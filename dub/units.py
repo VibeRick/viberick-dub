@@ -75,3 +75,9 @@ def flow_gaps(units: list[dict], from_take: list[bool], repaired: list[bool],
         else:
             out.append(FLOW_GAP)
     return out
+
+
+def pick_targets(requested: list[str] | None, src: str) -> list[str]:
+    """Requested languages minus the detected source (the UI cannot know the source before transcription)."""
+    langs = [lang for lang in (requested or []) if lang != src and lang in config.LANGS]
+    return langs or targets_for(src)

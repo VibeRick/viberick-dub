@@ -52,3 +52,9 @@ def test_sentence_merge_stops_at_long_pause_and_max_length():
     assert len(units.make_units(cues, duration=5.0)) == 2          # 2 s pause: separate
     long = [{"start": i * 2.0, "end": i * 2.0 + 1.9, "text": f"조각{i}"} for i in range(12)]
     assert all(x["end"] - x["start"] <= units.MAX_UNIT_SEC for x in units.make_units(long, duration=30.0))
+
+
+def test_requested_targets_never_include_the_source():
+    assert units.pick_targets(["en", "ko", "ja"], "ko") == ["en", "ja"]
+    assert units.pick_targets(None, "en") == ["ko", "ja", "zh-Hans"]
+    assert units.pick_targets(["ko"], "ko") == ["en", "ja", "zh-Hans"]   # nothing left → all others

@@ -153,7 +153,7 @@ def main(url: str, to: list[str] | None = None, max_sec: float | None = None, se
             str(run_dir / "out" / "video.orig.mp4"))
     brf = _cached(run_dir / "brief.json", lambda: briefmod.make_brief(us, info, src))
     events.log(run_dir, "brief", summary=brf["summary"], terms=len(brf["terms"]))
-    langs = to or unitsmod.targets_for(src)
+    langs = unitsmod.pick_targets(to, src)
     with ThreadPoolExecutor(len(langs)) as ex:
         reports = list(ex.map(lambda l: dub_language(run_dir, us, src, l, brf, total, bed), langs))
     summary = {"video": info.get("id"), "title": info.get("title"), "src": src, "duration": total,

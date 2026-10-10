@@ -60,6 +60,8 @@ function open(id) {
   state = { job: null, events: [], lines: {}, track: state.track || "orig", lineLang: null };
   $("#studio").hidden = false;
   $("#log").innerHTML = "";
+  $("#tx").innerHTML = `<li class="muted pad">The transcript appears when the dub is ready.</li>`;
+  state.txStarts = [];
   $("#lines-wrap").hidden = true;
   $("#stats").innerHTML = "";
   $("#tracks").innerHTML = "";
