@@ -106,9 +106,9 @@ def _trim_fade(raw: bytes, out: Path) -> float:
     return duration(out)
 
 
-def synth(text: str, out: Path, voice_id: str = config.VOICE_ID) -> float:
+def synth(text: str, out: Path, voice_id: str | None = None) -> float:
     for _ in range(4):
-        raw = _request(text, voice_id)
+        raw = _request(text, voice_id or config.ACTIVE["voice"])
         if len(raw) > RATE // 5:
             return _trim_fade(raw, out)
     raise RuntimeError(f"TTS returned no audio for {text[:40]!r}")

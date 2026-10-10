@@ -32,6 +32,6 @@ def fetch(url: str, run_dir: Path) -> dict:
                        (["-ac", "1", "-ar", "16000", "-c:a", "flac"], "source.stt.flac")):
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(run_dir / "source.mp4"), "-vn",
                         *args, str(run_dir / name)], check=True)
-    info = {k: raw.get(k) for k in ("id", "title", "channel", "duration", "description", "tags")}
+    info = {k: raw.get(k) for k in ("id", "title", "channel", "channel_id", "duration", "description", "tags", "thumbnail")}
     info_p.write_text(json.dumps(info, ensure_ascii=False, indent=1))
     return info

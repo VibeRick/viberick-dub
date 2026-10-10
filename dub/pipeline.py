@@ -34,6 +34,7 @@ def prepare(url: str, max_sec: float | None) -> tuple[Path, dict, float]:
     vid = fetch.video_id(url)
     base = config.RUNS / vid
     info = fetch.fetch(url, base)
+    events.log(base, "fetched", title=info.get("title"))
     run_dir = run_dir_for(vid, max_sec)
     run_dir.mkdir(parents=True, exist_ok=True)
     total = min(max_sec, info["duration"]) if max_sec else info["duration"]
@@ -67,10 +68,12 @@ def dub_language(run_dir: Path, us: list[dict], src: str, lang: str, brf: dict, 
     out = run_dir / "out"
     out.mkdir(exist_ok=True)
     mix.mix(timeline, bed, out / f"dub.{lang}.m4a")
-    (out / f"subs.{lang}.srt").write_text(subs.srt(us, [r["text"] for r in rows], lang))
+    srt = subs.srt(us, [r["text"] for r in rows], lang)
+    (out / f"subs.{lang}.srt").write_text(srt)
+    (out / f"subs.{lang}.vtt").write_text(subs.vtt(srt))
     if (run_dir / "source.mp4").exists():
         _ff("-i", str(run_dir / "source.mp4"), "-i", str(out / f"dub.{lang}.m4a"), "-map", "0:v", "-map", "1:a",
-            "-c", "copy", "-shortest", str(out / f"video.{lang}.mp4"))
+            "-c", "copy", "-shortest", "-movflags", "+faststart", str(out / f"video.{lang}.mp4"))
     rep = {"lang": lang, "lines": len(rows), "ok": sum(r["ok"] for r in rows),
            "first_pass_ok": sum(1 for r in rows if [a["do"] for a in r["actions"]].count("check") == 1 and r["ok"]),
            "shortened": sum(1 for r in rows if any(a["do"] == "shorten" for a in r["actions"])),
@@ -92,6 +95,12 @@ def _safe_group(g, us, texts, lang, d) -> bool:
 def main(url: str, to: list[str] | None = None, max_sec: float | None = None, separate_bed: bool = True) -> Path:
     t0 = time.time()
     run_dir, info, total = prepare(url, max_sec)
+    if "channel_id" not in info:   # info.json written before channel_id was kept
+        raw = json.loads((config.RUNS / fetch.video_id(url) / "source.info.json").read_text())
+        info["channel_id"] = raw.get("channel_id")
+    config.ACTIVE["voice"] = config.voice_for(info)
+    events.log(run_dir, "voice", voice="cloned" if config.ACTIVE["voice"] == config.VOICE_ID else "preset",
+               consent=config.ACTIVE["voice"] == config.VOICE_ID)
     events.log(run_dir, "start", url=url, title=info.get("title"), duration=total)
     bed = None
     if separate_bed:
@@ -104,9 +113,15 @@ def main(url: str, to: list[str] | None = None, max_sec: float | None = None, se
     cues = _cached(run_dir / "cues.json", lambda: proofread.proofread(audio, words, info, src_guess))
     src = unitsmod.detect_language(" ".join(c["text"] for c in cues))
     us = unitsmod.make_units(cues, total)
+    (run_dir / "units.json").write_text(json.dumps(us, ensure_ascii=False, indent=1))
     events.log(run_dir, "proofread", cues=len(cues), src=src)
     (run_dir / "out").mkdir(exist_ok=True)
-    (run_dir / "out" / f"subs.{src}.srt").write_text(subs.srt(us, [u["text"] for u in us], src))
+    srt = subs.srt(us, [u["text"] for u in us], src)
+    (run_dir / "out" / f"subs.{src}.srt").write_text(srt)
+    (run_dir / "out" / f"subs.{src}.vtt").write_text(subs.vtt(srt))
+    if (run_dir / "source.mp4").exists() and not (run_dir / "out" / "video.orig.mp4").exists():
+        _ff("-i", str(run_dir / "source.mp4"), "-c", "copy", "-movflags", "+faststart",
+            str(run_dir / "out" / "video.orig.mp4"))
     brf = _cached(run_dir / "brief.json", lambda: briefmod.make_brief(us, info, src))
     events.log(run_dir, "brief", summary=brf["summary"], terms=len(brf["terms"]))
     langs = to or unitsmod.targets_for(src)

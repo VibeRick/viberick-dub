@@ -7,3 +7,8 @@ def test_srt_splits_long_cjk_line_and_keeps_timing():
     assert len(blocks) == 2
     assert blocks[0].splitlines()[1].startswith("00:00:01,000 --> ")
     assert blocks[-1].splitlines()[1].endswith("00:00:05,000")
+
+
+def test_vtt_from_srt():
+    v = subs.vtt("1\n00:00:01,000 --> 00:00:02,500\nhi\n")
+    assert v.startswith("WEBVTT\n\n") and "00:00:01.000 --> 00:00:02.500" in v

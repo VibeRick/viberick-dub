@@ -1,0 +1,10 @@
+.venv
+runs
+.superpowers
+.git
+web
+docs
+tests
+deck
+demo
+**/__pycache__

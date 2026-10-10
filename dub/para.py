@@ -42,10 +42,10 @@ def synth_group(lines: list[str], lang: str, d: Path, ids: list[int]) -> bool:
         take.replace(d / f"{ids[0]:04d}.tts.wav")
         return True
     pts = cut_points(lines, stt.chirp_sync_words(take.read_bytes(), lang))
-    if pts is None:
+    end = voice.duration(take)
+    if pts is None or pts[-1] >= end - 0.05:
         take.unlink()
         return False
-    end = voice.duration(take)
     for k, i in enumerate(ids):
         a, b = pts[k], (pts[k + 1] if k + 1 < len(pts) else end)
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(take), "-ss", f"{a:.3f}", "-to",

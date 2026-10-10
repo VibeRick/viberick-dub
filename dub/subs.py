@@ -47,3 +47,7 @@ def srt(units: list[dict], texts: list[str], lang: str) -> str:
             n += 1
             s = e
     return "\n".join(blocks)
+
+
+def vtt(srt_text: str) -> str:
+    return "WEBVTT\n\n" + re.sub(r"(\d\d:\d\d:\d\d),(\d\d\d)", r"\1.\2", srt_text)

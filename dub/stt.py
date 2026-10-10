@@ -19,7 +19,8 @@ def _creds():
 
 
 def _client() -> SpeechClient:
-    return SpeechClient(credentials=_creds(), client_options=ClientOptions(
+    # REST, not gRPC: gRPC channels hung when used from worker threads that also fork ffmpeg.
+    return SpeechClient(credentials=_creds(), transport="rest", client_options=ClientOptions(
         api_endpoint=f"{config.STT_LOCATION}-speech.googleapis.com", quota_project_id=config.GCP_PROJECT))
 
 
@@ -92,4 +93,4 @@ def chirp_sync_words(wav_bytes: bytes, lang: str) -> list[dict]:
     req = cs.RecognizeRequest(
         recognizer=f"projects/{config.GCP_PROJECT}/locations/{config.STT_LOCATION}/recognizers/_",
         config=_cfg(lang), content=wav_bytes)
-    return _words(_client().recognize(request=req).results, 0.0)
+    return _words(_client().recognize(request=req, timeout=60).results, 0.0)

@@ -12,3 +12,11 @@ def test_cut_points_from_words():
              {"w": "How", "start": 1.3, "end": 1.5}, {"w": "are", "start": 1.55, "end": 1.7},
              {"w": "you?", "start": 1.75, "end": 2.0}]
     assert para.cut_points(["Hello there.", "How are you?"], words) == [0.0, 1.1]
+
+
+def test_synth_group_rejects_cut_past_take_end(monkeypatch, tmp_path):
+    from dub import voice
+    monkeypatch.setattr(para.voice, "synth", lambda text, out: (out.write_bytes(voice._silence_wav(1.0)), 1.0)[1])
+    words = [{"w": "Hello", "start": 0.1, "end": 0.5}, {"w": "there.", "start": 2.0, "end": 2.4}]
+    monkeypatch.setattr(para.stt, "chirp_sync_words", lambda b, lang: words)
+    assert para.synth_group(["Hello", "there."], "en", tmp_path, [0, 1]) is False

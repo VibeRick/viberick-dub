@@ -11,6 +11,13 @@ TEXT_MODEL = os.environ.get("DUB_TEXT_MODEL", "gemini-3.8-flash")
 TTS_MODEL = os.environ.get("DUB_TTS_MODEL", "gemini-3.8-flash-tts")
 VOICE_ID = os.environ.get("DUB_VOICE_ID", "voice_v6oqh4nu2jaw")   # Jaeho's replicated voice (Tier 3 project)
 FALLBACK_VOICE = "Puck"
+# Consent gate: the cloned voice is used only for channels whose owner recorded consent.
+CONSENTED_CHANNELS = set(filter(None, os.environ.get("DUB_CONSENTED_CHANNELS", "UCtcp7RtJMf8hWCKScSctioA").split(",")))
+ACTIVE = {"voice": VOICE_ID}   # one job per process; set by pipeline.main
+
+
+def voice_for(info: dict) -> str:
+    return VOICE_ID if info.get("channel_id") in CONSENTED_CHANNELS else FALLBACK_VOICE
 
 GCP_PROJECT = "viberick"
 GCP_ACCOUNT = "jaeho.shin@viberick.com"
