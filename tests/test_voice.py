@@ -13,7 +13,7 @@ def test_rate_gate_spaces_calls():
 def test_synth_retries_when_no_audio(monkeypatch, tmp_path):
     seq = [b"", voice._silence_wav(0.6)]
     monkeypatch.setattr(voice, "_request", lambda text, vid: seq.pop(0))
-    monkeypatch.setattr(voice, "_trim_fade", lambda raw, out: out.write_bytes(raw) or 0.6)
+    monkeypatch.setattr(voice, "_trim_fade", lambda raw, out: (out.write_bytes(raw), 0.6)[1])
     assert voice.synth("hello", tmp_path / "a.wav") == 0.6
     assert seq == []
 
