@@ -1,0 +1,10 @@
+.superpowers/
+runs/
+voice/
+*.wav
+*.m4a
+*.mp3
+.env
+.venv/
+__pycache__/
+node_modules/
