@@ -24,11 +24,12 @@ def _client() -> SpeechClient:
         api_endpoint=f"{config.STT_LOCATION}-speech.googleapis.com", quota_project_id=config.GCP_PROJECT))
 
 
-def _cfg(lang: str) -> cs.RecognitionConfig:
+def _cfg(lang: str, diarize: bool = False) -> cs.RecognitionConfig:
+    feats = cs.RecognitionFeatures(enable_word_time_offsets=True, enable_automatic_punctuation=True)
+    if diarize:
+        feats.diarization_config = cs.SpeakerDiarizationConfig(min_speaker_count=1, max_speaker_count=6)
     return cs.RecognitionConfig(auto_decoding_config=cs.AutoDetectDecodingConfig(),
-                                language_codes=[config.CHIRP_CODES[lang]], model="chirp_3",
-                                features=cs.RecognitionFeatures(enable_word_time_offsets=True,
-                                                                enable_automatic_punctuation=True))
+                                language_codes=[config.CHIRP_CODES[lang]], model="chirp_3", features=feats)
 
 
 def chunk_bounds(duration: float, silences: list[tuple[float, float]],
@@ -63,7 +64,8 @@ def _words(results, offset: float) -> list[dict]:
         if r.alternatives:
             for w in r.alternatives[0].words:
                 out.append({"w": w.word, "start": round(offset + w.start_offset.total_seconds(), 3),
-                            "end": round(offset + w.end_offset.total_seconds(), 3)})
+                            "end": round(offset + w.end_offset.total_seconds(), 3),
+                            **({"spk": w.speaker_label} if w.speaker_label else {})})
     return out
 
 
@@ -79,7 +81,7 @@ def chirp_words(audio: Path, lang: str, run_dir: Path) -> list[dict]:
         uri = f"gs://{config.BUCKET}/{blob.name}"
         req = cs.BatchRecognizeRequest(
             recognizer=f"projects/{config.GCP_PROJECT}/locations/{config.STT_LOCATION}/recognizers/_",
-            config=_cfg(lang), files=[cs.BatchRecognizeFileMetadata(uri=uri)],
+            config=_cfg(lang, diarize=True), files=[cs.BatchRecognizeFileMetadata(uri=uri)],
             recognition_output_config=cs.RecognitionOutputConfig(inline_response_config=cs.InlineOutputConfig()))
         res = _client().batch_recognize(request=req).result(timeout=3600).results[uri]
         if res.error and res.error.code:

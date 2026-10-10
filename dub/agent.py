@@ -18,7 +18,7 @@ def repair_line(u: dict, text: str, src: str, lang: str, brief: dict, d: Path, r
         acts.append({"do": do, **kw})
         events.log(run_dir, "line", lang=lang, id=u["id"], do=do, **kw)
 
-    dur = voice.duration(raw) if pre else voice.synth(text, raw)
+    dur = voice.duration(raw) if pre else voice.synth(text, raw, voice_id=u.get("voice"))
     act("synth", dur=round(dur, 2), slot=u["slot"], pre=pre)
     for _ in range(2):
         if not fit.needs_shorter(dur, u["slot"]):
@@ -28,7 +28,7 @@ def repair_line(u: dict, text: str, src: str, lang: str, brief: dict, d: Path, r
             break   # a tiny slot would gut the line ("あ"): keep it and let tempo + spill absorb it
         text = shorter
         act("shorten", text=text)
-        dur = voice.synth(text, raw)
+        dur = voice.synth(text, raw, voice_id=u.get("voice"))
         act("synth", dur=round(dur, 2), slot=u["slot"])
     v = {"heard": "", "issue": ""}
     for attempt in range(MAX_STEPS):
@@ -47,7 +47,7 @@ def repair_line(u: dict, text: str, src: str, lang: str, brief: dict, d: Path, r
             act("retranslate", text=text)
         else:
             break
-        dur = voice.synth(text, raw)
+        dur = voice.synth(text, raw, voice_id=u.get("voice"))
     return {"id": u["id"], "text": text, "dur": round(voice.duration(out), 3), "slot": u["slot"],
             "tempo": round(fit.decide_tempo(dur, u["slot"], allow_slow=not pre), 3), "actions": acts, "ok": False,
             "issue": v["issue"], "heard": v["heard"]}

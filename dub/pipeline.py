@@ -10,7 +10,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 from . import (agent, brief as briefmod, config, events, fetch, gem, mix, para, proofread, review,
-               separate, stt, subs, translate, units as unitsmod, voice)
+               separate, speakers, stt, subs, translate, units as unitsmod, voice)
 
 
 PARAGRAPH = os.environ.get("DUB_PARAGRAPH") == "1"
@@ -126,9 +126,9 @@ def main(url: str, to: list[str] | None = None, max_sec: float | None = None, se
     events.log(run_dir, "voice", voice="cloned" if config.ACTIVE["voice"] == config.VOICE_ID else "preset",
                consent=config.ACTIVE["voice"] == config.VOICE_ID)
     events.log(run_dir, "start", url=url, title=info.get("title"), duration=total)
-    bed = None
+    bed = vocals = None
     if separate_bed:
-        _, bed = separate.separate(run_dir)
+        vocals, bed = separate.separate(run_dir)
         events.log(run_dir, "separated")
     audio, wav = run_dir / "source.stt.flac", run_dir / "source.wav"
     src_guess = unitsmod.detect_language(f"{info.get('title', '')} {info.get('description', '')}")
@@ -136,7 +136,12 @@ def main(url: str, to: list[str] | None = None, max_sec: float | None = None, se
     events.log(run_dir, "transcribed", words=len(words), engine="chirp_3")
     cues = _cached(run_dir / "cues.json", lambda: proofread.proofread(audio, words, info, src_guess))
     src = unitsmod.detect_language(" ".join(c["text"] for c in cues))
-    us = unitsmod.make_units(cues, total)
+    us = unitsmod.make_units(speakers.label_cues(cues, words), total)
+    consent = config.ACTIVE["voice"] == config.VOICE_ID
+    cast = _cached(run_dir / "cast.json", lambda: speakers.cast(us, vocals, config.VOICE_ID, consent, run_dir))
+    for u in us:
+        u["voice"] = cast[u.get("spk") or "1"]["voice"]
+    events.log(run_dir, "cast", speakers=[{"spk": s, **c} for s, c in cast.items()])
     (run_dir / "units.json").write_text(json.dumps(us, ensure_ascii=False, indent=1))
     events.log(run_dir, "proofread", cues=len(cues), src=src)
     (run_dir / "out").mkdir(exist_ok=True)

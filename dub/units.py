@@ -32,9 +32,10 @@ def sentences(cues: list[dict]) -> list[dict]:
     for c in cues:
         if out:
             cur = out[-1]
-            if (not _ends_sentence(cur["text"]) and c["start"] - cur["end"] < MAX_JOIN_GAP
+            if (cur.get("spk") == c.get("spk") and not _ends_sentence(cur["text"])
+                    and c["start"] - cur["end"] < MAX_JOIN_GAP
                     and c["end"] - cur["start"] <= MAX_UNIT_SEC):
-                out[-1] = {"start": cur["start"], "end": c["end"], "text": f"{cur['text']} {c['text']}"}
+                out[-1] = {**cur, "end": c["end"], "text": f"{cur['text']} {c['text']}"}
                 continue
         out.append(dict(c))
     return out
@@ -46,7 +47,8 @@ def make_units(cues: list[dict], duration: float) -> list[dict]:
     for i, c in enumerate(cues):
         nxt = cues[i + 1]["start"] if i + 1 < len(cues) else duration
         slot = max(0.6, min(nxt, c["end"] + 0.8, duration) - c["start"])
-        out.append({"id": i, "start": c["start"], "end": c["end"], "slot": round(slot, 3), "text": c["text"]})
+        out.append({"id": i, "start": c["start"], "end": c["end"], "slot": round(slot, 3), "text": c["text"],
+                    **({"spk": c["spk"]} if "spk" in c else {})})
     return out
 
 
