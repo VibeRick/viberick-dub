@@ -29,3 +29,12 @@ def test_silent_clip_fails_without_asking_gemini(monkeypatch, tmp_path):
     row = agent.repair_line({"id": 0, "text": "원문", "slot": 2.0}, "line", "ko", "en", {}, tmp_path, tmp_path, pre=False)
     assert row["ok"] and len(asked) == 1
     assert [a["do"] for a in row["actions"]] == ["synth", "check", "resynth", "check"]
+
+
+def test_short_yes_is_audible(tmp_path):
+    import struct, wave
+    p = tmp_path / "yes.wav"
+    with wave.open(str(p), "wb") as w:
+        w.setnchannels(1); w.setsampwidth(2); w.setframerate(24000)
+        w.writeframes(struct.pack("<h", 4000) * int(24000 * 0.2) + struct.pack("<h", 0) * 2400)
+    assert agent.check.audible(p)

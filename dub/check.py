@@ -21,7 +21,7 @@ def check(clip: Path, text: str, lang: str) -> dict:
         SCHEMA, parts=[types.Part.from_bytes(data=clip.read_bytes(), mime_type="audio/wav")])
 
 
-def audible(clip: Path, floor: int = 1500, min_sec: float = 0.25) -> bool:
+def audible(clip: Path, floor: int = 1000, min_sec: float = 0.12) -> bool:
     """At least min_sec of samples above `floor` (~-27 dBFS). Gemini sometimes passes a near-silent clip."""
     with wave.open(str(clip)) as w:
         x = array.array("h", w.readframes(w.getnframes()))

@@ -60,6 +60,9 @@ def dub_language(run_dir: Path, us: list[dict], src: str, lang: str, brf: dict, 
         prev = json.loads(done.read_text())
         rows, t0 = prev["rows"], time.time() - prev["report"]["sec"]
         pre = [bool(r["actions"][0].get("pre")) for r in rows]
+        for i, r in enumerate(rows):   # give flagged lines another pass (e.g. after a guard change)
+            if not r["ok"]:
+                rows[i] = agent.repair_line(us[i], r["text"], src, lang, brf, d, run_dir, False)
     else:
         events.log(run_dir, "translated", lang=lang, lines=len(texts))
         pre = [False] * len(us)
