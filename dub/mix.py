@@ -6,21 +6,23 @@ from pathlib import Path
 from . import voice
 
 
-GAP = 0.08   # minimum silence between two separately anchored lines
+GAP = 0.08        # minimum silence between two separately anchored lines
+MAX_EARLY = 2.0   # a flowing line may start at most this much before its source line
 
 
-def place(units: list[dict], clips: list[Path], total: float, out: Path, flow: list[bool] | None = None) -> dict:
-    """flow[i] = line i continues the previous line's paragraph take: place it right after it (the clips
-    already carry the take's natural pauses). Other lines anchor to their original start time."""
+def place(units: list[dict], clips: list[Path], total: float, out: Path,
+          flow: list[float | None] | None = None) -> dict:
+    """flow[i] = None: anchor line i to its source start. A number: line i continues the previous one;
+    place it that many seconds after the previous clip ends, but never more than MAX_EARLY early."""
     rate = voice.RATE
     buf = bytearray((int(total * rate) + rate) * 2)
     cursor, late, starts = None, [], []
-    flow = flow or [False] * len(units)
+    flow = flow or [None] * len(units)
     for i, (u, c) in enumerate(zip(units, clips)):
         if cursor is None:
             start = u["start"]
-        elif flow[i]:
-            start = cursor
+        elif flow[i] is not None:
+            start = max(cursor + flow[i], u["start"] - MAX_EARLY)
         else:
             start = max(u["start"], cursor + GAP)
         starts.append(round(start, 3))

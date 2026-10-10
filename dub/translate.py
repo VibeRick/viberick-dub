@@ -59,3 +59,37 @@ def shorten(src_text: str, text: str, lang: str, seconds: float, ratio: float) -
         f"most {target} characters. Keep the point of the original and the tone; drop redundancy, never "
         f"meaning.\nOriginal: {src_text}\nCurrent: {text}",
         {"type": "object", "properties": {"text": {"type": "string"}}, "required": ["text"]})["text"].strip()
+
+
+UNDERFILL = 0.8
+
+
+def _chars(text: str, lang: str) -> int:
+    return len(text) if lang == "en" else len(text.replace(" ", ""))
+
+
+def expand(units: list[dict], texts: list[str], src: str, lang: str, brief: dict) -> list[str]:
+    """Second pass for lines Gemini left short (measured: median fill 67–78 % despite the 85 % rule).
+    A short line leaves the speaker's mouth moving over silence; rewrite it fuller from the source."""
+    short = [(u, t) for u, t in zip(units, texts) if t and _chars(t, lang) < UNDERFILL * budget(lang, u["slot"])]
+    if not short:
+        return texts
+    lines = "\n".join(f'{{"id":{u["id"]},"target_chars":{int(budget(lang, u["slot"]) * 0.92)},'
+                      f'"src":{u["text"]!r},"current":{t!r}}}' for u, t in short)
+    out = {}
+    for i in range(0, len(short), BATCH):
+        chunk = "\n".join(lines.splitlines()[i:i + BATCH])
+        got = gem.json_call(
+            f"These {config.LANGS[lang]} dubbing lines are too short for the time the speaker talks, so the dub "
+            f"goes silent while the speaker's mouth still moves. Rewrite each to about target_chars characters "
+            f"(count them). Translate the {config.LANGS[src]} source more fully: keep its nuance, hedges and "
+            "connectives, and use natural spoken phrasing. Never add facts, examples or opinions the source does "
+            f"not have. Keep terms consistent: {[t['source'] for t in brief.get('terms', [])]}.\n"
+            "Output every id once.\n\nLines:\n" + chunk, SCHEMA)
+        out.update({l["id"]: l["text"].strip() for l in got["lines"]})
+    res = list(texts)
+    for k, u in enumerate(units):
+        new = out.get(u["id"], "")
+        if new and _chars(texts[k], lang) < _chars(new, lang) <= budget(lang, u["slot"]) * 1.05:
+            res[k] = new
+    return res

@@ -52,21 +52,31 @@ def dub_language(run_dir: Path, us: list[dict], src: str, lang: str, brf: dict, 
     t0 = time.time()
     d = run_dir / "dub" / lang
     d.mkdir(parents=True, exist_ok=True)
-    texts = _cached(d / "texts.json", lambda: translate.translate(us, src, lang, brf))
-    events.log(run_dir, "translated", lang=lang, lines=len(texts))
-    pre, flow = [False] * len(us), [False] * len(us)
-    with ThreadPoolExecutor(8) as ex:
-        for g, ok in ex.map(lambda g: (g, _safe_group(g, us, texts, lang, d)), para.groups(us)):
-            for k, i in enumerate(g):
-                pre[i] = ok
-                flow[i] = ok and k > 0
-    events.log(run_dir, "voiced", lang=lang, para_lines=sum(pre), lines=len(us))
-    with ThreadPoolExecutor(8) as ex:
-        rows = list(ex.map(lambda i: agent.repair_line(us[i], texts[i], src, lang, brf, d, run_dir, pre[i]),
-                           range(len(us))))
-    for i, r in enumerate(rows):   # a re-synthesized line no longer carries the take's pauses: anchor it
-        if any(a["do"] in ("shorten", "resynth", "retranslate") for a in r["actions"]):
-            flow[i] = False
+    done = d.parent / f"{lang}.json"
+    remix = done.exists()   # agent already ran: only re-place and re-mix, log nothing new
+    texts = _cached(d / "texts.json", lambda: translate.expand(us, translate.translate(us, src, lang, brf),
+                                                                src, lang, brf))
+    if remix:
+        prev = json.loads(done.read_text())
+        rows, t0 = prev["rows"], time.time() - prev["report"]["sec"]
+        pre = [bool(r["actions"][0].get("pre")) for r in rows]
+    else:
+        events.log(run_dir, "translated", lang=lang, lines=len(texts))
+        pre = [False] * len(us)
+        with ThreadPoolExecutor(8) as ex:
+            for g, ok in ex.map(lambda g: (g, _safe_group(g, us, texts, lang, d)), para.groups(us)):
+                for i in g:
+                    pre[i] = ok
+        events.log(run_dir, "voiced", lang=lang, para_lines=sum(pre), lines=len(us))
+        with ThreadPoolExecutor(8) as ex:
+            rows = list(ex.map(lambda i: agent.repair_line(us[i], texts[i], src, lang, brf, d, run_dir, pre[i]),
+                               range(len(us))))
+    take = [False] * len(us)
+    for g in para.groups(us):
+        for k, i in enumerate(g):
+            take[i] = pre[i] and k > 0
+    repaired = [any(a["do"] in ("shorten", "resynth", "retranslate") for a in r["actions"]) for r in rows]
+    flow = unitsmod.flow_gaps(us, take, repaired, [r["text"] for r in rows])
     timeline = run_dir / "dub" / f"{lang}.voice.wav"
     drift = mix.place(us, [d / f"{r['id']:04d}.wav" for r in rows], total, timeline, flow)
     drift.pop("starts")
@@ -84,7 +94,8 @@ def dub_language(run_dir: Path, us: list[dict], src: str, lang: str, brf: dict, 
            "shortened": sum(1 for r in rows if any(a["do"] == "shorten" for a in r["actions"])),
            "para_lines": sum(pre), "sec": round(time.time() - t0, 1), **drift}
     (d.parent / f"{lang}.json").write_text(json.dumps({"report": rep, "rows": rows}, ensure_ascii=False, indent=1))
-    events.log(run_dir, "language_done", **rep)
+    if not remix:
+        events.log(run_dir, "language_done", **rep)
     return rep
 
 

@@ -21,3 +21,16 @@ def test_slots_extend_into_following_gap_but_not_forever():
     assert u[0]["slot"] == 2.2          # up to the next start
     assert u[1]["slot"] == 1.6          # capped at end + 0.8
     assert u[2]["slot"] == 1.8          # last: end + 0.8, within duration
+
+
+def test_flow_gaps_follow_source_continuity():
+    us = [{"start": 0.0, "end": 1.0}, {"start": 1.2, "end": 2.0}, {"start": 3.0, "end": 4.0}]
+    assert units.flow_gaps(us, [True, True, True], [False, False, False]) == [None, 0.0, None]
+    assert units.flow_gaps(us, [False, False, False], [False, False, False]) == [None, units.FLOW_GAP, None]
+
+
+def test_mid_sentence_breath_pause_flows_but_sentence_end_anchors():
+    us = [{"start": 0.0, "end": 1.0}, {"start": 1.6, "end": 2.0}, {"start": 2.6, "end": 3.0}]
+    texts = ["As businesses began to ponder", "these crucial questions.", "GEO emerged."]
+    f = units.flow_gaps(us, [False] * 3, [False] * 3, texts)
+    assert f == [None, units.FLOW_GAP, None]
