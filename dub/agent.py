@@ -6,10 +6,11 @@ from pathlib import Path
 from . import check, events, fit, translate, voice
 
 MAX_STEPS = 4
+MIN_KEEP = 0.5   # never accept a rewrite under half the current length
 
 
 def repair_line(u: dict, text: str, src: str, lang: str, brief: dict, d: Path, run_dir: Path,
-                pre: bool) -> dict:
+                pre: bool, prev: list[str] | None = None) -> dict:
     raw, out = d / f"{u['id']:04d}.tts.wav", d / f"{u['id']:04d}.wav"
     acts: list[dict] = []
 
@@ -22,7 +23,10 @@ def repair_line(u: dict, text: str, src: str, lang: str, brief: dict, d: Path, r
     for _ in range(2):
         if not fit.needs_shorter(dur, u["slot"]):
             break
-        text = translate.shorten(u["text"], text, lang, u["slot"], dur / u["slot"])
+        shorter = translate.shorten(u["text"], text, lang, u["slot"], dur / u["slot"])
+        if len(shorter.strip()) < MIN_KEEP * len(text.strip()):
+            break   # a tiny slot would gut the line ("あ"): keep it and let tempo + spill absorb it
+        text = shorter
         act("shorten", text=text)
         dur = voice.synth(text, raw)
         act("synth", dur=round(dur, 2), slot=u["slot"])
@@ -39,7 +43,7 @@ def repair_line(u: dict, text: str, src: str, lang: str, brief: dict, d: Path, r
         if attempt == 0:
             act("resynth")
         elif attempt == 1:
-            text = translate._batch([u], src, lang, brief, [])[0] or text
+            text = translate._batch([u], src, lang, brief, prev or [])[0] or text
             act("retranslate", text=text)
         else:
             break

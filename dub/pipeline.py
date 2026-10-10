@@ -62,7 +62,7 @@ def dub_language(run_dir: Path, us: list[dict], src: str, lang: str, brf: dict, 
         pre = [bool(r["actions"][0].get("pre")) for r in rows]
         for i, r in enumerate(rows):   # give flagged lines another pass (e.g. after a guard change)
             if not r["ok"]:
-                rows[i] = agent.repair_line(us[i], r["text"], src, lang, brf, d, run_dir, False)
+                rows[i] = agent.repair_line(us[i], r["text"], src, lang, brf, d, run_dir, False, texts[max(0, i - 3):i])
     else:
         events.log(run_dir, "translated", lang=lang, lines=len(texts))
         pre = [False] * len(us)
@@ -72,7 +72,8 @@ def dub_language(run_dir: Path, us: list[dict], src: str, lang: str, brf: dict, 
                     pre[i] = ok
         events.log(run_dir, "voiced", lang=lang, para_lines=sum(pre), lines=len(us))
         with ThreadPoolExecutor(8) as ex:
-            rows = list(ex.map(lambda i: agent.repair_line(us[i], texts[i], src, lang, brf, d, run_dir, pre[i]),
+            rows = list(ex.map(lambda i: agent.repair_line(us[i], texts[i], src, lang, brf, d, run_dir, pre[i],
+                                                           texts[max(0, i - 3):i]),
                                range(len(us))))
     take = [False] * len(us)
     for g in para.groups(us):

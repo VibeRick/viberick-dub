@@ -16,7 +16,32 @@ def targets_for(src: str) -> list[str]:
     return [lang for lang in config.LANGS if lang != src]
 
 
+MAX_UNIT_SEC = 14.0   # longest sentence unit; longer runs split at a fragment boundary
+MAX_JOIN_GAP = 1.5    # a pause longer than this ends the unit even mid-sentence
+
+
+def _ends_sentence(text: str) -> bool:
+    t = text.strip()
+    return bool(_SENTENCE_END.search(t)) or t.endswith(("다", "요", "죠", "까"))
+
+
+def sentences(cues: list[dict]) -> list[dict]:
+    """Merge breath-sized fragments into sentences. Korean puts the verb last, so a fragment like
+    "SEO, AEO, GEO" cannot be translated on its own; the dub must be built a sentence at a time."""
+    out: list[dict] = []
+    for c in cues:
+        if out:
+            cur = out[-1]
+            if (not _ends_sentence(cur["text"]) and c["start"] - cur["end"] < MAX_JOIN_GAP
+                    and c["end"] - cur["start"] <= MAX_UNIT_SEC):
+                out[-1] = {"start": cur["start"], "end": c["end"], "text": f"{cur['text']} {c['text']}"}
+                continue
+        out.append(dict(c))
+    return out
+
+
 def make_units(cues: list[dict], duration: float) -> list[dict]:
+    cues = sentences(cues)
     out = []
     for i, c in enumerate(cues):
         nxt = cues[i + 1]["start"] if i + 1 < len(cues) else duration
