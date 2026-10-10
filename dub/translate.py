@@ -27,10 +27,10 @@ def _batch(batch: list[dict], src: str, lang: str, brief: dict, prev: list[str])
         f"{config.LANGS[lang]} for a voice-over that replaces the original speech.\n"
         f"Topic: {brief.get('summary', '')}\nSpeaker: {brief.get('speaker_style', '')}\nTerms:\n{terms}\n"
         f"Previous lines (continuity): {' '.join(prev[-3:]) or '(start)'}\n\nRules:\n"
-        "- Use between 85% and 100% of max_chars (100% = the slot at natural speed). Under 85% leaves dead "
-        "air while the speaker is visibly talking; over 100% will not fit. Count characters before answering.\n"
-        "- Reach the length by translating fully, never by adding things the source does not say. If the "
-        "meaning is longer than max_chars, cut redundancy and fillers first, never the point.\n"
+        "- Say it the way this speaker would naturally say it in the target language. Never exceed max_chars "
+        "(100% = the slot at natural speed); aim for 80-100% by translating fully, but never pad with words the "
+        "speaker would not say (no empty intensifiers). A natural line slightly short beats a padded one.\n"
+        "- If the meaning is longer than max_chars, cut redundancy and fillers first, never the point.\n"
         "- Drop spoken fillers and false starts unless they carry meaning. Keep the friendly, direct tone.\n"
         "- Consecutive lines may be fragments of one sentence; they must read naturally when joined.\n"
         "- Numbers, URLs and code as a speaker would say them.\n"
@@ -61,7 +61,7 @@ def shorten(src_text: str, text: str, lang: str, seconds: float, ratio: float) -
         {"type": "object", "properties": {"text": {"type": "string"}}, "required": ["text"]})["text"].strip()
 
 
-UNDERFILL = 0.8
+UNDERFILL = 0.6
 
 
 def _chars(text: str, lang: str) -> int:
@@ -74,7 +74,7 @@ def expand(units: list[dict], texts: list[str], src: str, lang: str, brief: dict
     short = [(u, t) for u, t in zip(units, texts) if t and _chars(t, lang) < UNDERFILL * budget(lang, u["slot"])]
     if not short:
         return texts
-    lines = "\n".join(f'{{"id":{u["id"]},"target_chars":{int(budget(lang, u["slot"]) * 0.92)},'
+    lines = "\n".join(f'{{"id":{u["id"]},"target_chars":{int(budget(lang, u["slot"]) * 0.85)},'
                       f'"src":{u["text"]!r},"current":{t!r}}}' for u, t in short)
     out = {}
     for i in range(0, len(short), BATCH):
@@ -84,7 +84,8 @@ def expand(units: list[dict], texts: list[str], src: str, lang: str, brief: dict
             f"goes silent while the speaker's mouth still moves. Rewrite each to about target_chars characters "
             f"(count them). Translate the {config.LANGS[src]} source more fully: keep its nuance, hedges and "
             "connectives, and use natural spoken phrasing. Never add facts, examples or opinions the source does "
-            f"not have. Keep terms consistent: {[t['source'] for t in brief.get('terms', [])]}.\n"
+            "not have, and no empty intensifiers (truly, really, dedicated, focused, practically). If a line "
+            f"cannot grow naturally, return it unchanged. Keep terms consistent: {[t['source'] for t in brief.get('terms', [])]}.\n"
             "Output every id once.\n\nLines:\n" + chunk, SCHEMA)
         out.update({l["id"]: l["text"].strip() for l in got["lines"]})
     res = list(texts)

@@ -13,6 +13,9 @@ from . import (agent, brief as briefmod, config, events, fetch, gem, mix, para, 
                separate, stt, subs, translate, units as unitsmod, voice)
 
 
+PARAGRAPH = os.environ.get("DUB_PARAGRAPH") == "1"
+
+
 def _cached(p: Path, make):
     if p.exists():
         return json.loads(p.read_text())
@@ -66,10 +69,11 @@ def dub_language(run_dir: Path, us: list[dict], src: str, lang: str, brf: dict, 
     else:
         events.log(run_dir, "translated", lang=lang, lines=len(texts))
         pre = [False] * len(us)
-        with ThreadPoolExecutor(8) as ex:
-            for g, ok in ex.map(lambda g: (g, _safe_group(g, us, texts, lang, d)), para.groups(us)):
-                for i in g:
-                    pre[i] = ok
+        if PARAGRAPH:   # off by default: units are whole sentences, and cutting takes failed for Japanese
+            with ThreadPoolExecutor(8) as ex:
+                for g, ok in ex.map(lambda g: (g, _safe_group(g, us, texts, lang, d)), para.groups(us)):
+                    for i in g:
+                        pre[i] = ok
         events.log(run_dir, "voiced", lang=lang, para_lines=sum(pre), lines=len(us))
         with ThreadPoolExecutor(8) as ex:
             rows = list(ex.map(lambda i: agent.repair_line(us[i], texts[i], src, lang, brf, d, run_dir, pre[i],
