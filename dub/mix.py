@@ -6,25 +6,37 @@ from pathlib import Path
 from . import voice
 
 
-def place(units: list[dict], clips: list[Path], total: float, out: Path) -> dict:
+GAP = 0.08   # minimum silence between two separately anchored lines
+
+
+def place(units: list[dict], clips: list[Path], total: float, out: Path, flow: list[bool] | None = None) -> dict:
+    """flow[i] = line i continues the previous line's paragraph take: place it right after it (the clips
+    already carry the take's natural pauses). Other lines anchor to their original start time."""
     rate = voice.RATE
     buf = bytearray((int(total * rate) + rate) * 2)
-    cursor, late = 0.0, []
-    for u, c in zip(units, clips):
-        start = max(u["start"], cursor)
-        late.append(start - u["start"])
+    cursor, late, starts = None, [], []
+    flow = flow or [False] * len(units)
+    for i, (u, c) in enumerate(zip(units, clips)):
+        if cursor is None:
+            start = u["start"]
+        elif flow[i]:
+            start = cursor
+        else:
+            start = max(u["start"], cursor + GAP)
+        starts.append(round(start, 3))
+        late.append(max(0.0, start - u["start"]))
         pcm = voice.pcm(c)
         a = int(start * rate) * 2
         b = min(len(buf), a + len(pcm))
         if a < len(buf):
             buf[a:b] = pcm[: b - a]
-        cursor = start + len(pcm) / 2 / rate + 0.08
+        cursor = start + len(pcm) / 2 / rate
     with wave.open(str(out), "wb") as w:
         w.setnchannels(1); w.setsampwidth(2); w.setframerate(rate)
         w.writeframes(bytes(buf))
     s = sorted(late) or [0.0]
     return {"late_max": round(s[-1], 2), "late_p95": round(s[int(len(s) * 0.95)], 2),
-            "late_lines": sum(1 for x in late if x > 0.3)}
+            "late_lines": sum(1 for x in late if x > 0.3), "starts": starts}
 
 
 def mix(voice_wav: Path, bed: Path | None, out: Path) -> None:

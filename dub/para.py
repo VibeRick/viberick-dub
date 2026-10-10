@@ -2,6 +2,7 @@
 
 Cut points: Chirp 3 sync recognition on the take → word times → align each line's characters →
 cut midway between the previous line's last word and this line's first word."""
+import array
 import subprocess
 from pathlib import Path
 
@@ -35,6 +36,19 @@ def cut_points(lines: list[str], words: list[dict]) -> list[float] | None:
     return pts
 
 
+def quiet_point(pcm: bytes, t: float, rate: int, search: float = 0.15, win: float = 0.02) -> float:
+    """Centre of the quietest `win`-second window within ±search of t: cut there, not mid-word."""
+    x = array.array("h", pcm)
+    w, step = max(1, int(win * rate)), max(1, int(0.005 * rate))
+    lo, hi = max(0, int((t - search) * rate)), min(len(x) - w, int((t + search) * rate))
+    best, best_e = t, None
+    for a in range(lo, hi + 1, step):
+        e = sum(abs(v) for v in x[a:a + w])
+        if best_e is None or e < best_e:
+            best, best_e = (a + w / 2) / rate, e
+    return round(best, 3)
+
+
 def synth_group(lines: list[str], lang: str, d: Path, ids: list[int]) -> bool:
     take = d / f"take_{ids[0]:04d}.wav"
     voice.synth(" ".join(lines), take)
@@ -44,6 +58,11 @@ def synth_group(lines: list[str], lang: str, d: Path, ids: list[int]) -> bool:
     pts = cut_points(lines, stt.chirp_sync_words(take.read_bytes(), lang))
     end = voice.duration(take)
     if pts is None or pts[-1] >= end - 0.05:
+        take.unlink()
+        return False
+    pcm = voice.pcm(take)
+    pts = [0.0] + [quiet_point(pcm, p, voice.RATE) for p in pts[1:]]
+    if any(b <= a for a, b in zip(pts, pts[1:])):
         take.unlink()
         return False
     for k, i in enumerate(ids):

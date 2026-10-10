@@ -54,17 +54,22 @@ def dub_language(run_dir: Path, us: list[dict], src: str, lang: str, brf: dict, 
     d.mkdir(parents=True, exist_ok=True)
     texts = _cached(d / "texts.json", lambda: translate.translate(us, src, lang, brf))
     events.log(run_dir, "translated", lang=lang, lines=len(texts))
-    pre = [False] * len(us)
+    pre, flow = [False] * len(us), [False] * len(us)
     with ThreadPoolExecutor(8) as ex:
         for g, ok in ex.map(lambda g: (g, _safe_group(g, us, texts, lang, d)), para.groups(us)):
-            for i in g:
+            for k, i in enumerate(g):
                 pre[i] = ok
+                flow[i] = ok and k > 0
     events.log(run_dir, "voiced", lang=lang, para_lines=sum(pre), lines=len(us))
     with ThreadPoolExecutor(8) as ex:
         rows = list(ex.map(lambda i: agent.repair_line(us[i], texts[i], src, lang, brf, d, run_dir, pre[i]),
                            range(len(us))))
+    for i, r in enumerate(rows):   # a re-synthesized line no longer carries the take's pauses: anchor it
+        if any(a["do"] in ("shorten", "resynth", "retranslate") for a in r["actions"]):
+            flow[i] = False
     timeline = run_dir / "dub" / f"{lang}.voice.wav"
-    drift = mix.place(us, [d / f"{r['id']:04d}.wav" for r in rows], total, timeline)
+    drift = mix.place(us, [d / f"{r['id']:04d}.wav" for r in rows], total, timeline, flow)
+    drift.pop("starts")
     out = run_dir / "out"
     out.mkdir(exist_ok=True)
     mix.mix(timeline, bed, out / f"dub.{lang}.m4a")

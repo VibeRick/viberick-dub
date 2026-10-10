@@ -18,3 +18,8 @@ def test_missing_ids_are_retried_one_by_one(monkeypatch):
     units = [{"id": i, "text": f"s{i}", "slot": 2.0} for i in range(3)]
     out = translate.translate(units, "ko", "en", {"summary": "", "terms": []})
     assert out == ["t0", "t1", "t2"] and calls[-1] == [1]
+
+
+def test_budget_uses_measured_cloned_voice_rate():
+    assert translate.budget("en", 2.0) == int(translate.CPS["en"] * 2.0)
+    assert translate.CPS["en"] > 18 and translate.CPS["ja"] > 6.5

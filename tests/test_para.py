@@ -20,3 +20,12 @@ def test_synth_group_rejects_cut_past_take_end(monkeypatch, tmp_path):
     words = [{"w": "Hello", "start": 0.1, "end": 0.5}, {"w": "there.", "start": 2.0, "end": 2.4}]
     monkeypatch.setattr(para.stt, "chirp_sync_words", lambda b, lang: words)
     assert para.synth_group(["Hello", "there."], "en", tmp_path, [0, 1]) is False
+
+
+def test_quiet_point_snaps_to_lowest_energy():
+    import struct
+    rate = 1000
+    loud, quiet = struct.pack("<h", 15000), struct.pack("<h", 10)
+    pcm = loud * 500 + quiet * 40 + loud * 460          # quiet 0.50–0.54 s
+    t = para.quiet_point(pcm, 0.6, rate, search=0.15)
+    assert 0.5 <= t <= 0.54

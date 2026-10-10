@@ -13,17 +13,23 @@ def needs_shorter(dur: float, slot: float) -> bool:
     return dur / slot > MAX_TEMPO
 
 
-def decide_tempo(dur: float, slot: float) -> float:
+def decide_tempo(dur: float, slot: float, allow_slow: bool = True) -> float:
+    """allow_slow=False for lines cut from a paragraph take: they flow back to back, so slowing
+    a short line would only add drag."""
     r = dur / slot
     if r > 1.0:
         return min(r, HARD_MAX)
+    if not allow_slow:
+        return 1.0
     return max(MIN_TEMPO, min(1.0, r / 0.8))
 
 
+# Short fades at both ends: a clip that starts or stops mid-waveform clicks when laid on the timeline.
+EDGES = "afade=t=in:d=0.008,areverse,afade=t=in:d=0.015,areverse"
+
+
 def stretch(src: Path, dst: Path, tempo: float) -> float:
-    if abs(tempo - 1.0) < 0.01:
-        dst.write_bytes(src.read_bytes())
-    else:
-        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(src), "-af",
-                        f"atempo={tempo:.4f}", "-c:a", "pcm_s16le", str(dst)], check=True)
+    flt = EDGES if abs(tempo - 1.0) < 0.01 else f"atempo={tempo:.4f},{EDGES}"
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(src), "-af", flt, "-c:a", "pcm_s16le",
+                    str(dst)], check=True)
     return voice.duration(dst)

@@ -1,12 +1,13 @@
 """Dubbing translation: every line must be speakable inside its time slot.
 
-CPS = characters per second of the TTS voice at natural speed. Values measured on gemini-3.8-flash-tts
-(preset voices 2026-10-08; replicated voice spot-check 2026-10-10: ko 6.1, en 17.1, ja 6.2)."""
+CPS = characters per second of the cloned voice at natural speed, measured 2026-10-10 on 204 lines of
+Fty2sz3dBwU (speech only, edge silence excluded). The old preset-voice table (en 15.1, ja 6.2, zh 5.2) was
+11–24 % too slow, so lines came out short and the dub had 2.5–4× the source's pauses."""
 from concurrent.futures import ThreadPoolExecutor
 
 from . import config, gem
 
-CPS = {"en": 15.1, "ja": 6.2, "zh-Hans": 5.2, "ko": 7.0}
+CPS = {"en": 18.7, "ja": 6.9, "zh-Hans": 5.9, "ko": 6.5}
 BATCH = 40
 SCHEMA = {"type": "object", "properties": {"lines": {"type": "array", "items": {
     "type": "object", "properties": {"id": {"type": "integer"}, "text": {"type": "string"}},
@@ -14,7 +15,7 @@ SCHEMA = {"type": "object", "properties": {"lines": {"type": "array", "items": {
 
 
 def budget(lang: str, seconds: float) -> int:
-    return max(4, int(CPS.get(lang, 14.0) * seconds * 0.95))
+    return max(4, int(CPS.get(lang, 14.0) * seconds))
 
 
 def _batch(batch: list[dict], src: str, lang: str, brief: dict, prev: list[str]) -> list[str]:
@@ -26,8 +27,8 @@ def _batch(batch: list[dict], src: str, lang: str, brief: dict, prev: list[str])
         f"{config.LANGS[lang]} for a voice-over that replaces the original speech.\n"
         f"Topic: {brief.get('summary', '')}\nSpeaker: {brief.get('speaker_style', '')}\nTerms:\n{terms}\n"
         f"Previous lines (continuity): {' '.join(prev[-3:]) or '(start)'}\n\nRules:\n"
-        "- Use between 75% and 100% of max_chars (100% = the slot at natural speed). Under 75% leaves dead "
-        "air while the speaker is visibly talking; over 100% will not fit.\n"
+        "- Use between 85% and 100% of max_chars (100% = the slot at natural speed). Under 85% leaves dead "
+        "air while the speaker is visibly talking; over 100% will not fit. Count characters before answering.\n"
         "- Reach the length by translating fully, never by adding things the source does not say. If the "
         "meaning is longer than max_chars, cut redundancy and fillers first, never the point.\n"
         "- Drop spoken fillers and false starts unless they carry meaning. Keep the friendly, direct tone.\n"

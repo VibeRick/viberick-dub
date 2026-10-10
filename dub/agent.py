@@ -28,9 +28,10 @@ def repair_line(u: dict, text: str, src: str, lang: str, brief: dict, d: Path, r
         act("synth", dur=round(dur, 2), slot=u["slot"])
     v = {"heard": "", "issue": ""}
     for attempt in range(MAX_STEPS):
-        tempo = fit.decide_tempo(dur, u["slot"])
+        tempo = fit.decide_tempo(dur, u["slot"], allow_slow=not pre)
         final = fit.stretch(raw, out, tempo)
-        v = check.check(out, text, lang)
+        v = (check.check(out, text, lang) if check.audible(out) else
+             {"heard": "", "language_ok": False, "content_ok": False, "issue": "silent or truncated clip"})
         act("check", ok=v["language_ok"] and v["content_ok"], issue=v["issue"])
         if v["language_ok"] and v["content_ok"]:
             return {"id": u["id"], "text": text, "dur": round(final, 3), "slot": u["slot"],
@@ -44,5 +45,5 @@ def repair_line(u: dict, text: str, src: str, lang: str, brief: dict, d: Path, r
             break
         dur = voice.synth(text, raw)
     return {"id": u["id"], "text": text, "dur": round(voice.duration(out), 3), "slot": u["slot"],
-            "tempo": round(fit.decide_tempo(dur, u["slot"]), 3), "actions": acts, "ok": False,
+            "tempo": round(fit.decide_tempo(dur, u["slot"], allow_slow=not pre), 3), "actions": acts, "ok": False,
             "issue": v["issue"], "heard": v["heard"]}
