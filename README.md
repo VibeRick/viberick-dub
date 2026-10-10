@@ -15,7 +15,7 @@ dubbed audio tracks and subtitles, ready to upload to YouTube's multi-language a
 YouTube reports that creators who add multi-language audio get over 25% of their watch time from viewers in
 other languages. Its built-in auto-dubbing does not use the creator's voice, cannot be edited, and for Korean
 sources offers only English and Indonesian. Dubbing services that clone the voice charge about $0.33–2.20 per
-minute. VibeRick Dub costs about $0.03–0.05 per dubbed minute on Google Cloud.
+minute. VibeRick Dub costs about $0.03 per dubbed minute on Google Cloud (measured).
 
 ## How it works
 
@@ -62,15 +62,16 @@ All generated audio carries Gemini's SynthID watermark.
 
 ## Results (measured)
 
-3 minutes of a Korean tech explainer (`Fty2sz3dBwU`) dubbed into English, Japanese and Chinese:
+Korean tech explainer (`Fty2sz3dBwU`) dubbed into English, Japanese and Chinese:
 
 | | |
 |---|---|
-| Lines verified by Gemini listening | 60 / 60 |
-| Timing drift p95 | ≤ 0.13 s |
+| First 3 min, end to end (download → 3 dubbed videos) | 2 min 52 s · 69 / 69 lines verified by Gemini listening |
+| Full 15:05 video | 11 min · 366 / 369 lines verified (3 flagged for review) |
+| Timing drift p95 | ≤ 0.16 s |
 | Speaker similarity of the English clone to the creator (ECAPA cosine) | 0.68 (other people: 0.00–0.09) |
 | Transcript error (CER) vs the creator's edited captions | 7.6–7.9 % (Chirp 3 alone 8.6 %, Gemini alone 10.6–11.8 %) |
-| Gemini text cost for 3 min × 3 languages | ≈ $0.28 |
+| Cost per dubbed minute | ≈ $0.03 (Gemini text $0.009 + TTS $0.014 + Chirp $0.005 + Cloud Run $0.003) |
 
 A 2-minute two-speaker English podcast dubbed into Korean: Chirp separated the speakers, Gemini cast a male
 and a female preset, 28 / 28 lines verified, nobody received the cloned voice.
