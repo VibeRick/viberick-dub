@@ -33,7 +33,7 @@ def prepare(url: str, max_sec: float | None) -> tuple[Path, dict, float]:
     """Download once into runs/<id>/, then cut (dev/demo mode) into runs/<id>.<N>s/."""
     vid = fetch.video_id(url)
     base = config.RUNS / vid
-    info = fetch.fetch(url, base)
+    info = fetch.fetch(url, base, max_sec)
     events.log(base, "fetched", title=info.get("title"))
     run_dir = run_dir_for(vid, max_sec)
     run_dir.mkdir(parents=True, exist_ok=True)

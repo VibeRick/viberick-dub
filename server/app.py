@@ -47,8 +47,12 @@ def create_job(j: JobIn):
     cloud.job(job_id).set({"url": j.url, "video": vid, "langs": j.langs, "max_sec": max_sec, "status": "queued",
                            "stage": "Queued", "created": time.time(), "demo": False,
                            "thumbnail": f"https://i.ytimg.com/vi/{vid}/hqdefault.jpg"})
-    run_v2.JobsClient().run_job(run_v2.RunJobRequest(
-        name=f"projects/{config.GCP_PROJECT}/locations/{REGION}/jobs/{WORKER}",
-        overrides=run_v2.RunJobRequest.Overrides(container_overrides=[
-            run_v2.RunJobRequest.Overrides.ContainerOverride(env=[run_v2.EnvVar(name="JOB_ID", value=job_id)])])))
+    try:
+        run_v2.JobsClient().run_job(run_v2.RunJobRequest(
+            name=f"projects/{config.GCP_PROJECT}/locations/{REGION}/jobs/{WORKER}",
+            overrides=run_v2.RunJobRequest.Overrides(container_overrides=[
+                run_v2.RunJobRequest.Overrides.ContainerOverride(env=[run_v2.EnvVar(name="JOB_ID", value=job_id)])])))
+    except Exception as e:  # noqa: BLE001  the UI must not show a job stuck in "queued"
+        cloud.job(job_id).update({"status": "error", "error": "The dubbing worker could not start. Try again."})
+        raise HTTPException(503, "The dubbing worker could not start. Try again in a minute.") from e
     return {"id": job_id}

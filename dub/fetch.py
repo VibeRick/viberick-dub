@@ -1,4 +1,7 @@
-"""YouTube URL → source.mp4, source.wav (48 kHz stereo), source.stt.flac (16 kHz mono), info.json."""
+"""YouTube URL → source.mp4, source.wav (48 kHz stereo), source.stt.flac (16 kHz mono), info.json.
+
+YouTube asks cloud IPs to sign in, so on failure the download is retried through DUB_PROXY (a residential
+proxy). With max_sec only that section is downloaded, at ≤720p, to keep proxy bandwidth small."""
 import json
 import os
 import re
@@ -15,23 +18,40 @@ def video_id(url: str) -> str:
     return out.stdout.strip().splitlines()[-1]
 
 
-def fetch(url: str, run_dir: Path) -> dict:
+def _cmd(url: str, out_tmpl: str, max_sec: float | None, proxy: str | None) -> list[str]:
+    h = 720 if max_sec else 1080
+    cmd = ["yt-dlp", "-f", f"bv*[height<={h}][ext=mp4]+ba[ext=m4a]/b[ext=mp4][height<={h}]/bv*[height<={h}]+ba/b",
+           "--merge-output-format", "mp4", "-o", out_tmpl, "--write-info-json", "--no-playlist",
+           "--force-overwrites", url]
+    if max_sec:
+        cmd[1:1] = ["--download-sections", f"*0-{int(max_sec) + 2}"]
+    if proxy:
+        cmd[1:1] = ["--proxy", proxy]
+    return cmd
+
+
+def fetch(url: str, run_dir: Path, max_sec: float | None = None) -> dict:
     run_dir.mkdir(parents=True, exist_ok=True)
     info_p = run_dir / "info.json"
     if info_p.exists() and (run_dir / "source.wav").exists():
-        return json.loads(info_p.read_text())
-    if not (run_dir / "source.mp4").exists():
-        cmd = ["yt-dlp", "-f", "bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b",
-               "--merge-output-format", "mp4", "-o", str(run_dir / "source.%(ext)s"),
-               "--write-info-json", "--no-playlist", url]
-        if proxy := os.environ.get("DUB_PROXY"):
-            cmd[1:1] = ["--proxy", proxy]
-        subprocess.run(cmd, check=True)
+        info = json.loads(info_p.read_text())
+        if not info.get("partial_sec") or (max_sec and info["partial_sec"] >= max_sec):
+            return info
+    tmpl = str(run_dir / "source.%(ext)s")
+    r = subprocess.run(_cmd(url, tmpl, max_sec, None), capture_output=True, text=True)
+    if r.returncode != 0 and (proxy := os.environ.get("DUB_PROXY")):
+        r = subprocess.run(_cmd(url, tmpl, max_sec, proxy), capture_output=True, text=True)
+    if r.returncode != 0:
+        msg = r.stderr.strip().splitlines()[-1] if r.stderr.strip() else "yt-dlp failed"
+        raise RuntimeError(f"Could not download the video: {msg[:300]}")
     raw = json.loads((run_dir / "source.info.json").read_text())
     for args, name in ((["-ac", "2", "-ar", "48000"], "source.wav"),
                        (["-ac", "1", "-ar", "16000", "-c:a", "flac"], "source.stt.flac")):
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(run_dir / "source.mp4"), "-vn",
                         *args, str(run_dir / name)], check=True)
-    info = {k: raw.get(k) for k in ("id", "title", "channel", "channel_id", "duration", "description", "tags", "thumbnail")}
+    info = {k: raw.get(k) for k in ("id", "title", "channel", "channel_id", "duration", "description", "tags",
+                                    "thumbnail")}
+    if max_sec and raw.get("duration", 0) > max_sec:
+        info["partial_sec"] = max_sec
     info_p.write_text(json.dumps(info, ensure_ascii=False, indent=1))
     return info
