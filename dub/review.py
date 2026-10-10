@@ -26,7 +26,9 @@ def job_data(run_dir: Path, units: list[dict], langs: list[str]) -> dict:
             "events": events, "lines": lines}
 
 
-def write(run_dir: Path, wav: Path, units: list[dict], langs: list[str]) -> Path:
+def write(run_dir: Path, wav: Path, units: list[dict], langs: list[str]) -> Path | None:
+    if not (WEB / "index.html").exists():   # the Cloud Run worker ships without the web app
+        return None
     page = (WEB / "index.html").read_text()
     css = (WEB / "style.css").read_text()
     js = (WEB / "app.js").read_text()
