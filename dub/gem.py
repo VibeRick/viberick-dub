@@ -1,6 +1,7 @@
 """Gemini text calls on Vertex (project viberick credit) with retry, JSON mode and a cost ledger."""
 import json
 import random
+import sys
 import threading
 import time
 
@@ -52,6 +53,7 @@ def _call(contents, cfg: types.GenerateContentConfig, tries: int = 8):
         except Exception as e:  # noqa: BLE001  429/500 from the shared pool, empty output
             if i == tries - 1 or str(e).startswith("400"):
                 raise
+            print(f"gemini retry {i + 1}/{tries}: {str(e)[:160]}", file=sys.stderr, flush=True)
             time.sleep(min(60, 2 ** i) * (0.5 + random.random()))
 
 

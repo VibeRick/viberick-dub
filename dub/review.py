@@ -1,26 +1,41 @@
-"""<run>/review.html: listen to the original and each dub; inspect every line the agent touched."""
-import html
+"""<run>/review.html: the web app's studio view (video + synced transcript + agent log), fed from local
+files instead of Firestore. Open it directly from Finder."""
+import base64
 import json
 from pathlib import Path
 
+from . import config
 
-def write(run_dir: Path, wav: Path, units: list[dict], langs: list[str]) -> Path:
-    parts = [f"<h1>{html.escape(run_dir.name)}</h1><p>Original</p><audio controls src='{wav.name}'></audio>"]
+WEB = config.ROOT / "web"
+
+
+def job_data(run_dir: Path, units: list[dict], langs: list[str]) -> dict:
+    report = json.loads((run_dir / "out" / "report.json").read_text())
+    info = json.loads((run_dir / "info.json").read_text())
+    outputs = {p.name: f"out/{p.name}" for p in (run_dir / "out").iterdir()}
+    lines = {}
     for lang in langs:
         data = json.loads((run_dir / "dub" / f"{lang}.json").read_text())
-        rep = data["report"]
-        video = f"out/video.{lang}.mp4"
-        player = (f"<video controls width=640 src='{video}'></video>" if (run_dir / video).exists()
-                  else f"<audio controls src='out/dub.{lang}.m4a'></audio>")
-        parts.append(f"<h2>{lang}: {rep['ok']}/{rep['lines']} ok · late p95 {rep['late_p95']}s</h2>{player}"
-                     "<table border=1 cellpadding=4 style='border-collapse:collapse'>"
-                     "<tr><th>#</th><th>t</th><th>source</th><th>dub</th><th>tempo</th><th>ok</th><th>actions</th></tr>")
-        for u, r in zip(units, data["rows"]):
-            acts = " → ".join(a["do"] for a in r["actions"])
-            parts.append(f"<tr><td>{u['id']}</td><td>{u['start']:.1f}</td><td>{html.escape(u['text'])}</td>"
-                         f"<td>{html.escape(r['text'])}</td><td>{r['tempo']}</td>"
-                         f"<td>{'✓' if r['ok'] else '✗ ' + html.escape(r['issue'])}</td><td>{acts}</td></tr>")
-        parts.append("</table>")
+        lines[lang] = {"report": data["report"], "rows": [
+            {**r, "start": u["start"], "end": u["end"], "src": u["text"], "spk": u.get("spk"), "voice": u.get("voice")}
+            for u, r in zip(units, data["rows"])]}
+    events = [json.loads(l) for l in (run_dir / "events.jsonl").read_text().splitlines() if l.strip()]
+    return {"job": {"id": run_dir.name, "title": info.get("title"), "url": f"https://youtu.be/{info.get('id')}",
+                    "status": "done", "stage": "Done", "report": report, "outputs": outputs,
+                    "thumbnail": f"https://i.ytimg.com/vi/{info.get('id')}/hqdefault.jpg"},
+            "events": events, "lines": lines}
+
+
+def write(run_dir: Path, wav: Path, units: list[dict], langs: list[str]) -> Path:
+    page = (WEB / "index.html").read_text()
+    css = (WEB / "style.css").read_text()
+    js = (WEB / "app.js").read_text()
+    logo = "data:image/png;base64," + base64.b64encode((WEB / "logo.png").read_bytes()).decode()
+    data = json.dumps(job_data(run_dir, units, langs), ensure_ascii=False).replace("</", "<\\/")
+    page = page.replace('<link rel="stylesheet" href="style.css">', f"<style>{css}</style>")
+    page = page.replace('src="logo.png"', f'src="{logo}"').replace('href="favicon.png"', f'href="{logo}"')
+    page = page.replace('<script type="module" src="app.js"></script>',
+                        f"<script>window.LOCAL_JOB = {data};</script>\n<script type=\"module\">{js}</script>")
     p = run_dir / "review.html"
-    p.write_text("<meta charset=utf-8><body style='font:14px system-ui;max-width:1100px;margin:auto'>" + "".join(parts))
+    p.write_text(page)
     return p

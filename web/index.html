@@ -58,8 +58,13 @@
         <div class="downloads" id="downloads"></div>
       </div>
       <aside class="log">
-        <div class="log-head"><span class="dot" id="live-dot"></span><b>Agent log</b><span class="muted" id="log-count"></span></div>
-        <ol id="log"></ol>
+        <div class="log-head" role="tablist">
+          <button class="tab" id="tab-tx" role="tab" aria-selected="true">Transcript</button>
+          <button class="tab" id="tab-log" role="tab" aria-selected="false"><span class="dot" id="live-dot"></span>Agent log</button>
+          <span class="muted" id="log-count"></span>
+        </div>
+        <ol id="tx" class="tx"><li class="muted pad">The transcript appears when the dub is ready.</li></ol>
+        <ol id="log" hidden></ol>
       </aside>
     </div>
 

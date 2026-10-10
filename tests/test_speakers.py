@@ -24,3 +24,14 @@ def test_main_speaker_gets_clone_others_get_presets():
 def test_no_consent_means_no_clone_for_anyone():
     us = [{"spk": "1", "start": 0, "end": 10}]
     assert speakers.default_cast(us, clone="voice_me", consent=False)["1"] != "voice_me"
+
+
+def test_clone_goes_to_verified_speaker_not_the_loudest():
+    us = [{"spk": "1", "start": 0, "end": 10}, {"spk": "2", "start": 10, "end": 12}]
+    cast = speakers.default_cast(us, clone="voice_me", consent=True, verified={"2"})
+    assert cast["2"] == "voice_me" and cast["1"] != "voice_me"
+
+
+def test_no_verified_speaker_means_no_clone():
+    us = [{"spk": "1", "start": 0, "end": 10}]
+    assert speakers.default_cast(us, clone="voice_me", consent=True, verified=set())["1"] != "voice_me"

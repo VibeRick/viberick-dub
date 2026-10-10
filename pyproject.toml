@@ -19,7 +19,13 @@ dependencies = [
 dev = [
     "pytest>=8",
 ]
-sep = ["demucs>=4.0.1", "torch>=2.4", "torchaudio>=2.4", "soundfile>=0.12"]
+sep = [
+    "demucs>=4.0.1",
+    "torch>=2.4",
+    "torchaudio>=2.4",
+    "soundfile>=0.12",
+    "speechbrain>=1.1.1",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

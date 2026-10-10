@@ -10,6 +10,9 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev --group sep --no-install-project
 # Bake the demucs model weights into the image so a job does not download them.
 RUN uv run --no-sync python -c "from demucs.pretrained import get_model; get_model('htdemucs')"
+# Speaker-verification model for the consent lock (ECAPA-TDNN, ~80 MB).
+ENV DUB_ECAPA_DIR=/app/ecapa
+RUN uv run --no-sync python -c "from speechbrain.inference.speaker import EncoderClassifier as E; E.from_hparams(source='speechbrain/spkrec-ecapa-voxceleb', savedir='/app/ecapa')"
 COPY dub ./dub
 COPY server ./server
 ENV PATH="/app/.venv/bin:$PATH"

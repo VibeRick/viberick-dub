@@ -36,11 +36,16 @@ def talk_time(units: list[dict]) -> Counter:
     return t
 
 
-def default_cast(units: list[dict], clone: str, consent: bool) -> dict[str, str]:
+def default_cast(units: list[dict], clone: str, consent: bool, verified: set[str] | None = None) -> dict[str, str]:
+    """verified = speakers whose voice matched the consent recording (None: not checked, then the main
+    speaker is assumed to be the channel owner). The clone goes to at most one speaker."""
     order = [s for s, _ in talk_time(units).most_common()]
+    owner = None
+    if consent:
+        owner = order[0] if verified is None else next((s for s in order if s in verified), None)
     cast, presets = {}, iter(_ROTATION * 4)
-    for k, s in enumerate(order):
-        cast[s] = clone if (k == 0 and consent) else next(presets)
+    for s in order:
+        cast[s] = clone if s == owner else next(presets)
     return cast
 
 
@@ -60,12 +65,33 @@ def _sample(vocals: Path, units: list[dict], spk: str, out: Path, sec: float = 8
     return out
 
 
+def verify_speakers(units: list[dict], vocals: Path | None, run_dir: Path) -> dict[str, float] | None:
+    """Cosine similarity of each speaker to the consent recording; None when it cannot be checked."""
+    from . import verify
+    ref = verify.reference()
+    if not ref or not vocals or not vocals.exists():
+        return None
+    scores = {}
+    for s in talk_time(units):
+        p = verify.speaker_sample(vocals, units, s, run_dir / f"verify_{s}.wav")
+        if p:
+            scores[s] = round(verify.cosine(ref, verify.embed(p)), 3)
+    return scores
+
+
 def cast(units: list[dict], vocals: Path | None, clone: str, consent: bool, run_dir: Path) -> dict[str, dict]:
-    """{spk: {"voice", "why", "seconds"}}; Gemini picks presets for non-clone speakers when audio exists."""
-    base = default_cast(units, clone, consent)
+    """{spk: {"voice", "why", "seconds", "match"}}. Consent is two locks: the channel has a consent recording
+    on file, and the speaker's voice verifies against it. Gemini casts presets for everyone else."""
+    from . import verify
+    scores = verify_speakers(units, vocals, run_dir) if consent else None
+    verified = None if scores is None else {s for s, v in scores.items() if v >= verify.THRESHOLD}
+    if consent and scores is None:
+        verified = set()   # cannot verify → never clone
+    base = default_cast(units, clone, consent, verified)
     tt = talk_time(units)
-    out = {s: {"voice": v, "why": "creator's cloned voice (consent on file)" if v == clone else "rotation",
-               "seconds": round(tt[s], 1)} for s, v in base.items()}
+    out = {s: {"voice": v, "why": "creator's cloned voice (consent on file, voice verified)" if v == clone
+               else "rotation", "seconds": round(tt[s], 1),
+               **({"match": scores[s]} if scores and s in scores else {})} for s, v in base.items()}
     if not vocals or not vocals.exists():
         return out
     taken = {v for v in base.values() if v == clone}

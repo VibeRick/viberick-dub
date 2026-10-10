@@ -63,4 +63,5 @@ def publish_results(run_dir: Path, job_id: str, langs: list[str]) -> None:
     for lang in langs:
         data = json.loads((run_dir / "dub" / f"{lang}.json").read_text())
         ref.collection("lines").document(lang).set({"report": data["report"], "rows": [
-            {**r, "start": u["start"], "src": u["text"]} for u, r in zip(units, data["rows"])]})
+            {**r, "start": u["start"], "end": u["end"], "src": u["text"], "spk": u.get("spk"),
+             "voice": u.get("voice")} for u, r in zip(units, data["rows"])]})
