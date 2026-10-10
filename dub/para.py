@@ -15,7 +15,8 @@ def groups(units: list[dict], max_lines: int = 5, max_gap: float = 1.5, max_sec:
         if cur:
             gap = u["start"] - units[cur[-1]]["end"]
             span = u["end"] - units[cur[0]]["start"]
-            if gap > max_gap or len(cur) >= max_lines or span > max_sec:
+            spk_change = u.get("spk") != units[cur[-1]].get("spk")
+            if gap > max_gap or len(cur) >= max_lines or span > max_sec or spk_change:
                 out.append(cur)
                 cur = []
         cur.append(i)
@@ -49,9 +50,9 @@ def quiet_point(pcm: bytes, t: float, rate: int, search: float = 0.15, win: floa
     return round(best, 3)
 
 
-def synth_group(lines: list[str], lang: str, d: Path, ids: list[int]) -> bool:
+def synth_group(lines: list[str], lang: str, d: Path, ids: list[int], voice_id: str | None = None) -> bool:
     take = d / f"take_{ids[0]:04d}.wav"
-    voice.synth(" ".join(lines), take)
+    voice.synth(" ".join(lines), take, voice_id=voice_id)
     if len(lines) == 1:
         take.replace(d / f"{ids[0]:04d}.tts.wav")
         return True

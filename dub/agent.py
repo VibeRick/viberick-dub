@@ -18,6 +18,12 @@ def repair_line(u: dict, text: str, src: str, lang: str, brief: dict, d: Path, r
         acts.append({"do": do, **kw})
         events.log(run_dir, "line", lang=lang, id=u["id"], do=do, **kw)
 
+    if not text.strip():   # translator dropped a pure filler ("음…"): a short silence, not a failed job
+        out.write_bytes(voice._silence_wav(0.3))
+        act("skip")
+        return {"id": u["id"], "text": "", "dur": 0.3, "slot": u["slot"], "tempo": 1.0, "actions": acts,
+                "ok": True, "issue": "", "heard": ""}
+
     dur = voice.duration(raw) if pre else voice.synth(text, raw, voice_id=u.get("voice"))
     act("synth", dur=round(dur, 2), slot=u["slot"], pre=pre)
     for _ in range(2):

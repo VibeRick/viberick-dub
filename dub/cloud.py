@@ -45,11 +45,16 @@ def event_sink(job_id: str):
     return sink
 
 
-def upload_outputs(run_dir: Path, job_id: str) -> dict:
+def output_prefix(job_id: str, demo: bool) -> str:
+    """Demo jobs live under demo/; everything else under jobs/, which a bucket lifecycle rule deletes after 7 days."""
+    return f"{'demo' if demo else 'jobs'}/{job_id}"
+
+
+def upload_outputs(run_dir: Path, job_id: str, demo: bool = False) -> dict:
     bucket = storage.Client(project=config.GCP_PROJECT, credentials=config.gcp_credentials()).bucket(PUBLIC_BUCKET)
     urls = {}
     for p in sorted((run_dir / "out").iterdir()):
-        blob = bucket.blob(f"jobs/{job_id}/{p.name}")
+        blob = bucket.blob(f"{output_prefix(job_id, demo)}/{p.name}")
         ctype = "application/x-subrip" if p.suffix == ".srt" else mimetypes.guess_type(p.name)[0]
         blob.cache_control = "public, max-age=3600"
         blob.upload_from_filename(p, content_type=ctype)

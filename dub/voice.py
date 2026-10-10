@@ -2,6 +2,7 @@
 
 Send the bare line only: the model reads style instructions aloud (measured 2026-10-08)."""
 import base64
+import http.client
 import io
 import json
 import os
@@ -34,8 +35,8 @@ class RateGate:
         time.sleep(max(0.0, t - now))
 
 
-# Tier 3 key: 60/60 ok at 120/min (probe 2026-10-10). Tier 1 keys need 10.
-GATE = RateGate(int(os.environ.get("DUB_TTS_PER_MIN", "240")))
+# Tier 3 key: 60/60 ok at 120/min (probe 2026-10-10); the default is the measured rate. Tier 1 keys need 10.
+GATE = RateGate(int(os.environ.get("DUB_TTS_PER_MIN", "120")))
 
 
 def _find_audio(x) -> str | None:
@@ -68,7 +69,7 @@ def _request(text: str, voice_id: str) -> bytes:
             if e.code not in (429, 500, 503) or i == 7:
                 raise RuntimeError(f"TTS {e.code}: {e.read().decode()[:300]}") from e
             time.sleep(min(60, 2 ** i))
-        except (urllib.error.URLError, TimeoutError):
+        except (urllib.error.URLError, TimeoutError, http.client.HTTPException, ConnectionError, ValueError):
             if i == 7:
                 raise
             time.sleep(min(60, 2 ** i))

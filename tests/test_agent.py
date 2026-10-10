@@ -51,3 +51,11 @@ def test_shorten_that_guts_the_line_is_rejected(monkeypatch, tmp_path):
     row = agent.repair_line({"id": 0, "text": "원문", "slot": 0.6}, "そうですね", "ko", "ja", {}, tmp_path, tmp_path, pre=False)
     assert row["text"] == "そうですね"
     assert [a["do"] for a in row["actions"]] == ["synth", "check"]
+
+
+def test_empty_translation_becomes_a_silent_skip(monkeypatch, tmp_path):
+    monkeypatch.setattr(agent.voice, "synth", lambda *a, **k: (_ for _ in ()).throw(AssertionError("synth on empty")))
+    monkeypatch.setattr(agent.events, "log", lambda *a, **k: None)
+    row = agent.repair_line({"id": 3, "text": "음…", "slot": 1.0}, "", "ko", "en", {}, tmp_path, tmp_path, pre=False)
+    assert row["ok"] and [a["do"] for a in row["actions"]] == ["skip"]
+    assert abs(agent.voice.duration(tmp_path / "0003.wav") - 0.3) < 0.01

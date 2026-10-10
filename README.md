@@ -91,14 +91,16 @@ open runs/<id>.180s/review.html                 # video + synced transcript + ag
 
 ```bash
 gcloud builds submit --tag $REGION-docker.pkg.dev/$PROJECT/viberick-dub/app:vN
-gcloud run jobs deploy viberick-dub-worker --image ... --command python --args=-m,dub.worker
+gcloud run jobs deploy viberick-dub-worker --image ... --command python --args=-m,dub.worker \
+  --cpu 4 --memory 8Gi --task-timeout 3600 --max-retries 0
 gcloud run deploy viberick-dub --image ... --allow-unauthenticated
 firebase deploy --only hosting:viberick-dub,firestore:rules
 ```
 
 ## Limits
 
-- Public demo dubs the first 3 minutes of a video, 40 jobs a day.
+- Public demo dubs the first 3 minutes of a video, 40 jobs a day. Outputs of public jobs are deleted after 7 days;
+  only the showcase examples stay.
 - Overlapping speech is assigned to the dominant speaker.
 - Lip sync is not attempted; timing is matched sentence by sentence.
 

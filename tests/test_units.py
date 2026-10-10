@@ -58,3 +58,12 @@ def test_requested_targets_never_include_the_source():
     assert units.pick_targets(["en", "ko", "ja"], "ko") == ["en", "ja"]
     assert units.pick_targets(None, "en") == ["ko", "ja", "zh-Hans"]
     assert units.pick_targets(["ko"], "ko") == ["en", "ja", "zh-Hans"]   # nothing left → all others
+
+
+def test_source_guess_ignores_links_and_tags():
+    info = {"title": "SEO 완벽 정리", "description": "https://example.com/aaaa https://another.example.org/bbbb #SEO #GEO"}
+    assert units.guess_source(info) == "ko"
+
+
+def test_pick_targets_dedupes():
+    assert units.pick_targets(["en", "en", "ja"], "ko") == ["en", "ja"]

@@ -79,5 +79,16 @@ def flow_gaps(units: list[dict], from_take: list[bool], repaired: list[bool],
 
 def pick_targets(requested: list[str] | None, src: str) -> list[str]:
     """Requested languages minus the detected source (the UI cannot know the source before transcription)."""
-    langs = [lang for lang in (requested or []) if lang != src and lang in config.LANGS]
+    langs = [lang for lang in dict.fromkeys(requested or []) if lang != src and lang in config.LANGS]
     return langs or targets_for(src)
+
+
+_NOISE = re.compile(r"https?://\S+|www\.\S+|#\S+|@\S+")
+
+
+def guess_source(info: dict) -> str:
+    """Language for Chirp before any audio is heard: title counted three times, description once,
+    links/hashtags/handles removed (they are Latin text in any language and tipped Korean videos to en)."""
+    title = _NOISE.sub(" ", info.get("title") or "")
+    desc = _NOISE.sub(" ", info.get("description") or "")
+    return detect_language(f"{title} {title} {title} {desc}")

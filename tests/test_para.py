@@ -16,7 +16,7 @@ def test_cut_points_from_words():
 
 def test_synth_group_rejects_cut_past_take_end(monkeypatch, tmp_path):
     from dub import voice
-    monkeypatch.setattr(para.voice, "synth", lambda text, out: (out.write_bytes(voice._silence_wav(1.0)), 1.0)[1])
+    monkeypatch.setattr(para.voice, "synth", lambda text, out, **k: (out.write_bytes(voice._silence_wav(1.0)), 1.0)[1])
     words = [{"w": "Hello", "start": 0.1, "end": 0.5}, {"w": "there.", "start": 2.0, "end": 2.4}]
     monkeypatch.setattr(para.stt, "chirp_sync_words", lambda b, lang: words)
     assert para.synth_group(["Hello", "there."], "en", tmp_path, [0, 1]) is False
@@ -29,3 +29,8 @@ def test_quiet_point_snaps_to_lowest_energy():
     pcm = loud * 500 + quiet * 40 + loud * 460          # quiet 0.50–0.54 s
     t = para.quiet_point(pcm, 0.6, rate, search=0.15)
     assert 0.5 <= t <= 0.54
+
+
+def test_groups_never_mix_speakers():
+    u = [{"start": 0.0, "end": 1.0, "spk": "1"}, {"start": 1.1, "end": 2.0, "spk": "2"}, {"start": 2.1, "end": 3.0, "spk": "2"}]
+    assert para.groups(u) == [[0], [1, 2]]

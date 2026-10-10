@@ -58,14 +58,16 @@ def duration(audio: Path) -> float:
     return float(r.stdout.strip())
 
 
-def _words(results, offset: float) -> list[dict]:
+def _words(results, offset: float, chunk: int | None = None) -> list[dict]:
+    """chunk: speaker labels are only consistent within one recognition request, so they are scoped to it."""
     out = []
     for r in results:
         if r.alternatives:
             for w in r.alternatives[0].words:
                 out.append({"w": w.word, "start": round(offset + w.start_offset.total_seconds(), 3),
                             "end": round(offset + w.end_offset.total_seconds(), 3),
-                            **({"spk": w.speaker_label} if w.speaker_label else {})})
+                            **({"spk": w.speaker_label if chunk is None else f"{chunk}:{w.speaker_label}"}
+                               if w.speaker_label else {})})
     return out
 
 
@@ -86,7 +88,7 @@ def chirp_words(audio: Path, lang: str, run_dir: Path) -> list[dict]:
         res = _client().batch_recognize(request=req).result(timeout=3600).results[uri]
         if res.error and res.error.code:
             raise RuntimeError(f"chirp_3 chunk {i}: {res.error.message}")
-        words += _words(res.transcript.results, a)
+        words += _words(res.transcript.results, a, chunk=i)
         part.unlink()
     return words
 

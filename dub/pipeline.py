@@ -111,7 +111,7 @@ def _safe_group(g, us, texts, lang, d) -> bool:
     if all((d / f"{us[i]['id']:04d}.tts.wav").exists() for i in g):
         return True
     try:
-        return para.synth_group([texts[i] for i in g], lang, d, [us[i]["id"] for i in g])
+        return para.synth_group([texts[i] for i in g], lang, d, [us[i]["id"] for i in g], us[g[0]].get("voice"))
     except Exception:  # noqa: BLE001  per-line synthesis in the agent is the fallback
         return False
 
@@ -131,7 +131,7 @@ def main(url: str, to: list[str] | None = None, max_sec: float | None = None, se
         vocals, bed = separate.separate(run_dir)
         events.log(run_dir, "separated")
     audio, wav = run_dir / "source.stt.flac", run_dir / "source.wav"
-    src_guess = unitsmod.detect_language(f"{info.get('title', '')} {info.get('description', '')}")
+    src_guess = unitsmod.guess_source(info)
     words = _cached(run_dir / "words.json", lambda: stt.chirp_words(audio, src_guess, run_dir))
     events.log(run_dir, "transcribed", words=len(words), engine="chirp_3")
     cues = _cached(run_dir / "cues.json", lambda: proofread.proofread(audio, words, info, src_guess))

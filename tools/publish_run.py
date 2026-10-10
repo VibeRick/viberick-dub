@@ -32,6 +32,6 @@ for line in (run_dir / "events.jsonl").read_text().splitlines():
         batch = cloud.db().batch()
 batch.commit()
 cloud.publish_results(run_dir, job_id, [l["lang"] for l in report["langs"]])
-urls = cloud.upload_outputs(run_dir, job_id)
+urls = cloud.upload_outputs(run_dir, job_id, demo=a.demo)
 ref.update({"status": "done", "stage": "Done", "outputs": urls, "report": report, "finished": time.time()})
 print(job_id, n, "events")
