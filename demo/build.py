@@ -127,9 +127,9 @@ def build() -> Path:
              still(CARDS / "title.png", d["n1"] + pad, n["n1"], TMP / "s1.mp4"),
              still(CARDS / "problem.png", d["n2"] + pad, n["n2"], TMP / "s2.mp4"),
              # typing + submit in real time, then the whole pipeline sped up under the narration
-             clip(live, 2.0, 395.0, d["n3"] + pad, n["n3"], TMP / "s3.mp4", crop="crop=1160:652:140:0,"),
+             clip(live, 2.0, 455.0, d["n3"] + pad, n["n3"], TMP / "s3.mp4", crop="crop=1160:652:140:0,"),
              # the agent log, zoomed
-             clip(live, 330.0, 392.0, d["n4"] + pad, n["n4"], TMP / "s4.mp4", crop="crop=760:428:560:150,"),
+             clip(live, 405.0, 462.0, d["n4"] + pad, n["n4"], TMP / "s4.mp4", crop="crop=760:428:560:150,"),
              clip(studio, 5.0, 5.0 + min(dur(studio) - 6, d["n5"] + pad), d["n5"] + pad, n["n5"], TMP / "s5.mp4",
                   crop="crop=1160:652:140:0,"),
              still(CARDS / "consent.png", d["n6"] + pad, n["n6"], TMP / "s6.mp4"),

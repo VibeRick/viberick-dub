@@ -8,3 +8,8 @@ voice/
 .venv/
 __pycache__/
 node_modules/
+demo/raw/
+demo/build/
+*.webm
+*.mp4
+deck/*.pptx
