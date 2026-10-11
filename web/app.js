@@ -363,7 +363,7 @@ function openLocal(L) {
 function renderJob() {
   const j = state.job;
   if (!j) return;
-  $("#worker-check").hidden = recordedMode || !tokenFor(j.id);
+  $("#worker-check").hidden = recordedMode || !tokenFor(j.id) || !["queued", "running"].includes(j.status);
   $("#j-title").textContent = j.title || j.report?.title || j.url;
   $("#source-caption-note").textContent = j.source_captioned === false ?
     "Caption-free source. Choose below-video or on-video captions without overlapping the original speech captions." :
@@ -569,6 +569,9 @@ function speakerIdentity(row, speakers) {
   const id = row.spk == null ? "" : String(row.spk);
   if (!id) return null;
   const entry = Array.isArray(speakers) ? speakers.find(s => String(s.spk ?? s.id) === id) : speakers?.[id];
+  // Diarization ids ("0:1") mean nothing to a viewer; number speakers in the order the cast lists them.
+  const order = (Array.isArray(speakers) ? speakers.map(s => String(s.spk ?? s.id)) : Object.keys(speakers || {})).indexOf(id);
+  const label = order >= 0 ? `Speaker ${order + 1}` : `Speaker ${id}`;
   if (typeof entry === "string") return {
     id,
     name: entry,
@@ -577,18 +580,24 @@ function speakerIdentity(row, speakers) {
   };
   return {
     id,
-    name: entry?.name || entry?.label || `Speaker ${id}`,
+    name: entry?.name || entry?.label || label,
     voice: entry?.voice || "",
     voiceType: entry?.voice_type || ""
   };
 }
 
+function speakerIds() {
+  return [...new Set(Object.values(state.lines).flatMap(data => (data.rows || []).filter(row => row.spk != null).map(row => String(row.spk))))].sort();
+}
+
 function speakerFor(row) {
-  return speakerIdentity(row, state.job?.report?.speakers || state.job?.speakers || {});
+  const person = speakerIdentity(row, state.job?.report?.speakers || state.job?.speakers || {});
+  const n = person ? speakerIds().indexOf(person.id) : -1;
+  return person && n >= 0 && person.name === `Speaker ${person.id}` ? { ...person, name: `Speaker ${n + 1}` } : person;
 }
 
 function speakerColor(id) {
-  const ids = [...new Set(Object.values(state.lines).flatMap(data => (data.rows || []).filter(row => row.spk != null).map(row => String(row.spk))))].sort();
+  const ids = speakerIds();
   return ["var(--spk-0)", "var(--spk-1)", "var(--spk-2)", "var(--spk-3)"][Math.max(0, ids.indexOf(id)) % 4];
 }
 

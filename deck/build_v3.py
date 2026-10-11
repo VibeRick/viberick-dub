@@ -34,7 +34,7 @@ def stat(slide, x, y, w, big, small, color=INK):
 
 
 def build():
-    full, demo = B.report("Fty2sz3dBwU"), B.report("Fty2sz3dBwU.180s")
+    full, demo = B.report("Fty2sz3dBwU"), B.report("Fty2sz3dBwU.180s")  # noqa: F841
     prs = Presentation(str(B.TEMPLATE))
     s = prs.slides
 
@@ -53,36 +53,28 @@ def build():
         tf.add_paragraph().add_run().text = lines[len(tf.paragraphs) - 1]
     B.image(s[0], B.A / "logo-v.png", Emu(7900000), Emu(3150000), Emu(950000), Emu(950000))
 
-    # 2 · Brief about the idea
+    # 2 · Brief about the idea: one elevator line
     t(s[2], L, TOP, Emu(3900000), Emu(3700000), [
-        ("Your voice. Every language.", {"size": 26, "bold": True, "gap": 12}),
-        "Paste a YouTube link and pick from 125 languages. An agent on Google Cloud transcribes it, translates each sentence to fit "
-        "the moment it is spoken, says it in the creator's own cloned voice, then listens to every line and repairs what is wrong.",
-        "Out come dubbed MP4s, M4A audio tracks ready for YouTube's multi-language audio, and SRT/VTT subtitles. "
-        "Creators review any line, edit it, and regenerate only that line.",
+        ("Paste a YouTube link. Get it back in 125 languages, in your own voice.", {"size": 26, "bold": True, "gap": 16}),
+        ("One Gemini agent on Google Cloud does it end to end, in minutes: it transcribes, translates each sentence "
+         "to fit its timing, speaks it, listens to every line and fixes what is wrong.", {"size": 14, "color": MUTED, "gap": 16}),
         ("Live: viberick-dub.web.app", {"bold": True, "color": ACC}),
-    ], size=13, gap=10)
+    ], size=14, gap=10)
     B.image(s[2], A / "ui-hero.png", Emu(4350000), TOP, Emu(4530000), Emu(3500000))
 
-    # 3 · Opportunities / differentiation / USP
+    # 3 · Opportunities / differentiation / USP: two numbers and one table
     B.set_title(s[3], "Opportunities · how it is different · USP")
-    t(s[3], L, TOP, Emu(4200000), Emu(3800000), [
-        ("The opportunity", {"bold": True, "size": 16, "color": ACC}),
-        "Creators who add multi-language audio get over 25% of watch time from views in the video's non-primary language (YouTube, Sep 2025).",
-        "More than 6 million people a day already watch 10+ minutes of auto-dubbed video (YouTube, Dec 2025).",
-        ("What's missing", {"bold": True, "size": 16, "color": ACC}),
-        "YouTube can auto-dub a Korean video only into English or Indonesian, the dubs cannot be edited, and they are not the creator's voice.",
-        "Dubbing tools charge about $0.50–0.67 per dubbed minute (ElevenLabs, Perso, Rask list prices, Oct 2026).",
-    ], size=12, gap=7)
-    t(s[3], Emu(4650000), TOP, Emu(4230000), Emu(3800000), [
-        ("How VibeRick Dub is different", {"bold": True, "size": 16, "color": ACC}),
-        ("125 target languages: every language Gemini 3.8 TTS speaks, Hindi, Tamil and Bangla included.", {"bullet": True}),
-        ("Own voice, consent-gated: two locks (channel consent + speaker verification) before a clone is used.", {"bullet": True}),
-        ("An agent that listens: Gemini hears every generated line and repairs wrong language, missing words and overruns.", {"bullet": True}),
-        ("Timed to the speaker: translation is budgeted to each sentence's slot and the voice's measured speaking rate.", {"bullet": True}),
-        ("Inspectable and editable: every agent decision is visible; edit one line, preview, accept.", {"bullet": True}),
-        ("≈ $0.03 per dubbed minute to run, so a price far below today's tools still leaves a strong margin.", {"bullet": True}),
-    ], size=12, gap=7)
+    stat(s[3], L, Emu(1150000), Emu(2700000), "25%+", "of watch time comes from other languages once creators add multi-language audio (YouTube, Sep 2025)", ACC)
+    stat(s[3], Emu(3150000), Emu(1150000), Emu(2700000), "6M+", "people a day watch 10+ minutes of auto-dubbed video (YouTube, Dec 2025)")
+    stat(s[3], Emu(6050000), Emu(1150000), Emu(2800000), "2", "languages YouTube's own auto-dubbing offers a Korean video: English, Indonesian")
+    B.table(s[3], L, Emu(2250000), W, [
+        ["", "YouTube auto-dubbing", "Paid tools (ElevenLabs, Rask, Perso)", "VibeRick Dub"],
+        ["Targets for a Korean video", "2", "90–130+", "125"],
+        ["The creator's own voice", "No", "Yes", "Yes, behind two consent locks"],
+        ["Fix one line", "No (“cannot edit”)", "Yes", "Yes, preview in the same voice"],
+        ["Every line checked by ear, auto-repaired", "No", "Not advertised", "Yes: Gemini listens to each take"],
+        ["Price per dubbed minute", "Free", "$0.50–0.67", "$0.20 (≈ $0.03 to run)"],
+    ], [0.30, 0.20, 0.25, 0.25], size=11, row_h=330000)
 
     # 4 · Features
     feats = [
@@ -100,19 +92,22 @@ def build():
         t(s[4], Emu(265350 + col * 4350000), Emu(1180000 + row * 900000), Emu(4200000), Emu(860000),
           [(h, {"bold": True, "size": 14, "gap": 3}), (d, {"color": MUTED, "size": 12})])
 
-    # 5 · Process flow
-    B.image(s[5], A / "flow.png", L, TOP, W, Emu(2400000))
-    t(s[5], L, Emu(3700000), W, Emu(900000), [
-        ("Every step writes an event to Firestore, so the creator watches the agent decide in real time. "
-         "Unresolved lines stay flagged in the studio instead of being silently shipped.", {"size": 13, "color": MUTED})])
+    # 5 · Process flow: what the creator does on top, what the agent does underneath
+    B.image(s[5], A / "flow2.png", L, TOP, W, Emu(2600000))
+    t(s[5], L, Emu(3900000), W, Emu(700000), [
+        ("Every agent step writes an event to Firestore, so the creator watches the decisions live. "
+         "A line that still fails after repairs is flagged in the studio, never silently shipped.", {"size": 12, "color": MUTED})])
 
-    # 6 · Wireframes → the real studio
-    B.image(s[6], A / "ui-studio.png", L, TOP, Emu(5300000), Emu(3600000))
-    t(s[6], Emu(5750000), TOP, Emu(3130000), Emu(3600000), [
+    # 6 · Wireframes → the deployed studio, on a two-speaker podcast dubbed into Hindi
+    B.image(s[6], A / "ui-studio.png", L, TOP, Emu(5500000), Emu(3600000))
+    t(s[6], Emu(5950000), TOP, Emu(2930000), Emu(3600000), [
         ("The studio", {"bold": True, "size": 18}),
-        "Player with same-position language switching, synced transcript, live agent activity, a timeline of every line in every language, and a line inspector.",
+        "A two-speaker podcast dubbed into Hindi, Tamil and Spanish by the deployed app.",
+        ("Switch language at the same playback moment.", {"bullet": True}),
+        ("Speakers numbered and coloured; each got its own matched voice.", {"bullet": True}),
+        ("Transcript with source and dub, live agent log.", {"bullet": True}),
         ("Deployed UI, not a mock: viberick-dub.web.app", {"size": 12, "color": ACC}),
-    ], size=13, gap=10)
+    ], size=12, gap=8)
 
     # 7 · Architecture
     B.image(s[7], A / "arch.png", L, TOP, W, Emu(3700000))
@@ -150,29 +145,33 @@ def build():
         ("Estimates exclude storage egress and proxy download costs.", {"size": 10, "color": MUTED}),
     ], size=12, gap=7)
 
-    # 10 · Snapshots
-    B.image(s[10], A / "ui-lines.png", L, TOP, W, Emu(3300000))
-    t(s[10], L, Emu(4500000), W, Emu(400000), [
-        ("Line review and inspector, showing the real repair history of one line: “Said ‘WhyBrick’ instead of ‘VibeRick’” → generated again → passed. "
-         "The timeline and live agent log are on the same page.", {"size": 11, "color": MUTED})])
+    # 10 · Snapshots: four real screens
+    cw, ch, gx, gy = Emu(4250000), Emu(1450000), Emu(130000), Emu(400000)
+    shots = [("ui-hero.png", "Landing: the hero is a working player; switch languages while it plays."),
+             ("ui-picker.png", "Pick up to 4 of 125 languages; the source language is skipped."),
+             ("ui-lines.png", "Every line: source, dub, fit, agent verdict; edit one line and preview it."),
+             ("ui-timeline.png", "Timeline of every line in every language, repairs marked.")]
+    for k, (f, cap) in enumerate(shots):
+        x, y = L + (k % 2) * (cw + gx), TOP + (k // 2) * (ch + gy)
+        B.image(s[10], A / f, x, y, cw, ch)
+        t(s[10], x, y + ch + Emu(20000), cw, Emu(300000), [(cap, {"size": 10, "color": MUTED})])
 
     # 11 · Performance / benchmarking
-    ok3, n3 = sum(l["ok"] for l in demo["langs"]), sum(l["lines"] for l in demo["langs"])
     okf, nf = sum(l["ok"] for l in full["langs"]), sum(l["lines"] for l in full["langs"])
     stat(s[11], L, TOP, Emu(2100000), f"{okf}/{nf}", "lines passed Gemini's listening check · full 15:05 video, 3 languages", ACC)
-    stat(s[11], Emu(2450000), TOP, Emu(2100000), f"{ok3}/{n3}", "3 min × 3 languages, end to end in 2:52")
-    stat(s[11], Emu(4600000), TOP, Emu(2100000), "≤ 0.16 s", "p95 line end overrun vs the original speech")
-    stat(s[11], Emu(6750000), TOP, Emu(2100000), "0.90", "creator voice match · others ≤ 0.09 · gate 0.45")
-    B.table(s[11], L, Emu(2350000), W, [
-        ["Transcription (15:05 Korean video, 3 runs)", "Character error", "Timing |dt| p50"],
-        ["Gemini 3.8 Flash alone", "10.6–11.8%", "5–12 s (drifts up to 42 s)"],
-        ["Chirp 3 alone", "8.6%", "0.22 s"],
-        ["Chirp 3 + Gemini proofread (ours)", "7.6–7.9%", "0.22–0.24 s"],
-    ], [0.5, 0.22, 0.28], size=12, row_h=360000)
-    t(s[11], L, Emu(3900000), W, Emu(900000), [
-        ("Deployed run, 2026-10-11: a two-speaker Google DeepMind podcast excerpt (3 min, English) into Korean, Japanese and Chinese "
-         "on Cloud Run Jobs: 115/117 lines passed after repairs, 2 flagged for a human, 9 min 8 s from submit to finished MP4s.", {"size": 12, "gap": 4}),
-        ("STT reference: the creator's own edited captions. Automated listening checks are not a native-speaker rating.", {"size": 10, "color": MUTED})])
+    stat(s[11], Emu(2450000), TOP, Emu(2100000), "121/123", "two-speaker podcast → Hindi, Tamil, Spanish · 8 min 8 s on Cloud Run")
+    stat(s[11], Emu(4600000), TOP, Emu(2100000), "7 min", "paste a link → finished Spanish dub, 24/24 lines (live app test)")
+    stat(s[11], Emu(6750000), TOP, Emu(2100000), "≤ 0.16 s", "p95 line-end overrun vs the original speech")
+    B.table(s[11], L, Emu(2300000), W, [
+        ["Second opinion: Chirp 3 transcribes each dubbed line back", "Gemini listening check", "Chirp round-trip, median character error"],
+        ["Hindi (two-speaker podcast, 3 min)", "41/41", "4.0%"],
+        ["Tamil", "40/41", "5.8%"],
+        ["Spanish", "40/41", "0.0%"],
+    ], [0.5, 0.22, 0.28], size=12, row_h=340000)
+    t(s[11], L, Emu(3800000), W, Emu(900000), [
+        ("Two different models agree: Gemini judges each take inside the loop; Chirp 3, which never saw the script, "
+         "reads the audio back. Most residual error is English names written in native script.", {"size": 12, "gap": 4}),
+        ("Automated checks are not a native-speaker rating; tools/roundtrip_check.py reproduces the table.", {"size": 10, "color": MUTED})])
 
     # 12 · Future
     t(s[12], L, TOP, Emu(4200000), Emu(3800000), [
@@ -216,9 +215,10 @@ def build():
     ], [0.48, 0.52], size=12, row_h=420000)
 
     notes = {
-        3: "YouTube multi-language audio: blog.youtube/news-and-events/multi-language-audio/ (2025-09-10). Auto-dub viewers and 27 languages: blog.google/intl/en-in/products/platforms/unlocking-a-global-audience-with-auto-dubbing/ (2026-02-05). Korean → English/Indonesian only; cannot edit: support.google.com/youtube/answer/15569972. Prices: elevenlabs.io/pricing (Pro $99/600K credits, 3,000 credits/min), perso.ai/en/pricing (Pro $99 / 180 min), rask.ai/pricing (Creator Pro annual $799 / 1,200 min); per-minute values computed 2026-10-11.",
+        6: "Screens: deployed studio, job PqVbypvxDto-7c84a9 (Google DeepMind: The Podcast excerpt, preset voices).",
+        3: "ElevenLabs dubbing 90+ languages: elevenlabs.io/docs/capabilities/dubbing; Rask 130+: rask.ai. YouTube multi-language audio: blog.youtube/news-and-events/multi-language-audio/ (2025-09-10). Auto-dub viewers and 27 languages: blog.google/intl/en-in/products/platforms/unlocking-a-global-audience-with-auto-dubbing/ (2026-02-05). Korean → English/Indonesian only; cannot edit: support.google.com/youtube/answer/15569972. Prices: elevenlabs.io/pricing (Pro $99/600K credits, 3,000 credits/min), perso.ai/en/pricing (Pro $99 / 180 min), rask.ai/pricing (Creator Pro annual $799 / 1,200 min); per-minute values computed 2026-10-11.",
         9: "Gemini text cost is recorded token usage priced at configured rates (dub/gem.py), not an invoice. Korean overseas watch share: view.asiae.co.kr/en/article/2026081014010865557 (YouTube VP, paraphrased, 2026-08-10). Market estimate if asked: Valuates, AI dubbing USD 783M (2023) → 1.88B (2030), via Speech Technology Magazine.",
-        11: "runs/Fty2sz3dBwU/out/report.json (full), runs/Fty2sz3dBwU.180s/out/report.json (3 min). STT: RESEARCH-2026-10-10.md, experiments/2026-10-10-stt/score.txt. ECAPA: voice/ecapa.py.",
+        11: "Full: runs/Fty2sz3dBwU/out/report.json. Podcast: Cloud Run job PqVbypvxDto-7c84a9; round trip: docs/validation/roundtrip-PqVbypvxDto-7c84a9.json. Live test: job Fty2sz3dBwU-95bdef (2026-10-11). Transcription comparison (Chirp 3 + Gemini 7.6–7.9% vs Chirp 8.6% CER): RESEARCH-2026-10-10.md.",
     }
     for i, n in notes.items():
         s[i].notes_slide.notes_text_frame.text = n

@@ -256,7 +256,7 @@ body.in-studio #landing { display: none; }
   height: 38px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--line-2); background: transparent;
   cursor: pointer; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; transition: all .15s var(--ease);
 }
-.tracks button:hover:not(:disabled), .seg button:hover { background: var(--s2); }
+.tracks button:hover:not(:disabled):not([aria-pressed="true"]), .seg button:hover:not([aria-pressed="true"]) { background: var(--s2); }
 .tracks button[aria-pressed="true"], .seg button[aria-pressed="true"] { background: var(--ink); color: var(--ground); border-color: var(--ink); }
 .tracks button:disabled { opacity: .5; cursor: default; }
 .tracks small { font: 11px var(--mono); color: var(--ink-3); }

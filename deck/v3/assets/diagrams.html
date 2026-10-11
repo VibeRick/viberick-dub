@@ -26,6 +26,22 @@ svg{position:absolute;inset:0;z-index:0}
 .loopbar span{font:500 16px 'JetBrains Mono';padding:7px 12px;border-radius:8px;border:1.5px solid #ff6a2b}
 .loopbar .h{border-color:#d68a00;color:#a96d00}
 .loopbar .t{border:0;color:#7d7a74;padding:0}
+.lane{display:grid;grid-template-columns:150px 1fr;gap:18px;align-items:stretch}
+.lane>.who{font:500 15px 'JetBrains Mono';letter-spacing:.08em;text-transform:uppercase;color:#7d7a74;padding-top:18px}
+.cards{display:grid;gap:16px}
+.c4{grid-template-columns:repeat(4,1fr)}.c5{grid-template-columns:1fr 1.15fr 1fr 1.5fr 1fr}
+.card{border:1.5px solid #d6d4cf;border-radius:14px;padding:16px 18px;background:#fafaf8;position:relative}
+.card b{display:block;font:600 21px 'Inter Tight';margin-bottom:6px}
+.card p{margin:0;font-size:14.5px;color:#3a3936;line-height:1.4}
+.card em{display:block;margin-top:8px;font:500 12.5px 'JetBrains Mono';color:#7d7a74;font-style:normal}
+.me{background:#111214;border-color:#111214;color:#fff}.me p{color:#d9d7d2}.me em{color:#ff9a6b}
+.rep{border-color:#ff6a2b;background:#fff3ec}
+.ring{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.ring span{font:500 12.5px 'JetBrains Mono';padding:4px 8px;border-radius:6px;border:1.2px solid #ff6a2b;background:#fff}
+.ring .h{border-color:#d68a00;color:#a96d00}
+.c5 .card:not(:last-child)::after{content:"→";position:absolute;right:-15px;top:22px;font:600 18px Inter;color:#8a8781}
+.c4 .card:not(:last-child)::after{content:"→";position:absolute;right:-15px;top:22px;font:600 18px Inter;color:#8a8781}
+.mid{display:flex;justify-content:space-around;padding:10px 0 10px 168px;font:500 14px 'JetBrains Mono';color:#ff6a2b}
 </style></head><body>
 <div class="d" id="arch">
  <svg width="1600" height="560" id="sv"></svg>
@@ -52,6 +68,23 @@ svg{position:absolute;inset:0;z-index:0}
   <div class="step"><i>06</i><b>Mix &amp; ship</b><p>Original timeline over the music bed, −14 LUFS; MP4, M4A, SRT, VTT.</p><em>Cloud Run · Storage</em></div>
  </div>
  <div class="loopbar"><span class="t">repair loop →</span><span>measure</span><span>shorten</span><span>time-fit</span><span>Gemini listens</span><span>re-speak</span><span>re-translate</span><span class="h">flag a human</span></div>
+</div>
+<div class="d" id="flow2">
+ <div class="lane"><div class="who">Creator</div><div class="cards c4">
+  <div class="card me"><b>1 · Paste a link</b><p>Pick up to 4 of 125 languages. That’s the only input.</p><em>Firebase Hosting → Cloud Run API</em></div>
+  <div class="card me"><b>2 · Watch it work</b><p>Every agent decision streams in live: what it heard, fixed and checked.</p><em>Firestore listener</em></div>
+  <div class="card me"><b>3 · Review any line</b><p>Edit the words, hear a preview in the same voice, accept.</p><em>Only that line re-runs</em></div>
+  <div class="card me"><b>4 · Publish</b><p>MP4 per language, M4A tracks for YouTube multi-language audio, SRT/VTT.</p><em>Cloud Storage</em></div>
+ </div></div>
+ <div class="mid"><span>↓ starts one Cloud Run Job</span><span>↑ events</span><span>↑ lines + takes</span><span>↑ outputs</span></div>
+ <div class="lane"><div class="who">Agent<br>(Cloud Run Job)</div><div class="cards c5">
+  <div class="card"><b>Listen</b><p>Word timestamps and speakers; Gemini hears the audio and fixes names.</p><em>Chirp 3 · Gemini</em></div>
+  <div class="card"><b>Translate to time</b><p>A brief for tone and terms; each sentence fits the seconds it was spoken in.</p><em>Gemini 3.8 Flash</em></div>
+  <div class="card"><b>Speak</b><p>The creator’s own voice (with consent); a matched voice per other speaker.</p><em>Gemini TTS</em></div>
+  <div class="card rep"><b>Check &amp; repair, every line</b><p>Gemini listens to each take: right language, every word, right length.</p>
+   <div class="ring"><span>measure</span><span>shorten</span><span>time-fit</span><span>Gemini listens</span><span>re-speak</span><span>re-translate</span><span class="h">flag a human</span></div></div>
+  <div class="card"><b>Mix &amp; ship</b><p>On the original timeline over the music bed, −14 LUFS.</p><em>ffmpeg · Cloud Storage</em></div>
+ </div></div>
 </div>
 <script>
 const sv=document.getElementById('sv'),A=document.getElementById('arch').getBoundingClientRect();
