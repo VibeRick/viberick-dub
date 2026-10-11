@@ -1104,6 +1104,7 @@ async function loadExamples() {
     $("#stage").hidden = true;
   }
   cards.innerHTML = "";
+  if (featured) jobs.sort((a, b) => (b === featured) - (a === featured));  // the creator's own-voice sample leads
   for (const j of jobs) {
     const c = $("#t-card").content.cloneNode(true);
     const a = c.querySelector("a");
