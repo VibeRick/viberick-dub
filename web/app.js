@@ -363,7 +363,7 @@ function openLocal(L) {
 function renderJob() {
   const j = state.job;
   if (!j) return;
-  $("#worker-check").hidden = recordedMode || !tokenFor(j.id) || !["queued", "running"].includes(j.status);
+  $("#worker-check").hidden = recordedMode || !tokenFor(j.id) || !looksStalled(j);
   $("#j-title").textContent = j.title || j.report?.title || j.url;
   $("#source-caption-note").textContent = j.source_captioned === false ?
     "Caption-free source. Choose below-video or on-video captions without overlapping the original speech captions." :
@@ -385,8 +385,8 @@ function renderJob() {
     done: "Finished",
     partial: "Partially finished · review failed languages",
     error: "Job failed",
-    queued: "Queued",
-    running: j.stage || "Running"
+    queued: liveStatus(j),
+    running: liveStatus(j)
   })[j.status] || j.status;
   $("#activity-mode").textContent = running ? "Live events from this job. Completed languages become playable as they finish." : j.status === "error" ? "Recorded activity from a failed job. Any available language outputs can still be reviewed." : "Recorded activity from this job. Automated checks may still require human review.";
   $("#live-dot").classList.toggle("live", running);
@@ -395,13 +395,33 @@ function renderJob() {
     $("#activity-mode").textContent = "Archived events from the supplied run. This view does not start generation or connect to live job data.";
   }
   $("#ph-img").src = safeUrl(j.thumbnail || "");
-  $("#ph-text").textContent = j.status === "error" ? "This job failed. Please create a new job." : (j.stage || "Queued") + "…";
+  $("#ph-text").textContent = j.status === "error" ? "This job failed. Please create a new job." :
+    !j.stage || j.stage === "Queued" ? "Starting a Cloud Run worker… usually under a minute" : j.stage + "…";
   if (j.outputs) {
     renderTracks();
     renderStats();
   }
   renderSteps();
   renderOutcome();
+}
+
+// Mirrors the server's stale rule (server/app.py: QUEUE_TIMEOUT_SEC 600, LEASE_SEC 180).
+function looksStalled(j) {
+  const now = Date.now() / 1000;
+  if (j.status === "queued") return now > (j.created || now) + 600;
+  if (j.status === "running") return now > (j.lease_until || (j.heartbeat || j.started || now) + 180);
+  return false;
+}
+// Elapsed time and the stalled check change without a Firestore update.
+setInterval(() => {
+  const j = state.job;
+  if (recordedMode || !j || !["queued", "running"].includes(j.status)) return;
+  $("#j-status").textContent = liveStatus(j);
+  $("#worker-check").hidden = !tokenFor(j.id) || !looksStalled(j);
+}, 1000);
+function liveStatus(j) {
+  const stage = j.stage && j.stage !== "Queued" ? j.stage : "Starting a worker";
+  return `${stage} · ${mmss(Math.max(0, Date.now() / 1000 - (j.created || Date.now() / 1000)))}`;
 }
 
 $("#worker-check").onclick = async () => {
@@ -543,8 +563,10 @@ function choose(l, i) {
 
 function applySubs() {
   const mode = $("#caption-mode").value;
-  [...$("#video").textTracks].forEach(t => t.mode = mode === "overlay" ? "showing" : "hidden");
+  // "On video" is drawn by the page so the source line can sit under the dub line.
+  [...$("#video").textTracks].forEach(t => t.mode = "hidden");
   $("#caption-display").hidden = mode !== "below";
+  $("#caption-overlay").hidden = mode !== "overlay";
   highlight();
 }
 $("#caption-mode").onchange = applySubs;
@@ -638,14 +660,27 @@ function highlight() {
   });
   $("#tx").querySelectorAll("li").forEach((li, i) => li.classList.toggle("now", i === idx));
   const r = rs[idx];
-  $("#caption-target").textContent = r ? (state.track === "orig" ? r.src : r.text) : "";
+  const spoken = x => String(x || "").replace(/\[[^\]]*\]\s*/g, "").trim();  // drop [laughter]-style tags
+  $("#caption-target").textContent = r ? spoken(state.track === "orig" ? r.src : r.text) : "";
   $("#caption-source").hidden = !$("#source-subs").checked || state.track === "orig";
-  $("#caption-source").textContent = r?.src || "";
+  $("#caption-source").textContent = spoken(r?.src);
+  $("#ov-target").textContent = $("#caption-target").textContent;
+  $("#ov-source").textContent = spoken(r?.src);
+  $("#ov-source").hidden = $("#caption-source").hidden || !r;
+  $("#caption-overlay").classList.toggle("empty", !r);
   $("#timeline-seek").value = t;
   $("#timeline-clock").textContent = mmss(t) + " / " + mmss(duration());
   document.querySelectorAll(".playhead").forEach(x => x.style.left = `${Math.min(100,t/duration()*100)}%`);
   if (idx !== state.txNow) {
     state.txNow = idx;
+    // While playing, the inspector follows the spoken line unless the creator is editing one.
+    const editing = $("#inspector").contains(document.activeElement) || $("#line-editor")?.querySelector("audio, .draft");
+    if (idx >= 0 && !v.paused && !editing && idx !== state.selected) {
+      state.selected = idx;
+      renderInspector();
+      document.querySelectorAll(".interval.selected").forEach(x => x.classList.remove("selected"));
+      document.querySelectorAll(`.interval[data-l="${CSS.escape(state.track)}"][data-i="${idx}"]`).forEach(x => x.classList.add("selected"));
+    }
     const li = $("#tx").querySelector(`li[data-i="${idx}"]`);
     if (li && Date.now() - userScrolled > 4000) $("#tx").scrollTop = li.offsetTop - $("#tx").clientHeight / 3;
   }

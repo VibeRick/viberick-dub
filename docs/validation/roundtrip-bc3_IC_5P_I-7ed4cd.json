@@ -1,0 +1,932 @@
+[
+ {
+  "lang": "hi",
+  "lines": 43,
+  "mean_cer": 0.151,
+  "median_cer": 0.069,
+  "over_30pct": 8,
+  "rows": [
+   {
+    "id": 0,
+    "said": "टी माइनस 5 सेकंड और गिनती जारी।",
+    "chirp": "t - 5 सेकंड और गिनती जारी",
+    "cer": 0.292,
+    "gemini_ok": true
+   },
+   {
+    "id": 1,
+    "said": "अरे मार्क,",
+    "chirp": "अरे मार्क.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 2,
+    "said": "मिशन शुरू।",
+    "chirp": "मिशन शुरू।",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 3,
+    "said": "टी ज़ीरो, सभी हरी बत्तियां सही हैं।",
+    "chirp": "टी जीरो, सभी हरी बत्तियां सही हैं। टी",
+    "cer": 0.111,
+    "gemini_ok": true
+   },
+   {
+    "id": 4,
+    "said": "लो वो निकल पड़ी।",
+    "chirp": "लो, वो निकल पड़ी.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 5,
+    "said": "Houston, We Have a Podcast में स्वागत है।",
+    "chirp": "ह्यूस्टन वी हैव अ पॉडकास्ट में स्वागत है।",
+    "cer": 0.688,
+    "gemini_ok": true
+   },
+   {
+    "id": 6,
+    "said": "नमस्ते दोस्तों, Houston We Have a Podcast के लाइव एपिसोड में स्वागत है।",
+    "chirp": "नमस्ते दोस्तों, ह्यूस्टन वी हैव अ पॉडकास्ट के लाइव एपिसोड में स्वागत है।",
+    "cer": 0.386,
+    "gemini_ok": true
+   },
+   {
+    "id": 7,
+    "said": "मैं नासा का Gary Jordan हूँ।",
+    "chirp": "मैं NASA का गैरी जॉर्डन हूं।",
+    "cer": 0.682,
+    "gemini_ok": true
+   },
+   {
+    "id": 8,
+    "said": "हम कैमरों के सामने आकर यह एपिसोड लाइव रिकॉर्ड कर रहे हैं क्योंकि यह Houston We Have a Podcast का 200वां एपिसोड है।",
+    "chirp": "हम कैमरों के सामने आकर यह एपिसोड लाइव रिकॉर्ड कर रहे हैं क्योंकि यह ह्यूस्टन वी हैव अ पॉडकास्ट का 200 वां एपिसोड है।",
+    "cer": 0.242,
+    "gemini_ok": true
+   },
+   {
+    "id": 9,
+    "said": "तो सोचा कुछ खास करें।",
+    "chirp": "तो सोचा कुछ खास करें।",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 10,
+    "said": "इसे इंटरैक्टिव बनाएंगे।",
+    "chirp": "इसे इंटरेक्टिव बनाएंगे।",
+    "cer": 0.05,
+    "gemini_ok": true
+   },
+   {
+    "id": 11,
+    "said": "हम कुछ सवाल भी लेंगे।",
+    "chirp": "हम कुछ सवाल भी लेंगे।",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 12,
+    "said": "हम शो के लिए कुछ खास मेहमान ढूंढ रहे थे।",
+    "chirp": "हम शो के लिए कुछ खास मेहमान ढूंढ रहे थे।",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 13,
+    "said": "कोई मिला नहीं, तो हमारे खास मेहमान Dan Huot हैं।",
+    "chirp": "कोई मिला नहीं तो हमारे खास मेहमान डैन ह्यूअट हैं।",
+    "cer": 0.243,
+    "gemini_ok": true
+   },
+   {
+    "id": 14,
+    "said": "Dan, धन्यवाद",
+    "chirp": "धन्यवाद। धन्यवाद।",
+    "cer": 0.7,
+    "gemini_ok": false
+   },
+   {
+    "id": 15,
+    "said": "हाँ, आखिरी पसंद बनने का मज़ा ही अलग है।",
+    "chirp": "हां, आखिरी पसंद बनने का मजा ही अलग है।",
+    "cer": 0.069,
+    "gemini_ok": true
+   },
+   {
+    "id": 16,
+    "said": "Gary, दोबारा बुलाने का शुक्रिया।",
+    "chirp": "गैरी दोबारा बुलाने का शुक्रिया।",
+    "cer": 0.154,
+    "gemini_ok": true
+   },
+   {
+    "id": 17,
+    "said": "[हँसी] हम सच में आपको शो में लाना चाहते थे, क्योंकि शुरुआत आपने ही की थी।",
+    "chirp": "हम सच में आपको शो में लाना चाहते थे क्योंकि शुरुआत आपने ही की थी।",
+    "cer": 0.074,
+    "gemini_ok": true
+   },
+   {
+    "id": 18,
+    "said": "और आज हम बात करेंगे कि तब से अब तक आप क्या कर रहे थे।",
+    "chirp": "और आज हम बात करेंगे कि तब से अब तक आप क्या कर रहे थे?",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 19,
+    "said": "आप NASA TV और Commercial Crew मिशन कवरेज पर काम कर रहे हैं।",
+    "chirp": "आप NASA TV और कमर्शियल क्रू मिशन कवरेज पर काम कर रहे हैं?",
+    "cer": 0.304,
+    "gemini_ok": true
+   },
+   {
+    "id": 20,
+    "said": "तो हम उसके बारे में जानेंगे।",
+    "chirp": "तो हम उसके बारे में जानेंगे। तो",
+    "cer": 0.091,
+    "gemini_ok": true
+   },
+   {
+    "id": 21,
+    "said": "पॉडकास्ट पर चर्चा होगी और लाइव सवाल भी लेंगे।",
+    "chirp": "पॉडकास्ट पर चर्चा होगी और लाइव सवाल भी लेंगे।",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 22,
+    "said": "Facebook Live स्ट्रीम पर ठीक नीचे कमेंट करें।",
+    "chirp": "Facebook लाइव स्ट्रीम पर ठीक नीचे कमेंट करें।",
+    "cer": 0.108,
+    "gemini_ok": true
+   },
+   {
+    "id": 23,
+    "said": "तो Dan, शुरू करते हैं।",
+    "chirp": "तो डैन शुरू करते हैं।",
+    "cer": 0.188,
+    "gemini_ok": true
+   },
+   {
+    "id": 24,
+    "said": "मेरा पहला सवाल, आप चार साल पहले शो में मेहमान बने थे और अंतर्राष्ट्रीय अंतरिक्ष स्टेशन के PAO थे।",
+    "chirp": "मेरा पहला सवाल, आप 4 साल पहले शो में मेहमान बने थे और अंतरराष्ट्रीय अंतरिक्ष स्टेशन के पीएओ थे।",
+    "cer": 0.104,
+    "gemini_ok": true
+   },
+   {
+    "id": 25,
+    "said": "तब से आप क्या कर रहे हैं?",
+    "chirp": "तब से आप क्या कर रहे हैं?",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 26,
+    "said": "मज़ेदार बात है। हमने पहला एपिसोड वहीं टेबल पर दस फीट दूर बैठकर रिकॉर्ड किया था, सोचा था कोशिश करते हैं, बुरा लगा तो रिलीज़ नहीं करेंगे।",
+    "chirp": "मजेदार बात है। हमने पहला एपिसोड वहीं टेबल पर 10 ft दूर बैठकर रिकॉर्ड किया था। सोचा था कोशिश करते हैं। बुरा लगा तो रिलीज नहीं करेंगे।",
+    "cer": 0.067,
+    "gemini_ok": true
+   },
+   {
+    "id": 27,
+    "said": "पर आज 200 एपिसोड हो गए, Gary, आपकी और टीम की दाद देनी होगी।",
+    "chirp": "आज 200 एपिसोड हो गए। गैरी आपकी और टीम की दाद देनी होगी।",
+    "cer": 0.14,
+    "gemini_ok": true
+   },
+   {
+    "id": 28,
+    "said": "- शुक्रिया।",
+    "chirp": "शुक्रिया।",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 29,
+    "said": "- पर हाँ, तब मैं Space Station के लिए PAO यानी पब्लिक अफेयर्स ऑफिसर था, और अब भी बहुत काम करता हूँ, पर काम बढ़ गया।",
+    "chirp": "पर हां, तब मैं स्पेस स्टेशन के लिए पीएओ यानी पब्लिक अफेयर्स ऑफिसर था और अभी बहुत काम करता हूं। पर काम बढ़ गया।",
+    "cer": 0.224,
+    "gemini_ok": true
+   },
+   {
+    "id": 30,
+    "said": "अब रोज़ आपके साथ स्पेस स्टेशन पर काम करने मिलता है।",
+    "chirp": "अब रोज आपके साथ स्पेस स्टेशन पर काम करने मिलता है।",
+    "cer": 0.025,
+    "gemini_ok": true
+   },
+   {
+    "id": 31,
+    "said": "हमारे साथ Leah Cheshier हैं।",
+    "chirp": "हमारे साथ लिया चेसियर हैं।",
+    "cer": 0.522,
+    "gemini_ok": true
+   },
+   {
+    "id": 32,
+    "said": "NASA TV देखने वालों ने उन्हें ज़रूर देखा होगा, और हम JSC में Space Station और Commercial Crew से जुड़ी लगभग हर बात कवर करते हैं।",
+    "chirp": "नासा टीवी देखने वालों ने उन्हें जरूर देखा होगा। और हम जेएससी में स्पेस स्टेशन और कमर्शियल क्रू से जुड़ी लगभग हर बात कवर करते हैं।",
+    "cer": 0.406,
+    "gemini_ok": true
+   },
+   {
+    "id": 33,
+    "said": "Commercial Crew Program, अगर आप मानव स्पेसफ्लाइट फॉलो करते हैं, तो जानते होंगे।",
+    "chirp": "कमर्शियल क्रू प्रोग्राम। अगर आप मानव स्पेस फ्लाइट फॉलो करते हैं तो जानते होंगे।",
+    "cer": 0.328,
+    "gemini_ok": true
+   },
+   {
+    "id": 34,
+    "said": "अह, पिछले कुछेक सालों से हम जुटे हुए थे, और पिछले ही साल, अह, शटल के खत्म होने के बाद पहली बार अमेरिका से फिर से इंसान उड़ने लगे, तो हम बस पूरी तरह इसी सब में कूद पड़े।",
+    "chirp": "अ, पिछले कुछ एक सालों से हम जुटे हुए थे और पिछले ही साल शटल के खत्म होने के बाद पहली बार अमेरिका से फिर से इंसान उड़ने लगे। तो हम बस पूरी तरह इसी सब में कूद पड़े।",
+    "cer": 0.032,
+    "gemini_ok": true
+   },
+   {
+    "id": 35,
+    "said": "मेरा मतलब, ह्यूस्टन, फ़्लोरिडा और वॉशिंगटन में NASA HQ की एक बहुत बड़ी टीम इस पर काम करती है, लेकिन पिछले दो सालों में मेरा ज़्यादातर वक्त इसी ने ले लिया है। [हँसी]",
+    "chirp": "मेरा मतलब ह्यूस्टन, फ्लोरिडा और वाशिंगटन में NASA HQ की एक बहुत बड़ी टीम इस पर काम करती है। लेकिन पिछले 2 सालों में मेरा ज्यादातर वक्त इसी ने ले लिया है।",
+    "cer": 0.071,
+    "gemini_ok": true
+   },
+   {
+    "id": 36,
+    "said": "मैं वाकई आपके उसी काम के बारे में बात करना चाहता हूँ।",
+    "chirp": "मैं वाकई आपके उसी काम के बारे में बात करना चाहता हूं।",
+    "cer": 0.024,
+    "gemini_ok": true
+   },
+   {
+    "id": 37,
+    "said": "सच कहें तो, NASA TV पर मिशन कवरेज हमारे पुराने तरीकों से काफी अलग दिखता है।",
+    "chirp": "सच कहें तो NASA टीवी पर मिशन कवरेज हमारे पुराने तरीकों से काफी अलग दिखता है।",
+    "cer": 0.069,
+    "gemini_ok": true
+   },
+   {
+    "id": 38,
+    "said": "शुरू वहीं से।",
+    "chirp": "शुरू वहीं से।",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 39,
+    "said": "समझते हैं कि हम पहले कैसे करते थे और अब क्या बदला है।",
+    "chirp": "समझते हैं कि हम पहले कैसे करते थे और अब क्या बदला है?",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 40,
+    "said": "तो बताइए पहले NASA TV और कवरेज कैसा था।",
+    "chirp": "तो बताइए पहले NASA TV और कवरेज कैसा था?",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 41,
+    "said": "हाँ, NASA TV तो मानो हमेशा से रहा है,",
+    "chirp": "हां, NASA TV तो मानो हमेशा से रहा है।",
+    "cer": 0.037,
+    "gemini_ok": true
+   },
+   {
+    "id": 42,
+    "said": "देखा जाए तो हमेशा, अह,",
+    "chirp": "देखा जाए तो हमेशा अब",
+    "cer": 0.062,
+    "gemini_ok": true
+   }
+  ]
+ },
+ {
+  "lang": "ta",
+  "lines": 43,
+  "mean_cer": 0.149,
+  "median_cer": 0.07,
+  "over_30pct": 6,
+  "rows": [
+   {
+    "id": 0,
+    "said": "T-5 வினாடிகள், கவுண்டவுன்.",
+    "chirp": "ஐந்து விநாடிகள் கவுண்ட்டவுன்",
+    "cer": 0.381,
+    "gemini_ok": true
+   },
+   {
+    "id": 1,
+    "said": "மார்க் அவர்களே,",
+    "chirp": "மார்க்க அவர்களே",
+    "cer": 0.077,
+    "gemini_ok": true
+   },
+   {
+    "id": 2,
+    "said": "பயணம் துவக்கம்.",
+    "chirp": "பயணம் துவக்கம்.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 3,
+    "said": "T-0, விளக்குகள் சரியாக உள்ளன.",
+    "chirp": "T0 விளக்குகளில் சரியாக உள்ளன. T0",
+    "cer": 0.174,
+    "gemini_ok": true
+   },
+   {
+    "id": 4,
+    "said": "புறப்பட்டுவிட்டது.",
+    "chirp": "புறப்பட்டு விட்டது.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 5,
+    "said": "ஹூஸ்டன், வி ஹேவ் எ போட்காஸ்ட்.",
+    "chirp": "ஹியூஸ்டன், வி ஹேவ் எ பாட்காஸ்ட்.",
+    "cer": 0.125,
+    "gemini_ok": false
+   },
+   {
+    "id": 6,
+    "said": "Houston We Have a Podcast நேரலைக்கு வந்த அனைவருக்கும் நன்றி.",
+    "chirp": "ஹியூஸ்டன் வி ஹேவ் எ பாட்காஸ்ட் நேரலைக்கு வந்த அனைவருக்கும் நன்றி.",
+    "cer": 0.51,
+    "gemini_ok": true
+   },
+   {
+    "id": 7,
+    "said": "NASA Gary Jordan",
+    "chirp": "நாசால கேரி ஜோடன்",
+    "cer": 1.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 8,
+    "said": "Houston We Have a Podcast-ன் 200-வது எபிசோட் என்பதால், இந்த முறை கேமராக்கள் முன் ஒன்றிணைந்து நேரலையாகப் பதிவு செய்கிறோம்.",
+    "chirp": "ஹியூஸ்டன் வி ஹேவ் எ பாட்காஸ்ட் இன் 200 ஆவது எபிசோட் என்பதால் இந்த முறை கேமராக்கள் முன் ஒன்றிணைந்து நேரடையாக பதிவு செய்கிறோம்.",
+    "cer": 0.304,
+    "gemini_ok": true
+   },
+   {
+    "id": 9,
+    "said": "விசேஷமா செய்ய",
+    "chirp": "விசேஷமா செய்ய",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 10,
+    "said": "இணைந்து செய்வோம்",
+    "chirp": "இணைந்து செய்வோம்.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 11,
+    "said": "கேள்விகள் கேட்கலாம்.",
+    "chirp": "கேள்விகள் கேட்கலாம்.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 12,
+    "said": "நிகழ்ச்சிக்குச் சிறப்பு விருந்தினர் தேவை.",
+    "chirp": "நிகழ்ச்சிக்கு சிறப்பு விருந்தினர் தேவை.",
+    "cer": 0.054,
+    "gemini_ok": true
+   },
+   {
+    "id": 13,
+    "said": "யாருமில்லை, அதனால் இன்று சிறப்பு விருந்தினராக Dan Huot.",
+    "chirp": "யாரும் இல்ல, அதனால் இன்று சிறப்பு விருந்தினராக டான் ஹியுட்.",
+    "cer": 0.277,
+    "gemini_ok": true
+   },
+   {
+    "id": 14,
+    "said": "வரவேற்கிறோம் Dan.",
+    "chirp": "வரவேற்கிறோம் டான்.",
+    "cer": 0.267,
+    "gemini_ok": true
+   },
+   {
+    "id": 15,
+    "said": "சொன்னதுபோல, கடைசித் தேர்வா இருப்பது சூப்பர்.",
+    "chirp": "சொன்னது போல கடைசி தேர்வா இருப்பது சூப்பர்.",
+    "cer": 0.053,
+    "gemini_ok": true
+   },
+   {
+    "id": 16,
+    "said": "சேர்த்ததற்கு நன்றி Gary.",
+    "chirp": "சேர்த்ததற்கு நன்றி கேரி.",
+    "cer": 0.19,
+    "gemini_ok": true
+   },
+   {
+    "id": 17,
+    "said": "[சிரிப்பு] முதல் எபிசோடைத் துவங்கியதால், நீங்கள் இதில் வர உண்மையிலேயே விரும்பினோம்.",
+    "chirp": "முதல் எபிசோட் துவங்கியதால் நீங்கள் இதில் வர உண்மையிலேயே விரும்பினோம்.",
+    "cer": 0.141,
+    "gemini_ok": true
+   },
+   {
+    "id": 18,
+    "said": "அதன்பின் நீங்கள் என்ன செய்தீர்கள் என்பதுதான் தலைப்பு.",
+    "chirp": "அதன் பின் நீங்கள் என்ன செய்தீர்கள் என்பதுதான் தலைப்பு.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 19,
+    "said": "NASA TV, Commercial Crew ஒளிபரப்பை உருவாக்க உழைத்தீர்கள்.",
+    "chirp": "NASA TV கமர்சியல் க்ரூ ஒளிபரப்பை உருவாக்க உழைத்தீர்கள்.",
+    "cer": 0.286,
+    "gemini_ok": true
+   },
+   {
+    "id": 20,
+    "said": "அதைப் பற்றித் தெரிந்துகொள்வோம்.",
+    "chirp": "அதை பற்றி தெரிந்து கொள்வோம்.",
+    "cer": 0.143,
+    "gemini_ok": true
+   },
+   {
+    "id": 21,
+    "said": "பாட்காஸ்ட் பேசி உங்கள் கேள்விகளுக்கு நேரலையாய் பதில் தருவோம்.",
+    "chirp": "பாட்கேஸ்ட் பேசி உங்கள் கேள்விகளுக்கு நேரடியாய் பதில் தருவோம்.",
+    "cer": 0.056,
+    "gemini_ok": true
+   },
+   {
+    "id": 22,
+    "said": "Facebook Live-ன் கீழேயே கமெண்ட் செய்யுங்கள்.",
+    "chirp": "Facebook லைவின் கீழே கமெண்ட் செய்யுங்கள்.",
+    "cer": 0.158,
+    "gemini_ok": true
+   },
+   {
+    "id": 23,
+    "said": "துவங்கிவிடலாம் Dan.",
+    "chirp": "துவங்கி விடலாம் டான்.",
+    "cer": 0.235,
+    "gemini_ok": true
+   },
+   {
+    "id": 24,
+    "said": "நான்கு ஆண்டுகளுக்கு முன் நீங்கள் சர்வதேச விண்வெளி நிலையத்தின் PAO-வாக வந்தீர்கள், அதுதான் முதல் கேள்வி.",
+    "chirp": "நான்கு ஆண்டுகளுக்கு முன் நீங்கள் சர்வதேச விண்வெளி நிலையத்தின் பி ஏ ஓ ஆக வந்தீர்கள் அதுதான் முதல் கேள்வி",
+    "cer": 0.056,
+    "gemini_ok": true
+   },
+   {
+    "id": 25,
+    "said": "அதன்பின் என்ன செய்தீர்கள்?",
+    "chirp": "அதன் பின் என்ன செய்தீர்கள்?",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 26,
+    "said": "வேடிக்கைதான். அங்கே 10 அடி தள்ளி மேஜையில் அமர்ந்து, \"முயற்சிப்போம், மோசமாக இருந்தால் வெளியிட வேண்டாம்\" என்று முதல் எபிசோடைப் பதிவுசெய்தோம்.",
+    "chirp": "வேடிக்கை தான் அங்கே 10 அடி தள்ளி மேஜையில் அமர்ந்து முயற்சிப்போம் மோசமாக இருந்தால் வெளியிட வேண்டாம் என்று முதல் எபிசோடு பதிவு செய்தோம்.",
+    "cer": 0.025,
+    "gemini_ok": true
+   },
+   {
+    "id": 27,
+    "said": "ஆனால் 200 எபிசோடுகளுக்குப் பிறகு, நீங்களும் உங்கள் குழுவும் அருமை.",
+    "chirp": "ஆனா 200 எபிசோடுகளுக்கு பிறகு நீங்களும் உங்கள் குழுவும் அருமை.",
+    "cer": 0.07,
+    "gemini_ok": true
+   },
+   {
+    "id": 28,
+    "said": "- நன்றி.",
+    "chirp": "நன்றி.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 29,
+    "said": "ஆமாம், அப்போது விண்வெளி நிலையத்தின் PAO-வாக இருந்தேன், இப்போதும் நிறைய வேலை செய்கிறேன், ஆனால் பொறுப்பு கூடியுள்ளது.",
+    "chirp": "ஆமாம், அப்போது விண்வெளி நிலையத்தின் பி ஏ ஓ ஆக இருந்தேன். இப்போதும் நிறைய வேலை செய்கிறேன் ஆனால் பொறுப்பு கூடியுள்ளது.",
+    "cer": 0.051,
+    "gemini_ok": true
+   },
+   {
+    "id": 30,
+    "said": "விண்வெளி நிலையம் சார்ந்து உங்களுடன் தினசரி பணிகளைச் செய்கிறேன்.",
+    "chirp": "விண்வெளி நிலையம் சார்ந்து உங்களுடன் தினசரி பணிகளை செய்கிறேன்.",
+    "cer": 0.036,
+    "gemini_ok": true
+   },
+   {
+    "id": 31,
+    "said": "Leah Cheshier இருக்கிறார்.",
+    "chirp": "லியா செஷியர் இருக்கிறார்.",
+    "cer": 0.522,
+    "gemini_ok": true
+   },
+   {
+    "id": 32,
+    "said": "NASA TV பார்த்தவர்கள் நிச்சயம் அவரைப் பார்த்திருப்பார்கள், JSC-யில் விண்வெளி நிலையம் மற்றும் Commercial Crew சார்ந்த அனைத்தையும் கவர் செய்கிறோம்.",
+    "chirp": "NASA TV பார்த்தவர்கள் நிச்சயம் அவரை பார்த்திருப்பார்கள் JSC இல் விண்வெளி நிலையம் மற்றும் கமர்சியல் க்ரூ சார்ந்த அனைத்தையும் கவர் செய்கிறோம்.",
+    "cer": 0.142,
+    "gemini_ok": true
+   },
+   {
+    "id": 33,
+    "said": "Commercial Crew Program பற்றி, விண்வெளிப் பயணங்களைக் கவனித்தால் உங்களுக்குத் தெரியும்.",
+    "chirp": "கமர்சியல் க்ரூ ப்ரோக்ராம் பத்தி விண்வெளி பயணங்களை கவனிச்சா உங்களுக்கு தெரியும்.",
+    "cer": 0.461,
+    "gemini_ok": true
+   },
+   {
+    "id": 34,
+    "said": "கடந்த இரண்டு ஆண்டுகளாகப் பணியாற்றி, ஷட்டில் முடிந்தபின் முதல் முறையாக அமெரிக்காவிலிருந்து மனிதர்களை விண்வெளிக்கு அனுப்பும் பணி சென்ற ஆண்டு மீண்டும் தொடங்கியது, அதில் தீவிரமாக இறங்கினோம்.",
+    "chirp": "கடந்த இரண்டு ஆண்டுகளாக பணியாற்றி ஷட்டில் முடிந்த பின் முதல் முறையாக அமெரிக்காவிலிருந்து மனிதர்களை விண்வெளிக்கு அனுப்பும் பணி சென்ற ஆண்டு மீண்டும் தொடங்கியது அதில் தீவிரமாக இறங்கினோம்",
+    "cer": 0.012,
+    "gemini_ok": true
+   },
+   {
+    "id": 35,
+    "said": "ஹூஸ்டனில் உள்ள பெரிய NASA குழு, புளோரிடா குழுக்கள், NASA HQ குழுவினர் இதில் வேலை செய்கிறார்கள், கடந்த சில ஆண்டுகளாக என் நேரமெல்லாம் இதிலேயே சென்றது. [சிரிப்பு]",
+    "chirp": "ஹூஸ்டனில் உள்ள பெரிய நாசா குழு புளோரிடா குழுக்கள் நாசா hq குழுவினர் இதில் வேலை செய்கிறார்கள் கடந்த சில ஆண்டுகளாக என் நேரமெல்லாம் இதிலேயே சென்றது",
+    "cer": 0.12,
+    "gemini_ok": true
+   },
+   {
+    "id": 36,
+    "said": "நீங்கள் செய்த அந்த வேலைகளைப் பற்றித்தான் விவாதிக்க விரும்புகிறேன்.",
+    "chirp": "நீங்கள் செய்த அந்த வேலைகளை பற்றி தான் விவாதிக்க விரும்புகிறேன்.",
+    "cer": 0.068,
+    "gemini_ok": true
+   },
+   {
+    "id": 37,
+    "said": "NASA TV-யின் தற்போதைய மிஷன் கவரேஜ் முன்பைவிட முற்றிலும் மாறுபட்டுள்ளது.",
+    "chirp": "NASA TV-யின் தற்போதைய மிஷன் கவரேஜ் முன்பை விட முற்றிலும் மாறுபட்ட.",
+    "cer": 0.097,
+    "gemini_ok": true
+   },
+   {
+    "id": 38,
+    "said": "அங்கிருந்தே ஆரம்பிக்கலாம்.",
+    "chirp": "அங்கிருந்தே ஆரம்பிக்கலாம்.",
+    "cer": 0.0,
+    "gemini_ok": false
+   },
+   {
+    "id": 39,
+    "said": "முன்பு எப்படி இருந்தது, இப்போது எப்படி மாறியுள்ளது என்பதைப் பார்ப்போம்.",
+    "chirp": "முன்பு எப்படி இருந்தது இப்போது எப்படி மாறியுள்ளது என்பதை பார்ப்போம்.",
+    "cer": 0.032,
+    "gemini_ok": true
+   },
+   {
+    "id": 40,
+    "said": "NASA TV-யும் நம் விண்வெளிப் பதிவும் அன்று எப்படி இருந்தது?",
+    "chirp": "NASA TVயும் நம் விண்வெளி பதிவும் அன்று எப்படி இருந்தது?",
+    "cer": 0.041,
+    "gemini_ok": true
+   },
+   {
+    "id": 41,
+    "said": "ஆமாம், அதாவது NASA TV ரொம்பக் காலமாவே இருக்கு",
+    "chirp": "ஆமாம் அதாவது நாசா டிவி ரொம்ப காலமாவே இருக்கு.",
+    "cer": 0.263,
+    "gemini_ok": true
+   },
+   {
+    "id": 42,
+    "said": "சொல்லப்போனால் எப்போதும்.",
+    "chirp": "சொல்லப்போனால் எப்போதும்",
+    "cer": 0.0,
+    "gemini_ok": true
+   }
+  ]
+ },
+ {
+  "lang": "es",
+  "lines": 43,
+  "mean_cer": 0.057,
+  "median_cer": 0.0,
+  "over_30pct": 1,
+  "rows": [
+   {
+    "id": 0,
+    "said": "T menos cinco segundos y contando.",
+    "chirp": "T menos 5 segundos y contando.",
+    "cer": 0.179,
+    "gemini_ok": true
+   },
+   {
+    "id": 1,
+    "said": "Mark, dime,",
+    "chirp": "Mark, dime.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 2,
+    "said": "inicia misión.",
+    "chirp": "Inicia misión.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 3,
+    "said": "T cero, luces autorizadas.",
+    "chirp": "T-0, luces autorizadas.",
+    "cer": 0.19,
+    "gemini_ok": true
+   },
+   {
+    "id": 4,
+    "said": "Allá va ella.",
+    "chirp": "Allá va ella.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 5,
+    "said": "Houston, tenemos un podcast.",
+    "chirp": "Houston, tenemos un podcast.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 6,
+    "said": "Hola a todos, y bienvenidos en vivo a Houston We Have a Podcast.",
+    "chirp": "Hola, a todos y bienvenidos en vivo a Houston, We Have a Podcast.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 7,
+    "said": "Soy Gary Jordan de NASA.",
+    "chirp": "Soy Gary Jordan, de NASA.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 8,
+    "said": "Nos reunimos ante las cámaras para grabar en vivo porque es nuestro episodio doscientos de Houston We Have a Podcast.",
+    "chirp": "Nos reunimos ante las cámaras para grabar en vivo porque es nuestro episodio 200 de Houston We Have a Podcast.",
+    "cer": 0.103,
+    "gemini_ok": true
+   },
+   {
+    "id": 9,
+    "said": "Haremos algo pro.",
+    "chirp": "Haremos algo pro.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 10,
+    "said": "Será interactivo.",
+    "chirp": "Será interactivo.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 11,
+    "said": "Tomaremos preguntas",
+    "chirp": "Tomaremos preguntas.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 12,
+    "said": "Buscábamos invitados para el show.",
+    "chirp": "Buscábamos invitados para el show.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 13,
+    "said": "Ninguno pudo, así que tenemos a Dan Huot hoy.",
+    "chirp": "Ninguno pudo, así que tenemos a Dan Watt hoy.",
+    "cer": 0.086,
+    "gemini_ok": true
+   },
+   {
+    "id": 14,
+    "said": "Gracias Dan.",
+    "chirp": "Gracias, Dan. Gracias, Dan.",
+    "cer": 1.0,
+    "gemini_ok": false
+   },
+   {
+    "id": 15,
+    "said": "Sí, un gusto ser el peor es nada.",
+    "chirp": "Sí, un gusto ser el peor es nada.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 16,
+    "said": "Gracias por recibirme, Gary.",
+    "chirp": "Gracias por recibirme Gary.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 17,
+    "said": "De verdad queríamos que vinieras al programa, ya que tú lo inauguraste.",
+    "chirp": "De verdad queríamos que vinieras al programa, ya que tú lo inauguraste.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 18,
+    "said": "El tema de hoy será hablar sobre lo que has hecho.",
+    "chirp": "El tema de hoy será hablar sobre lo que has hecho.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 19,
+    "said": "Trabajas mucho con NASA TV y la cobertura de Commercial Crew.",
+    "chirp": "Trabajas mucho con NASA TV y la cobertura de Commercial Crew.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 20,
+    "said": "Aprenderemos algo de eso.",
+    "chirp": "Aprenderemos algo de eso.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 21,
+    "said": "Hablaremos del pódcast y de sus dudas en vivo.",
+    "chirp": "Hablaremos del podcast y de sus dudas en vivo.",
+    "cer": 0.027,
+    "gemini_ok": true
+   },
+   {
+    "id": 22,
+    "said": "Solo comenten abajo en el Facebook Live stream.",
+    "chirp": "Solo comenten abajo en el Facebook livestream.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 23,
+    "said": "Entremos en tema.",
+    "chirp": "Entremos en tema. ¿Qué",
+    "cer": 0.214,
+    "gemini_ok": true
+   },
+   {
+    "id": 24,
+    "said": "La última vez que viniste fue hace cuatro años. Eras oficial de prensa de la estación espacial.",
+    "chirp": "La última vez que viniste fue hace 4 años. Eras oficial de prensa de la estación espacial.",
+    "cer": 0.078,
+    "gemini_ok": true
+   },
+   {
+    "id": 25,
+    "said": "¿Qué has hecho luego?",
+    "chirp": "¿Qué has hecho luego?",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 26,
+    "said": "Qué risa. Grabamos el primer episodio a tres metros de aquí, sentados a una mesa diciendo: \"Si queda mal, no sale\".",
+    "chirp": "Qué risa. Grabamos el primer episodio a 3 m de aquí, sentados a una mesa diciendo, \"Si queda mal, no sale.\"",
+    "cer": 0.102,
+    "gemini_ok": true
+   },
+   {
+    "id": 27,
+    "said": "Y ya van doscientos episodios. Todo el equipo... increíble.",
+    "chirp": "Y ya van 200 episodios. Todo el equipo, increíble.",
+    "cer": 0.217,
+    "gemini_ok": true
+   },
+   {
+    "id": 28,
+    "said": "Gracias.",
+    "chirp": "Gracias.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 29,
+    "said": "Pero sí, entonces era el PAO, oficial de asuntos públicos, para la Estación Espacial y aún hago mucho allí, pero se ha ampliado.",
+    "chirp": "Pero sí, entonces era el PAO oficial de asuntos públicos para la estación espacial y aún hago mucho allí, pero se ha ampliado.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 30,
+    "said": "Ahora trabajo contigo a diario en todo de la Estación.",
+    "chirp": "Ahora trabajo contigo a diario en todo de la estación.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 31,
+    "said": "Está Leah Cheshier.",
+    "chirp": "¿Está Lia Cheshire?",
+    "cer": 0.25,
+    "gemini_ok": true
+   },
+   {
+    "id": 32,
+    "said": "Quienes ven NASA TV seguro la han visto, y cubrimos casi todo lo que pasa aquí en el JSC con la Estación Espacial y Commercial Crew.",
+    "chirp": "Quienes ven NASA TV, seguro la han visto. Y cubrimos casi todo lo que pasa aquí en el JSC con la estación espacial y Commercial Crew.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 33,
+    "said": "El Commercial Crew Program, si siguen los vuelos espaciales, ya lo conocen bien.",
+    "chirp": "El Commercial Crew Program, si siguen los vuelos espaciales, ya lo conocen bien.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 34,
+    "said": "Durante los últimos años hemos trabajado, y justo el año pasado volvimos a enviar tripulantes desde Estados Unidos por primera vez desde el fin del transbordador, metiéndonos de lleno.",
+    "chirp": "Durante los últimos años hemos trabajado y justo el año pasado volvimos a enviar tripulantes desde Estados Unidos por primera vez desde el fin del transbordador, metiéndonos de lleno.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 35,
+    "said": "O sea, un gran equipo de la NASA trabaja en eso aquí en Houston, en Florida y en la sede de la NASA en Washington, pero me ha consumido casi todo el tiempo el último par de años.",
+    "chirp": "O sea, un gran equipo de la NASA trabaja en eso aquí en Houston, en Florida y en la sede de la NASA en Washington, pero me ha consumido casi todo el tiempo el último par de años.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 36,
+    "said": "Bueno, justo de eso quiero hablar, de lo que has hecho.",
+    "chirp": "Bueno, justo de eso quiero hablar, de lo que has hecho.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 37,
+    "said": "La cobertura de misiones en NASA TV hoy es muy distinta de la histórica.",
+    "chirp": "La cobertura de misiones en NASA TV hoy es muy distinta de la histórica.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 38,
+    "said": "Empiezo ahí.",
+    "chirp": "¿Empiezo ahí?",
+    "cer": 0.0,
+    "gemini_ok": false
+   },
+   {
+    "id": 39,
+    "said": "Quiero ver cómo era antes y en qué cambió.",
+    "chirp": "Quiero ver cómo era antes y en qué cambió.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 40,
+    "said": "Cuéntanos cómo eran NASA TV y la cobertura.",
+    "chirp": "Cuéntanos cómo eran NASA TV y la cobertura.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 41,
+    "said": "Sí, NASA TV ha existido desde siempre.",
+    "chirp": "Sí, NASA TV ha existido desde siempre.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 42,
+    "said": "básicamente siempre, eh,",
+    "chirp": "Básicamente, siempre, ¿eh?",
+    "cer": 0.0,
+    "gemini_ok": true
+   }
+  ]
+ }
+]

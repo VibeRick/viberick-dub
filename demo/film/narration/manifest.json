@@ -24,11 +24,11 @@
     }
   },
   "N3": {
-    "text": "It handles conversations too. Here is Google DeepMind's podcast, dubbed into Hindi. Gemini listens to each speaker and gives each one a matching voice. Nobody's voice is cloned without consent.",
-    "seconds": 11.140625,
+    "text": "It handles conversations too. Here is NASA's podcast, dubbed into Hindi. Gemini hears two different people and gives each one a matching voice. Nobody's voice is cloned without consent.",
+    "seconds": 10.7745,
     "ok": true,
     "verdict": {
-      "heard": "It handles conversations, too. Here is Google DeepMind's podcast, dubbed into Hindi. Gemini listens to each speaker and gives each one a matching voice. Nobody's voice is cloned without consent.",
+      "heard": "It handles conversations too. Here is NASA's podcast dubbed into Hindi. Gemini hears two different people and gives each one a matching voice. Nobody's voice is cloned without consent.",
       "language_ok": true,
       "content_ok": true,
       "meaning_ok": true,
@@ -48,11 +48,11 @@
     }
   },
   "N5": {
-    "text": "And you stay in control of each line. Here the agent dropped the show's name from a Korean line. I add it back and preview just that line in the same voice. Gemini checks it again, and I accept. Only that line is regenerated; the rest of the dub stays as it was.",
-    "seconds": 16.031541666666666,
+    "text": "And you stay in control of each line. Here I want the Hindi to say \"today\", so I add the word and preview just that line in the same voice. Gemini checks it again, and I accept. Only that line is regenerated; the rest of the dub stays as it was.",
+    "seconds": 15.812875,
     "ok": true,
     "verdict": {
-      "heard": "And you stay in control of each line. Here the agent dropped the show's name from a Korean line. I add it back and preview just that line in the same voice. Gemini checks it again, and I accept. Only that line is regenerated; the rest of the dub stays as it was.",
+      "heard": "And you stay in control of each line. Here, I want the Hindi to say \"today\". So I add the word, and preview just that line in the same voice. Gemini checks it again, and I accept. Only that line is regenerated. The rest of the dub stays as it was.",
       "language_ok": true,
       "content_ok": true,
       "meaning_ok": true,

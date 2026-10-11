@@ -99,7 +99,7 @@ def build():
     B.image(s[6], A / "ui-studio.png", L, TOP, Emu(5500000), Emu(3600000))
     t(s[6], Emu(5950000), TOP, Emu(2930000), Emu(3600000), [
         ("The studio", {"bold": True, "size": 18}),
-        "A two-speaker podcast dubbed into Hindi, Tamil and Spanish by the deployed app.",
+        "NASA's Houston We Have a Podcast (public domain) dubbed into Hindi, Tamil and Spanish by the deployed app.",
         ("Switch language at the same playback moment.", {"bullet": True}),
         ("Speakers numbered and coloured; each got its own matched voice.", {"bullet": True}),
         ("Transcript with source and dub, live agent log.", {"bullet": True}),
@@ -155,18 +155,18 @@ def build():
     # 11 · Performance / benchmarking
     okf, nf = sum(l["ok"] for l in full["langs"]), sum(l["lines"] for l in full["langs"])
     stat(s[11], L, TOP, Emu(2100000), f"{okf}/{nf}", "lines passed Gemini's listening check · full 15:05 video, 3 languages", ACC)
-    stat(s[11], Emu(2450000), TOP, Emu(2100000), "121/123", "two-speaker podcast → Hindi, Tamil, Spanish · 8 min 8 s on Cloud Run")
+    stat(s[11], Emu(2450000), TOP, Emu(2100000), "124/129", "NASA podcast, two hosts → Hindi, Tamil, Spanish · 9 min 7 s on Cloud Run")
     stat(s[11], Emu(4600000), TOP, Emu(2100000), "7 min", "paste a link → finished Spanish dub, 24/24 lines (live app test)")
     stat(s[11], Emu(6750000), TOP, Emu(2100000), "≤ 0.16 s", "p95 line-end overrun vs the original speech")
     B.table(s[11], L, Emu(2300000), W, [
         ["Second opinion: Chirp 3 transcribes each dubbed line back", "Gemini listening check", "Chirp round-trip, median character error"],
-        ["Hindi (two-speaker podcast, 3 min)", "41/41", "4.0%"],
-        ["Tamil", "40/41", "5.8%"],
-        ["Spanish", "40/41", "0.0%"],
+        ["Hindi (NASA podcast, 3 min)", "42/43", "6.9%"],
+        ["Tamil", "41/43", "7.0%"],
+        ["Spanish", "41/43", "0.0%"],
     ], [0.5, 0.22, 0.28], size=12, row_h=340000)
     t(s[11], L, Emu(3800000), W, Emu(900000), [
         ("Two different models agree: Gemini judges each take inside the loop; Chirp 3, which never saw the script, "
-         "reads the audio back. Most residual error is English names written in native script.", {"size": 12, "gap": 4}),
+         "reads the audio back. Most residual error is English names written in native script (Gary Jordan → गैरी जॉर्डन).", {"size": 12, "gap": 4}),
         ("Automated checks are not a native-speaker rating; tools/roundtrip_check.py reproduces the table.", {"size": 10, "color": MUTED})])
 
     # 12 · Future
@@ -211,10 +211,10 @@ def build():
     ], [0.48, 0.52], size=12, row_h=420000)
 
     notes = {
-        6: "Screens: deployed studio, job PqVbypvxDto-7c84a9 (Google DeepMind: The Podcast excerpt, preset voices).",
+        6: "Screens: deployed studio, job bc3_IC_5P_I-7ed4cd (NASA Johnson, Houston We Have a Podcast Ep. 200, public domain; preset voices).",
         3: "ElevenLabs dubbing 90+ languages: elevenlabs.io/docs/capabilities/dubbing; Rask 130+: rask.ai. YouTube multi-language audio: blog.youtube/news-and-events/multi-language-audio/ (2025-09-10). Auto-dub viewers and 27 languages: blog.google/intl/en-in/products/platforms/unlocking-a-global-audience-with-auto-dubbing/ (2026-02-05). Korean → English/Indonesian only; cannot edit: support.google.com/youtube/answer/15569972. Prices: elevenlabs.io/pricing (Pro $99/600K credits, 3,000 credits/min), perso.ai/en/pricing (Pro $99 / 180 min), rask.ai/pricing (Creator Pro annual $799 / 1,200 min); per-minute values computed 2026-10-11. MrBeast quotes: fortune.com/2025/03/28/mrbeast-advice-mark-zuckerberg-meta-video-dubbing. Human dubbing $20–200/min: vendor price guides (checksub.com/blog/dubbing-price-guide, vozo.ai), wide range, not authoritative. YouTube expressive speech copies pitch and intonation for some pairs; it is not a voice clone.",
         9: "Gemini text cost is recorded token usage priced at configured rates (dub/gem.py), not an invoice. MrBeast on human dubbing via Unilingo (Spanish, Japanese actors): restofworld.org/2023/youtube-foreign-language-dub/. Korean overseas watch share: view.asiae.co.kr/en/article/2026081014010865557 (YouTube VP, paraphrased, 2026-08-10). Market estimate if asked: Valuates, AI dubbing USD 783M (2023) → 1.88B (2030), via Speech Technology Magazine.",
-        11: "Full: runs/Fty2sz3dBwU/out/report.json. Podcast: Cloud Run job PqVbypvxDto-7c84a9; round trip: docs/validation/roundtrip-PqVbypvxDto-7c84a9.json. Live test: job Fty2sz3dBwU-95bdef (2026-10-11). Transcription comparison (Chirp 3 + Gemini 7.6–7.9% vs Chirp 8.6% CER): RESEARCH-2026-10-10.md.",
+        11: "Full: runs/Fty2sz3dBwU/out/report.json. Podcast: Cloud Run job bc3_IC_5P_I-7ed4cd (NASA, public domain); round trip: docs/validation/roundtrip-bc3_IC_5P_I-7ed4cd.json. Live test: job Fty2sz3dBwU-95bdef (2026-10-11). Transcription comparison (Chirp 3 + Gemini 7.6–7.9% vs Chirp 8.6% CER): RESEARCH-2026-10-10.md.",
     }
     for i, n in notes.items():
         s[i].notes_slide.notes_text_frame.text = n

@@ -6,7 +6,7 @@
    "at": 0,
    "dur": 20.89,
    "trim": 0,
-   "rate": 0.852,
+   "rate": 1,
    "label": "Live · a real Cloud Run job"
   }
  ],
@@ -41,11 +41,11 @@
   }
  ],
  "editFile": "film/edit.mp4",
- "editTotal": 16.1,
+ "editTotal": 16.43,
  "edit": [
   {
    "at": 0,
-   "dur": 16.1,
+   "dur": 16.43,
    "trim": 0,
    "rate": 1
   }
@@ -55,65 +55,56 @@
   "end": 4.03
  },
  "podcast": {
-  "attribution": "Excerpt: Google DeepMind: The Podcast, “The future of intelligence” (youtu.be/PqVbypvxDto). Dubbed with preset voices for demonstration.",
+  "attribution": "Source: NASA Johnson, Houston We Have a Podcast, Ep. 200 (youtu.be/bc3_IC_5P_I). NASA media, public domain; NASA does not endorse this project. Dubbed with preset voices.",
   "cast": [
    {
-    "spk": "0:1",
-    "name": "Demis Hassabis",
-    "voice": "Charon",
-    "why": "“male, informative, mid-low”"
+    "spk": "0:3",
+    "name": "Gary Jordan",
+    "voice": "Puck",
+    "why": "“youthful, upbeat, engaging male voice”"
    },
    {
-    "spk": "0:2",
-    "name": "Hannah Fry",
-    "voice": "Aoede",
-    "why": "“friendly, conversational, breezy female”"
+    "spk": "0:4",
+    "name": "Dan Huot",
+    "voice": "Algieba",
+    "why": "“smooth, informative mid-range male voice”"
    }
   ],
   "turns": [
    {
-    "spk": "0:1",
-    "start": 34.21,
-    "end": 39.4,
+    "spk": "0:4",
+    "start": 47.68,
+    "end": 50.408,
     "text": {
-     "hi": "और यह बात फिर Turing machine के उस सवाल पर आती है कि आखिर Turing machine की सीमा क्या है?",
-     "en": "And this comes back to the Turing machine question of like, what is the limit of a Turing machine?"
+     "hi": "हाँ, आखिरी पसंद बनने का मज़ा ही अलग है।",
+     "en": "Yeah, like I said, it's, it's always great to be the bottom of the barrel."
     }
    },
    {
-    "spk": "0:2",
-    "start": 39.4,
-    "end": 43.3,
+    "spk": "0:4",
+    "start": 50.528,
+    "end": 52.444,
     "text": {
-     "hi": "तो ऐसा कुछ नहीं जो इस तरह की गणनाओं से न हो सके...",
-     "en": "So, there's nothing that cannot be done within this sort of computational…"
+     "hi": "Gary, दोबारा बुलाने का शुक्रिया।",
+     "en": "So, thanks for letting me back in, Gary."
     }
    },
    {
-    "spk": "0:1",
-    "start": 43.3,
-    "end": 48.7,
+    "spk": "0:3",
+    "start": 52.56,
+    "end": 57.433,
     "text": {
-     "hi": "खैर, यूं कहें कि ब्रह्मांड में ऐसा कुछ नहीं मिला जो नॉन-कंप्यूटेबल हो।",
-     "en": "Well, no one's… Put it this way. Nobody's found anything in the universe that's non-computable."
+     "hi": "हम सच में आपको शो में लाना चाहते थे, क्योंकि शुरुआत आपने ही की थी।",
+     "en": "We actually did really want you to, uh, to come on this show because you kicked us off with episode one."
     }
    },
    {
-    "spk": "0:1",
-    "start": 48.7,
-    "end": 49.45,
+    "spk": "0:3",
+    "start": 57.81,
+    "end": 61.5,
     "text": {
-     "hi": "अब तक।",
-     "en": "So far."
-    }
-   },
-   {
-    "spk": "0:2",
-    "start": 49.45,
-    "end": 51.2,
-    "text": {
-     "hi": "हाँ, अब तक।",
-     "en": "So far."
+     "hi": "और आज हम बात करेंगे कि तब से अब तक आप क्या कर रहे थे।",
+     "en": "And, uh, today's episode theme is going to be talking about what you have been doing since."
     }
    }
   ],
@@ -122,9 +113,9 @@
     "l": "hi",
     "lang": "hi",
     "label": "Hindi",
-    "file": "film/dm.hi.mp4",
-    "start": 34.0,
-    "end": 51.2
+    "file": "film/nasa.hi.mp4",
+    "start": 47.3,
+    "end": 61.5
    }
   ]
  }

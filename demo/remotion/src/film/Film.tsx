@@ -107,9 +107,9 @@ const ColdOpen = () => {
 // ── 2b · YouTube auto-dubbing vs VibeRick Dub (support.google.com/youtube/answer/15569972, 2026-10-11) ─
 const COMPARE = [
   ["From a Korean video", "English, Indonesian", "125 languages"],
-  ["Whose voice", "a synthetic voice", "your own, with consent"],
+  ["Whose voice", "a stock voice", "your own (with consent) or a matched one"],
   ["Fix a line", "“You cannot edit automatic dubs”", "edit and re-speak each line"],
-  ["Checks itself", "—", "Gemini listens to every line"],
+  ["Checks every line", "not documented", "Gemini listens and fixes it"],
 ];
 const Compare: React.FC<{ f: number; at: number; until: number }> = ({ f, at, until }) => (
   <AbsoluteFill style={{ justifyContent: "center", padding: "0 160px", opacity: Math.min(fadeIn(f, at, 8), 1 - fadeIn(f, until - 6, 6)) }}>
@@ -242,7 +242,7 @@ const PodcastTake: React.FC<{ t: Take; narrated: number }> = ({ t, narrated }) =
       <div style={{ position: "absolute", left: 120, top: 110, width: 1200, height: 675, borderRadius: 18, overflow: "hidden", border: `1px solid ${C.line}` }}>
         <Video src={src} trimBefore={Math.max(0, trim)} muted={f < narrated} volume={f < narrated ? 0 : 1} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         {f >= narrated && turn && (
-          <div lang={t.lang} style={{ position: "absolute", left: 40, right: 40, bottom: 34, textAlign: "center" }}>
+          <div lang={t.lang} style={{ position: "absolute", left: 40, right: 40, bottom: 190, textAlign: "center" }}>
             <span style={{ display: "inline-block", padding: "10px 18px", borderRadius: 10, background: "rgba(0,0,0,.82)", font: `500 36px/1.4 ${ui}`, color: C.ink }}>{turn.text[t.lang]}<br /><span lang="en" style={{ font: `400 22px/1.4 ${ui}`, color: C.ink2 }}>{turn.text.en}</span></span>
           </div>
         )}
