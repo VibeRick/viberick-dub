@@ -66,15 +66,16 @@ def build():
     B.set_title(s[3], "Opportunities · how it is different · USP")
     stat(s[3], L, Emu(1150000), Emu(2700000), "25%+", "of watch time comes from other languages once creators add multi-language audio (YouTube, Sep 2025)", ACC)
     stat(s[3], Emu(3150000), Emu(1150000), Emu(2700000), "6M+", "people a day watch 10+ minutes of auto-dubbed video (YouTube, Dec 2025)")
-    stat(s[3], Emu(6050000), Emu(1150000), Emu(2800000), "2", "languages YouTube's own auto-dubbing offers a Korean video: English, Indonesian")
+    stat(s[3], Emu(6050000), Emu(1150000), Emu(2800000), "70%", "of MrBeast's YouTube audience doesn't speak English; dubs in his own voice hold them longer (Fortune, Mar 2025)")
     B.table(s[3], L, Emu(2250000), W, [
-        ["", "YouTube auto-dubbing", "Paid tools (ElevenLabs, Rask, Perso)", "VibeRick Dub"],
-        ["Targets for a Korean video", "2", "90–130+", "125"],
-        ["The creator's own voice", "No", "Yes", "Yes, behind two consent locks"],
-        ["Fix one line", "No (“cannot edit”)", "Yes", "Yes, preview in the same voice"],
-        ["Every line checked by ear, auto-repaired", "No", "Not advertised", "Yes: Gemini listens to each take"],
-        ["Price per dubbed minute", "Free", "$0.50–0.67", "$0.20 (≈ $0.03 to run)"],
-    ], [0.30, 0.20, 0.25, 0.25], size=11, row_h=330000)
+        ["", "Human dubbing studio", "YouTube auto-dubbing", "AI voice tools (ElevenLabs, Rask)", "VibeRick Dub agent"],
+        ["Who does the work", "Translator, voice actors, editor", "One click, no control", "You review and fix lines in an editor", "One agent, end to end"],
+        ["Targets for a Korean video", "Any, one at a time", "2 (English, Indonesian)", "90–130+", "125"],
+        ["Whose voice", "An actor's", "A stock voice", "A voice clone", "Your own (with consent) or a matched voice per speaker"],
+        ["Checks every line by ear", "A director, by hand", "Not documented", "Not advertised", "Gemini listens; up to 4 fixes, then flags a human"],
+        ["Fix one line", "New recording session", "No (“cannot edit”)", "Yes", "Yes, preview in the same voice"],
+        ["Per dubbed minute", "≈ $20–200 · days", "Free", "$0.50–0.67", "$0.20 · minutes"],
+    ], [0.17, 0.19, 0.17, 0.2, 0.27], size=10, row_h=300000)
 
     # 4 · Features
     feats = [
@@ -93,10 +94,7 @@ def build():
           [(h, {"bold": True, "size": 14, "gap": 3}), (d, {"color": MUTED, "size": 12})])
 
     # 5 · Process flow: what the creator does on top, what the agent does underneath
-    B.image(s[5], A / "flow2.png", L, TOP, W, Emu(2600000))
-    t(s[5], L, Emu(3900000), W, Emu(700000), [
-        ("Every agent step writes an event to Firestore, so the creator watches the decisions live. "
-         "A line that still fails after repairs is flagged in the studio, never silently shipped.", {"size": 12, "color": MUTED})])
+    B.image(s[5], A / "flow3.png", L, TOP, W)
 
     # 6 · Wireframes → the deployed studio, on a two-speaker podcast dubbed into Hindi
     B.image(s[6], A / "ui-studio.png", L, TOP, Emu(5500000), Emu(3600000))
@@ -106,7 +104,6 @@ def build():
         ("Switch language at the same playback moment.", {"bullet": True}),
         ("Speakers numbered and coloured; each got its own matched voice.", {"bullet": True}),
         ("Transcript with source and dub, live agent log.", {"bullet": True}),
-        ("Deployed UI, not a mock: viberick-dub.web.app", {"size": 12, "color": ACC}),
     ], size=12, gap=8)
 
     # 7 · Architecture
@@ -139,9 +136,9 @@ def build():
     t(s[9], Emu(4800000), TOP, Emu(4080000), Emu(3800000), [
         ("Business model", {"bold": True, "size": 16, "color": ACC}),
         ("Pay per dubbed minute, plus a creator subscription with monthly minutes.", {"bullet": True}),
-        ("At $0.20 per dubbed minute: less than half of today's $0.50–0.67 tools, ≈ 85% gross margin.", {"bullet": True}),
+        ("$0.20 per dubbed minute, ready in minutes. A human studio (translator, voice actors, mixing) costs ≈ $20–200 per minute per language and takes days. ≈ 85% gross margin on our ≈ $0.03 cost.", {"bullet": True}),
         ("Infra scales to zero: each dub is one Cloud Run Job execution; an idle service costs nothing.", {"bullet": True}),
-        ("First market: Korean creators. YouTube says about 30% of Korean channels' watch time already comes from overseas (Aug 2026).", {"bullet": True}),
+        ("First market: YouTubers who want to go global. Big channels already pay studios per language (MrBeast dubs into many languages; 70% of his audience doesn't speak English). Mid-size channels can't afford a studio at all; for Korean channels, about 30% of watch time already comes from overseas.", {"bullet": True}),
         ("Estimates exclude storage egress and proxy download costs.", {"size": 10, "color": MUTED}),
     ], size=12, gap=7)
 
@@ -216,8 +213,8 @@ def build():
 
     notes = {
         6: "Screens: deployed studio, job PqVbypvxDto-7c84a9 (Google DeepMind: The Podcast excerpt, preset voices).",
-        3: "ElevenLabs dubbing 90+ languages: elevenlabs.io/docs/capabilities/dubbing; Rask 130+: rask.ai. YouTube multi-language audio: blog.youtube/news-and-events/multi-language-audio/ (2025-09-10). Auto-dub viewers and 27 languages: blog.google/intl/en-in/products/platforms/unlocking-a-global-audience-with-auto-dubbing/ (2026-02-05). Korean → English/Indonesian only; cannot edit: support.google.com/youtube/answer/15569972. Prices: elevenlabs.io/pricing (Pro $99/600K credits, 3,000 credits/min), perso.ai/en/pricing (Pro $99 / 180 min), rask.ai/pricing (Creator Pro annual $799 / 1,200 min); per-minute values computed 2026-10-11.",
-        9: "Gemini text cost is recorded token usage priced at configured rates (dub/gem.py), not an invoice. Korean overseas watch share: view.asiae.co.kr/en/article/2026081014010865557 (YouTube VP, paraphrased, 2026-08-10). Market estimate if asked: Valuates, AI dubbing USD 783M (2023) → 1.88B (2030), via Speech Technology Magazine.",
+        3: "ElevenLabs dubbing 90+ languages: elevenlabs.io/docs/capabilities/dubbing; Rask 130+: rask.ai. YouTube multi-language audio: blog.youtube/news-and-events/multi-language-audio/ (2025-09-10). Auto-dub viewers and 27 languages: blog.google/intl/en-in/products/platforms/unlocking-a-global-audience-with-auto-dubbing/ (2026-02-05). Korean → English/Indonesian only; cannot edit: support.google.com/youtube/answer/15569972. Prices: elevenlabs.io/pricing (Pro $99/600K credits, 3,000 credits/min), perso.ai/en/pricing (Pro $99 / 180 min), rask.ai/pricing (Creator Pro annual $799 / 1,200 min); per-minute values computed 2026-10-11. MrBeast quotes: fortune.com/2025/03/28/mrbeast-advice-mark-zuckerberg-meta-video-dubbing. Human dubbing $20–200/min: vendor price guides (checksub.com/blog/dubbing-price-guide, vozo.ai), wide range, not authoritative. YouTube expressive speech copies pitch and intonation for some pairs; it is not a voice clone.",
+        9: "Gemini text cost is recorded token usage priced at configured rates (dub/gem.py), not an invoice. MrBeast on human dubbing via Unilingo (Spanish, Japanese actors): restofworld.org/2023/youtube-foreign-language-dub/. Korean overseas watch share: view.asiae.co.kr/en/article/2026081014010865557 (YouTube VP, paraphrased, 2026-08-10). Market estimate if asked: Valuates, AI dubbing USD 783M (2023) → 1.88B (2030), via Speech Technology Magazine.",
         11: "Full: runs/Fty2sz3dBwU/out/report.json. Podcast: Cloud Run job PqVbypvxDto-7c84a9; round trip: docs/validation/roundtrip-PqVbypvxDto-7c84a9.json. Live test: job Fty2sz3dBwU-95bdef (2026-10-11). Transcription comparison (Chirp 3 + Gemini 7.6–7.9% vs Chirp 8.6% CER): RESEARCH-2026-10-10.md.",
     }
     for i, n in notes.items():

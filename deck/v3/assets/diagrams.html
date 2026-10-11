@@ -42,6 +42,34 @@ svg{position:absolute;inset:0;z-index:0}
 .c5 .card:not(:last-child)::after{content:"→";position:absolute;right:-15px;top:22px;font:600 18px Inter;color:#8a8781}
 .c4 .card:not(:last-child)::after{content:"→";position:absolute;right:-15px;top:22px;font:600 18px Inter;color:#8a8781}
 .mid{display:flex;justify-content:space-around;padding:10px 0 10px 168px;font:500 14px 'JetBrains Mono';color:#ff6a2b}
+
+#flow3{width:1600px;padding:28px 36px}
+#flow3 .you{display:flex;justify-content:space-between;align-items:center;gap:16px}
+#flow3 .you div{background:#111214;color:#fff;border-radius:12px;padding:14px 20px;font:600 21px 'Inter Tight'}
+#flow3 .you div small{display:block;font:400 14px Inter;color:#cfcdc8;margin-top:3px}
+#flow3 .you .gap{flex:1;background:none;color:#7d7a74;font:500 14px 'JetBrains Mono';text-align:center;padding:0;border-top:2px dashed #c9c6c0;height:0}
+#flow3 .band{margin-top:18px;border:2px solid #ff6a2b;border-radius:18px;padding:18px 20px 16px;background:#fffaf6}
+#flow3 .bandh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
+#flow3 .bandh b{font:600 24px 'Inter Tight'}#flow3 .bandh span{font:500 14px 'JetBrains Mono';color:#a4502a}
+#flow3 .steps{display:grid;grid-template-columns:1fr 1fr 1fr 1.55fr;gap:22px}
+#flow3 .st{background:#fff;border:1.5px solid #e2dfd9;border-radius:14px;padding:16px 16px 14px;position:relative;display:flex;flex-direction:column;gap:8px}
+#flow3 .st:not(:last-child)::after{content:"→";position:absolute;right:-19px;top:40%;font:600 20px Inter;color:#ff6a2b}
+#flow3 .role{font:500 12.5px 'JetBrains Mono';letter-spacing:.06em;text-transform:uppercase;color:#7d7a74}
+#flow3 .st b{font:600 22px 'Inter Tight'}
+#flow3 .q{font-size:16px;color:#111214;line-height:1.35}
+#flow3 .ex{display:flex;flex-direction:column;gap:5px;margin-top:2px}
+#flow3 .ex span{font:500 13.5px 'JetBrains Mono';background:#f4f2ee;border-radius:7px;padding:5px 8px;color:#2a2926}
+#flow3 .by{margin-top:auto;font:500 12.5px 'JetBrains Mono';color:#ff6a2b}
+#flow3 .loop{display:grid;grid-template-columns:auto auto auto;gap:8px 10px;align-items:center;margin-top:2px}
+#flow3 .pill{font:500 14px 'JetBrains Mono';border:1.5px solid #111214;border-radius:8px;padding:6px 9px;text-align:center;background:#fff}
+#flow3 .pill.g{background:#111214;color:#fff}
+#flow3 .pill.ok{border-color:#1f8a4c;color:#1f8a4c}
+#flow3 .pill.fix{border-color:#ff6a2b;color:#c2410c}
+#flow3 .pill.h{border-color:#d68a00;color:#a96d00}
+#flow3 .ar{font:600 16px Inter;color:#8a8781;text-align:center}
+#flow3 .checks{font-size:13.5px;color:#5f5c57;grid-column:1/-1}
+#flow3 .out{margin-top:14px;display:flex;gap:10px;align-items:center;font:500 14px 'JetBrains Mono';color:#5f5c57}
+#flow3 .out span{border:1.5px solid #d6d4cf;border-radius:8px;padding:5px 9px;color:#111214;background:#fff}
 </style></head><body>
 <div class="d" id="arch">
  <svg width="1600" height="560" id="sv"></svg>
@@ -85,6 +113,33 @@ svg{position:absolute;inset:0;z-index:0}
    <div class="ring"><span>measure</span><span>shorten</span><span>time-fit</span><span>Gemini listens</span><span>re-speak</span><span>re-translate</span><span class="h">flag a human</span></div></div>
   <div class="card"><b>Mix &amp; ship</b><p>On the original timeline over the music bed, −14 LUFS.</p><em>ffmpeg · Cloud Storage</em></div>
  </div></div>
+</div>
+
+<div class="d" id="flow3">
+ <div class="you">
+  <div>You paste a link<small>pick up to 4 of 125 languages</small></div>
+  <div class="gap">one Cloud Run Job · every decision streams to Firestore, live</div>
+  <div>You review, then publish<small>edit any line · only that line re-runs</small></div>
+ </div>
+ <div class="band">
+  <div class="bandh"><b>The agent makes the calls a dubbing team makes</b><span>Gemini 3.8 Flash · Chirp 3 · Gemini TTS</span></div>
+  <div class="steps">
+   <div class="st"><span class="role">transcriber</span><b>Hear</b><div class="q">Who is speaking, and what exactly did they say?</div>
+    <div class="ex"><span>2 voices → Speaker A, B</span><span>“제미나이” → Gemini</span></div><span class="by">Chirp 3 + Gemini listens</span></div>
+   <div class="st"><span class="role">translator</span><b>Adapt</b><div class="q">How does it sound in Hindi, and does it fit the seconds?</div>
+    <div class="ex"><span>2.8 s slot → ≤ 39 chars</span><span>keep “ChatGPT” as is</span></div><span class="by">Gemini 3.8 Flash</span></div>
+   <div class="st"><span class="role">casting director</span><b>Cast</b><div class="q">Whose voice speaks each line?</div>
+    <div class="ex"><span>creator → own voice ✓consent</span><span>guest → matched voice</span></div><span class="by">Gemini picks by ear · TTS</span></div>
+   <div class="st"><span class="role">dubbing director</span><b>Check every line, fix it</b>
+    <div class="loop">
+     <span class="pill">speak</span><span class="ar">→</span><span class="pill g">Gemini listens</span>
+     <span class="checks">right language? every word? same meaning? fits the time?</span>
+     <span class="pill ok">✓ keep</span><span class="ar">or</span><span class="pill fix">✗ shorten · re-translate · re-speak</span>
+     <span class="pill h" style="grid-column:1/-1">still wrong after 4 tries → flag a human</span>
+    </div></div>
+  </div>
+  <div class="out">→ mixed on the original timeline over the music<span>MP4</span><span>M4A track for YouTube</span><span>SRT / VTT</span></div>
+ </div>
 </div>
 <script>
 const sv=document.getElementById('sv'),A=document.getElementById('arch').getBoundingClientRect();
