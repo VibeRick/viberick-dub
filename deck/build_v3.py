@@ -1,6 +1,6 @@
-"""Deck v3 on the official template → deck/v3/VibeRick-Dub.pptx + PDF.
+"""The submission deck on the official template → deck/v3/VibeRick-Dub.pptx + PDF (needs LibreOffice).
 
-uv run --with python-pptx --with pillow python deck/build_v3.py
+uv run --no-project --with python-pptx --with pillow python deck/build_v3.py
 Keeps every template heading; visuals from deck/v3/assets (UI captures of the deployed studio, diagrams).
 Business figures: sources in speaker notes (checked 2026-10-11)."""
 import json
@@ -14,7 +14,7 @@ from pptx.util import Emu, Pt
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
-import build as B  # noqa: E402  (template helpers)
+import template as B  # noqa: E402  (template helpers)
 
 ROOT = HERE.parent
 A = HERE / "v3" / "assets"

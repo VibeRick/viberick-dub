@@ -1,9 +1,0 @@
-*{box-sizing:border-box}body{margin:0;width:960px;height:540px;background:#0e0f11;color:#eceae4;font-family:Inter,"Noto Sans KR",Arial,sans-serif;display:flex;flex-direction:column;justify-content:center;padding:0 72px;overflow:hidden}
-.eyebrow{font:500 13px ui-monospace,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:#7d8089;margin-bottom:14px}
-h1{font-size:62px;line-height:1.02;letter-spacing:-.035em;margin:0 0 16px;font-weight:700}h1 span{color:#6f8bff}
-p{font-size:21px;color:#b7b9bf;margin:0;max-width:760px;line-height:1.45}
-.big{font-size:96px;font-weight:700;letter-spacing:-.04em;color:#6f8bff;line-height:1}
-.row{display:flex;gap:18px;margin-top:26px}.card{flex:1;border:1px solid #262930;border-radius:14px;padding:18px;background:#16181b}
-.card b{display:block;font-size:20px;margin-bottom:6px;color:#eceae4}.card span{font-size:15px;color:#9a9da5;line-height:1.4}
-.logo{display:flex;gap:12px;align-items:center;font-size:20px;margin-bottom:28px}.logo img{width:36px;height:36px;border-radius:8px}
-table{border-collapse:collapse;font-size:17px;margin-top:6px}td{padding:7px 18px 7px 0;border-bottom:1px solid #262930}td.n{font:600 17px ui-monospace,Menlo,monospace;color:#6f8bff;text-align:right}
