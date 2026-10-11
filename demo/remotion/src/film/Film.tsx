@@ -6,6 +6,7 @@ import {
 } from "remotion";
 import N from "../film-narration.json";
 import footage from "./footage.json";
+import OPEN_TAKES from "./open.json";
 
 type Clip = { at: number; dur: number; trim: number; rate: number; label?: string; zoom?: number[] };
 type Take = { l: string; lang: string; label: string; file: string; start: number; end: number };
@@ -58,7 +59,9 @@ const OPEN = [
   { l: "zh-Hans", lang: "zh-Hans", label: "中文", tag: "AI DUB · HIS OWN VOICE", start: 8.53, end: 12.62, text: "拿我父母来说，现在好像全都会去问ChatGPT了。" },
 ];
 const OPEN_PAD = 0.35;
-export const openDur = (o: typeof OPEN[number]) => sec(o.end - o.start + OPEN_PAD * 2);
+// Dubbed shots play a fresh, unstretched take (demo/film/coldopen.py) over the original bed.
+const takeSec = (o: typeof OPEN[number]) => (OPEN_TAKES as Record<string, number>)[o.l];
+export const openDur = (o: typeof OPEN[number]) => sec((takeSec(o) ?? o.end - o.start) + OPEN_PAD * 2);
 const coldOpenFrames = OPEN.reduce((n, o) => n + openDur(o), 0);
 
 const Face: React.FC<{ src: string; trim: number }> = ({ src, trim }) => {
@@ -73,12 +76,13 @@ const Face: React.FC<{ src: string; trim: number }> = ({ src, trim }) => {
 
 const ColdOpenShot: React.FC<{ o: typeof OPEN[number]; i: number }> = ({ o, i }) => {
   const f = useCurrentFrame();
-  const src = staticFile(`film/solo.${o.l}.mp4`);
+  const src = staticFile("film/solo.orig.mp4");
   const trim = sec(o.start - OPEN_PAD);
+  const audio = takeSec(o) ? <Audio src={staticFile(`film/open.${o.l}.wav`)} /> : <Audio src={src} trimBefore={trim} />;
   return (
     <AbsoluteFill style={{ background: C.ground }}>
       <Video src={src} trimBefore={trim} muted style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "blur(28px) brightness(.32) saturate(.8)", transform: "scale(1.1)" }} />
-      <Audio src={src} trimBefore={trim} />
+      {audio}
       <AbsoluteFill style={{ flexDirection: "row", alignItems: "center", padding: "0 120px", gap: 96 }}>
         <Face src={src} trim={trim} />
         <div style={{ flex: 1 }}>
