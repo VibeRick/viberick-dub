@@ -76,10 +76,6 @@ def build():
         ["Fix one line", "New recording session", "No (“cannot edit”)", "Yes, preview in the same voice"],
         ["Per dubbed minute", "≈ $20–200 · days", "Free", "$0.20 · minutes"],
     ], [0.22, 0.24, 0.22, 0.32], size=10, row_h=300000)
-    t(s[3], L, Emu(4600000), W, Emu(300000), [
-        ("Paid AI dubbing tools (ElevenLabs, Rask: 90–130+ languages, $0.50–0.67/min) also dub end to end; "
-         "none advertise listening to every line and repairing it.", {"size": 9, "color": MUTED})])
-
     # 4 · Features
     feats = [
         ("Creator's own voice", "Gemini TTS voice replication from a 20 s reference, used only behind two consent locks."),
