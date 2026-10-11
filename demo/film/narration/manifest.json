@@ -1,0 +1,86 @@
+{
+  "N1": {
+    "text": "I make videos in Korean. That was me in English, Japanese and Chinese. I never recorded those lines. VibeRick Dub did, in my own voice, from one YouTube link. Reaching a new audience used to mean translators, voice actors, re-timing and subtitles, for every language.",
+    "seconds": 18.236291666666666,
+    "ok": true,
+    "verdict": {
+      "heard": "I make videos in Korean. That was me in English, Japanese and Chinese. I never recorded those lines. VibeRick Dub did, in my own voice, from one YouTube link. Reaching a new audience used to mean translators, voice actors, re-timing and subtitles, for every language.",
+      "language_ok": true,
+      "content_ok": true,
+      "meaning_ok": true,
+      "issue": ""
+    }
+  },
+  "N2": {
+    "text": "Paste a link and choose languages. A Cloud Run job starts, and you watch the agent work. Chirp 3 timestamps every word and tells the speakers apart. Gemini listens to the audio, fixes the transcript, and translates each sentence to fit the time it was spoken.",
+    "seconds": 15.588333333333333,
+    "ok": true,
+    "verdict": {
+      "heard": "Paste a link and choose languages. A Cloud Run job starts, and you watch the agent work. Chirp 3 timestamps every word and tells the speakers apart. Gemini listens to the audio, fixes the transcript, and translates each sentence to fit the time it was spoken.",
+      "language_ok": true,
+      "content_ok": true,
+      "meaning_ok": true,
+      "issue": ""
+    }
+  },
+  "N3": {
+    "text": "It handles conversations too. Here is Google DeepMind's podcast. Gemini listens to each speaker and casts a matching voice. Nobody's voice is cloned without consent.",
+    "seconds": 9.604791666666667,
+    "ok": true,
+    "verdict": {
+      "heard": "It handles conversations too. Here is Google DeepMind's podcast. Gemini listens to each speaker and casts a matching voice. Nobody's voice is cloned without consent.",
+      "language_ok": true,
+      "content_ok": true,
+      "meaning_ok": true,
+      "issue": ""
+    }
+  },
+  "N4": {
+    "text": "Then every line is checked by ear. Gemini listens to each clip: right language, every word, right length. Here it heard my company's name come out as \"WhyBrick\". The agent spoke the line again, listened again, and it passed. Whatever it can't fix, it flags for a human.",
+    "seconds": 17.882666666666665,
+    "ok": true,
+    "verdict": {
+      "heard": "Then every line is checked by ear. Gemini listens to each clip: right language, every word, right length. Here it heard my company's name come out as \"WhyBrick\". The agent spoke the line again, listened again, and it passed. Whatever it can't fix, it flags for a human.",
+      "language_ok": true,
+      "content_ok": true,
+      "meaning_ok": true,
+      "issue": ""
+    }
+  },
+  "N5": {
+    "text": "And you stay in control. Here the agent dropped the show's name from a Korean line. I add it back, preview just that line in the same voice, Gemini checks it again, and I accept.",
+    "seconds": 11.477541666666667,
+    "ok": true,
+    "verdict": {
+      "heard": "And you stay in control. Here the agent dropped the show's name from a Korean line. I add it back, preview just that line in the same voice, Gemini checks it again, and I accept.",
+      "language_ok": true,
+      "content_ok": true,
+      "meaning_ok": true,
+      "issue": ""
+    }
+  },
+  "N6": {
+    "text": "It is all Google Cloud. Firebase hosts the studio. Cloud Run starts one job per dub, so it scales with creators and costs nothing when idle. Every agent decision streams through Firestore, and the media lands in Cloud Storage. On a full fifteen-minute video, three hundred sixty-six of three hundred sixty-nine lines passed the listening check, at about three cents per dubbed minute.",
+    "seconds": 20.328041666666667,
+    "ok": true,
+    "verdict": {
+      "heard": "It is all Google Cloud. Firebase hosts the studio, Cloud Run starts one job per dub, so it scales with creators and costs nothing when idle. Every agent decision streams through Firestore, and the media lands in Cloud Storage. On a full 15-minute video, 366 of 369 lines pass the listening check, at about 3 cents per dubbed minute.",
+      "language_ok": true,
+      "content_ok": true,
+      "meaning_ok": true,
+      "issue": ""
+    }
+  },
+  "N7": {
+    "text": "My voice is only used because I recorded my consent, and my voice matches it. You made the video. We'll handle the languages.",
+    "seconds": 7.085208333333333,
+    "ok": true,
+    "verdict": {
+      "heard": "My voice is only used because I recorded my consent, and my voice matches it. You made the video. We'll handle the languages.",
+      "language_ok": true,
+      "content_ok": true,
+      "meaning_ok": true,
+      "issue": ""
+    }
+  }
+}

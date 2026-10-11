@@ -1,0 +1,154 @@
+Team Details
+
+    a. Team name: VibeRick
+    b. Team leader name: Jaeho Shin
+    c. Problem Statement: Media, Content & Digital Experiences — creators
+       reach only the viewers who speak their language. VibeRick Dub turns one
+       video into dubbed tracks in the creator's own voice.
+Brief about the idea
+Dub your video. Review every line.
+Paste a YouTube link. An AI agent built on Gemini transcribes it,
+translates every sentence to fit its timing, uses a consented
+clone or a preset voice, then listens back to each line and
+attempts to repair what doesn't sound right.
+Review a translated line, hear a new take, and accept it without
+restarting the whole video. The revised local studio exposes the
+actual audio timeline and keeps original captions separate.
+Languages today: Korean · English · Japanese · Chinese (source detected
+automatically).
+Opportunities
+A creator needs more than a translated voice
+A line can be correct but still sound rushed, leave an awkward pause, or cover the next speaker. Burned-in
+captions remain in the source video and can compete with the new subtitles.
+
+The product makes the repair visible
+Listen to a language, inspect its timing and review a flagged line. Edit the wording, generate a preview, and
+accept or discard it. Other completed languages remain available.
+
+A focused first audience
+Tutorial creators and interview producers who want to review a small number of target languages before
+publishing dubbed videos and audio tracks.
+Studio revisions are implemented locally; deployed validation and fresh listening review are pending.
+List of features offered by the solution
+Creator's own voice                                            Translation that fits the clock
+Gemini 3.8 Flash TTS voice replication from a 20 s sample      Each sentence gets a character budget from its time slot
++ spoken consent                                               and the voice's measured speed
+
+
+Automatic checks with human review                             Audio-led transcription
+Gemini checks each clip; retry or flag. A pass does not        Chirp timestamps + Gemini audio proofreading; source
+certify translation quality.                                   captions can contain editorial edits.
+
+
+Multi-speaker                                                  Consent lock
+Chirp 3 diarization; Gemini casts a fitting preset voice for   Clone only for the channel owner whose voice verifies
+every other speaker                                            against the consent recording
+
+
+Revised studio (local)                                         Ready to upload
+Actual output timing, per-language progress, line preview /    Dubbed MP4 + M4A (−14 LUFS, original music kept) +
+accept / discard and recovery                                  SRT/VTT subtitles
+Process flow diagram
+Revised local studio: desktop and mobile
+Architecture diagram of the proposed solution
+Technologies used in the solution
+Technology                                         Role
+
+Gemini 3.8 Flash (Vertex AI)                       Proofread by listening · dubbing brief · translate to time · shorten · judge every clip ·
+                                                   cast voices
+Gemini 3.8 Flash TTS — voice replication           The creator's own voice in other languages (SynthID watermarked)
+
+Chirp 3 (Speech-to-Text v2)                        Word timestamps + speaker diarization — the timing backbone
+
+Cloud Run (service + Job)                          FastAPI API · dubbing worker (4 vCPU, demucs, ECAPA, ffmpeg)
+
+Firestore                                          Jobs, live agent event stream, per-line results (realtime listeners)
+
+Firebase Hosting                                   Web app; /api/** rewritten to Cloud Run
+
+Cloud Storage                                      Batch STT input; public dubbed MP4/M4A/SRT/VTT
+
+Secret Manager · Artifact Registry · Cloud Build   Keys · container image · builds
+
+Open source                                        demucs (music bed), ECAPA-TDNN (speaker verification for the consent lock), yt-dlp,
+                                                   ffmpeg
+Estimated implementation cost
+Baseline run: cost per dubbed minute                                           USD               Evidence
+
+Gemini text + listening checks                                                 0.008             Usage recorded; rate-based
+                                                                                                 estimate
+Gemini TTS                                                                     0.014             Planning estimate
+
+Chirp (source minutes split across 3 languages)                                0.005             Planning estimate
+
+Cloud Run compute                                                              0.003             Planning estimate
+
+Illustrative subtotal                                                          ~ 0.03            Not a billing reconciliation
+
+
+Storage, downloads/proxy, retries and additional line previews can add cost. New quality settings are being
+measured; this baseline is not the revised product's cost.
+Infrastructure uses Google Cloud. Voice generation uses a separately billed Google project; credits and cash billing must be tracked
+separately.
+Baseline prototype: playback and agent events
+
+
+
+
+Left: Japanese dub with subtitles and the synced transcript. Right: the agent log — every shorten, re-speak, re-translate and
+Gemini verdict, streamed live from Firestore.
+Recorded baseline: automatic checks and remaining gaps
+Measure                                                      Result
+
+3-min source → 3 languages: automatic checks passed          69 / 69
+
+Positive end overrun (p95; not absolute timing error)        0.16 s
+
+Wall-clock, 3 languages                                      2:52
+
+Full 15:05 video → 3 languages: checks passed · wall-clock   366 / 369 · 10:58
+
+2-speaker English → Korean: checks passed; preset voices     28 / 28 · male + female presets
+
+Remaining listening gap                                      Long pauses; occasional wrong-language speech
+
+Transcript CER vs creator's edited captions (3 runs)         Chirp 3 + Gemini 7.6–7.9% · Chirp 8.6% · Gemini 10.6–
+                                                             11.8%
+Gemini-only timestamps drift (why Chirp is the clock)        up to 42 s
+
+Speaker similarity to the creator (ECAPA cosine)             English clone 0.68 · creator 0.90 · others 0.00–0.09
+Additional details / future development
+Implemented locally; release verification in progress
+Output-aligned subtitles, per-language timelines and translation previews with accept/discard. Timing and
+voice prompts are being tested against the recorded baseline.
+
+Next evidence gates
+Native listening review for meaning, pacing and voice consistency; measured silence and cost; deployed
+recovery and preview acceptance tests.
+
+Expansion after those gates
+Validate additional languages one at a time. Add guest consent enrollment and creator glossaries. Export
+files for manual publishing; automatic YouTube audio-track publishing is unverified.
+Source captions remain in the pixels. Use a clean original for the main demo; preview controls cannot erase them.
+Links
+GitHub public repository
+Public repository: pending publication
+Demo video (under 3 minutes)
+Demo video URL: pending approval and upload
+Final product
+https://viberick-dub.web.app
+Consent and safety by design
+Two locks before a voice is cloned                                    Speaker vs consent       Cosine
+                                                                      recording
+1. Channel lock: the channel owner recorded the consent               Creator (own video)      0.90
+statement.
+                                                                      Creator's consent take   0.88
+2. Speaker lock: the diarized speaker's voice verifies against that
+recording (ECAPA cosine ≥ 0.45).                                      Podcast speaker A        0.09
+Everyone else gets a Gemini preset voice chosen by Gemini after
+listening to them.                                                    Podcast speaker B        0.00
+
+Verification stores an embedding. Voice replication also uses         Threshold                0.45
+provider-side voice state; local consent/reference recordings and
+generated media need explicit retention controls.
+

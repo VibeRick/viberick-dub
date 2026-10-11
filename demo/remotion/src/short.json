@@ -1,0 +1,80 @@
+[
+  {
+    "lang": "ko",
+    "name": "한국어",
+    "clips": [
+      {
+        "text": "그 자리에 계실 테고요.",
+        "duration": 1.4550416666666666,
+        "file": "podcast/short/ko-2.wav",
+        "speaker": "lex",
+        "start": 11.45,
+        "end": 12.905,
+        "source_start": 11.45,
+        "source_end": 13.52
+      },
+      {
+        "text": "그럼",
+        "duration": 0.75975,
+        "file": "podcast/short/ko-3.wav",
+        "speaker": "demis",
+        "start": 13.4,
+        "end": 14.16,
+        "source_start": 13.4,
+        "source_end": 14.15
+      }
+    ]
+  },
+  {
+    "lang": "ja",
+    "name": "日本語",
+    "clips": [
+      {
+        "text": "その場に立ち会うわけですね。",
+        "duration": 2.0773333333333333,
+        "file": "podcast/short/ja-2.wav",
+        "speaker": "lex",
+        "start": 11.45,
+        "end": 13.527,
+        "source_start": 11.45,
+        "source_end": 13.52
+      },
+      {
+        "text": "絶対に。",
+        "duration": 0.759,
+        "file": "podcast/short/ja-3.wav",
+        "speaker": "demis",
+        "start": 13.4,
+        "end": 14.159,
+        "source_start": 13.4,
+        "source_end": 14.15
+      }
+    ]
+  },
+  {
+    "lang": "zh-Hans",
+    "name": "中文",
+    "clips": [
+      {
+        "text": "而且你当时也会在现场。",
+        "duration": 1.7695833333333333,
+        "file": "podcast/short/zh-Hans-2.wav",
+        "speaker": "lex",
+        "start": 11.45,
+        "end": 13.22,
+        "source_start": 11.45,
+        "source_end": 13.52
+      },
+      {
+        "text": "当然。",
+        "duration": 0.7069583333333334,
+        "file": "podcast/short/zh-Hans-3.wav",
+        "speaker": "demis",
+        "start": 13.4,
+        "end": 14.107,
+        "source_start": 13.4,
+        "source_end": 14.15
+      }
+    ]
+  }
+]

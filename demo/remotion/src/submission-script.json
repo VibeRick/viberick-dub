@@ -1,0 +1,42 @@
+{
+  "problem": {
+    "text": "You made a video worth sharing. Reaching another language means translating, recording, matching the timing and building subtitles. Then doing it all again.",
+    "frames": 321,
+    "audio": null
+  },
+  "product": {
+    "text": "VibeRick Dub handles that workflow. Paste your video link and choose your languages. Get dubbed video, audio tracks and subtitles you can download and use.",
+    "frames": 348,
+    "audio": null
+  },
+  "conversation": {
+    "text": "The reply keeps a different voice, while subtitles follow its actual speech.",
+    "frames": 217,
+    "audio": null
+  },
+  "pipeline": {
+    "text": "A translation also has to fit the time a speaker actually talks. Chirp supplies word timestamps. Gemini translates for those windows. We measure each generated take, adjust wording or pace, and check the language, content and meaning.",
+    "frames": 504,
+    "audio": null
+  },
+  "repair": {
+    "text": "In this recorded run, the checker caught a Japanese line spoken in Korean. The pipeline generated another take. Problems it cannot resolve stay flagged.",
+    "frames": 335,
+    "audio": null
+  },
+  "voice": {
+    "text": "With consent, creators can use their own voice. Here is the original, then the English version.",
+    "frames": 230,
+    "audio": null
+  },
+  "architecture": {
+    "text": "Firebase hosts the studio. Firestore carries progress. Cloud Run executes the API and workers, with media in Cloud Storage. Completed languages become available independently.",
+    "frames": 335,
+    "audio": null
+  },
+  "finish": {
+    "text": "Switch languages without losing your place. Download the video, audio or subtitles. Fine-tune a line only when needed. You made the video. We handle the languages.",
+    "frames": 361,
+    "audio": null
+  }
+}

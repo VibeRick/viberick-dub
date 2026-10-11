@@ -1,0 +1,68 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#fff;font-family:Inter,sans-serif;color:#111214}
+.d{width:1600px;padding:40px;box-sizing:border-box;position:relative;background:#fff}
+.lab{font:500 15px 'JetBrains Mono';letter-spacing:.08em;text-transform:uppercase;color:#7d7a74;margin:0 0 12px}
+.node{border:1.5px solid #d6d4cf;border-radius:14px;padding:16px 20px;background:#fafaf8}
+.node b{display:block;font:600 22px 'Inter Tight';letter-spacing:-.01em}
+.node span{font-size:15px;color:#5f5c57}
+.ops{border-style:dashed;background:#fff}.ops b{font-size:17px}
+.ai{border-color:#ff6a2b;background:#fff3ec}
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:110px;align-items:start;position:relative;z-index:1}
+.col{display:flex;flex-direction:column;gap:14px}
+svg{position:absolute;inset:0;z-index:0}
+.foot{margin-top:28px;display:grid;grid-template-columns:repeat(5,1fr);gap:18px;font-size:15px;color:#3a3936}
+.foot div{border-top:2px solid #111214;padding-top:10px}
+.foot b{font:500 14px 'JetBrains Mono';color:#ff6a2b;display:block;margin-bottom:4px}
+.flow{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+.step{border:1.5px solid #d6d4cf;border-radius:14px;padding:18px;min-height:190px;background:#fafaf8;display:flex;flex-direction:column;gap:8px}
+.step i{font:500 14px 'JetBrains Mono';color:#7d7a74;font-style:normal}
+.step b{font:600 22px 'Inter Tight'}
+.step p{margin:0;font-size:15px;color:#3a3936;flex:1}
+.step em{font:500 13px 'JetBrains Mono';color:#7d7a74;font-style:normal}
+.step.loop{border-color:#ff6a2b;background:#fff3ec}
+.loopbar{margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.loopbar span{font:500 16px 'JetBrains Mono';padding:7px 12px;border-radius:8px;border:1.5px solid #ff6a2b}
+.loopbar .h{border-color:#d68a00;color:#a96d00}
+.loopbar .t{border:0;color:#7d7a74;padding:0}
+</style></head><body>
+<div class="d" id="arch">
+ <svg width="1600" height="560" id="sv"></svg>
+ <div class="grid" id="g">
+  <div class="col"><p class="lab">Browser</p><div class="node" id="fb"><b>Firebase Hosting</b><span>Studio · live updates</span></div><div class="node" id="fs"><b>Firestore</b><span>Jobs · agent events · lines</span></div><div class="node ops"><b>Secret Manager · Artifact Registry · Cloud Build</b><span>Keys · container · builds</span></div></div>
+  <div class="col"><p class="lab">Serving · Cloud Run</p><div class="node" id="api"><b>Cloud Run service</b><span>API · quotas · line edits</span></div><div class="node" id="job"><b>Cloud Run Jobs</b><span>One worker per dub · 4 vCPU</span></div><div class="node" id="gcs"><b>Cloud Storage</b><span>MP4 · M4A · SRT · VTT</span></div></div>
+  <div class="col"><p class="lab">Google AI</p><div class="node ai" id="chirp"><b>Chirp 3</b><span>Words · timestamps · speakers</span></div><div class="node ai" id="gem"><b>Gemini 3.8 Flash</b><span>Proofread · brief · translate · listen · cast</span></div><div class="node ai" id="tts"><b>Gemini TTS</b><span>Voice replication · presets</span></div></div>
+ </div>
+<div class="foot">
+  <div><b>1</b>Studio posts the link; the API checks quota and creates the job in Firestore.</div>
+  <div><b>2</b>The API starts a Cloud Run Job execution for that one dub.</div>
+  <div><b>3</b>The worker calls Chirp 3, Gemini and Gemini TTS per language.</div>
+  <div><b>4</b>Every agent decision is a Firestore event; the browser listener shows it live.</div>
+  <div><b>5</b>Outputs land in Cloud Storage; a line edit re-runs only that line.</div>
+ </div>
+</div>
+<div class="d" id="flow">
+ <div class="flow">
+  <div class="step"><i>01</i><b>Listen</b><p>Chirp 3 timestamps every word and labels speakers; Gemini listens and fixes names and jargon.</p><em>Chirp 3 · Gemini</em></div>
+  <div class="step"><i>02</i><b>Brief</b><p>Topic, register, and how each term is rendered.</p><em>Gemini 3.8 Flash</em></div>
+  <div class="step"><i>03</i><b>Translate to time</b><p>Character budget per sentence from its slot and the voice’s measured rate.</p><em>Gemini 3.8 Flash</em></div>
+  <div class="step"><i>04</i><b>Speak</b><p>Creator’s own voice behind two consent locks; matched presets for everyone else.</p><em>Gemini TTS</em></div>
+  <div class="step loop"><i>05</i><b>Check &amp; repair</b><p>Measure, then Gemini listens: language, words, meaning, length.</p><em>Gemini agent loop</em></div>
+  <div class="step"><i>06</i><b>Mix &amp; ship</b><p>Original timeline over the music bed, −14 LUFS; MP4, M4A, SRT, VTT.</p><em>Cloud Run · Storage</em></div>
+ </div>
+ <div class="loopbar"><span class="t">repair loop →</span><span>measure</span><span>shorten</span><span>time-fit</span><span>Gemini listens</span><span>re-speak</span><span>re-translate</span><span class="h">flag a human</span></div>
+</div>
+<script>
+const sv=document.getElementById('sv'),A=document.getElementById('arch').getBoundingClientRect();
+const c=id=>{const r=document.getElementById(id).getBoundingClientRect();return {l:r.left-A.left,r:r.right-A.left,t:r.top-A.top,b:r.bottom-A.top,cx:(r.left+r.right)/2-A.left,cy:(r.top+r.bottom)/2-A.top}};
+const line=(x1,y1,x2,y2,col,dash)=>sv.insertAdjacentHTML('beforeend',`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${col}" stroke-width="2.5" ${dash?'stroke-dasharray="7 6"':''} marker-end="url(#m)"/>`);
+sv.innerHTML='<defs><marker id="m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#8a8781"/></marker></defs>';
+const fb=c('fb'),api=c('api'),job=c('job'),fs=c('fs'),gcs=c('gcs');
+line(fb.r,fb.cy,api.l,api.cy,'#8a8781');
+line(api.cx,api.b,job.cx,job.t,'#8a8781');
+['chirp','gem','tts'].forEach(i=>{const n=c(i);line(job.r,job.cy,n.l,n.cy,'#ff6a2b')});
+line(job.l,job.cy,fs.r,fs.cy,'#ff6a2b',1);
+line(job.cx,job.b,gcs.cx,gcs.t,'#8a8781');
+sv.setAttribute('height',document.getElementById('arch').offsetHeight);
+</script></body></html>

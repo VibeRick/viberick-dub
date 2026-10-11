@@ -1,0 +1,133 @@
+{
+ "liveFile": "film/live.mp4",
+ "liveTotal": 17.8,
+ "live": [
+  {
+   "at": 0,
+   "dur": 17.8,
+   "trim": 0,
+   "rate": 1,
+   "label": "Live · a real Cloud Run job"
+  }
+ ],
+ "liveCallouts": [
+  {
+   "at": 7.2,
+   "x": 180,
+   "y": 560,
+   "title": "Cloud Run Job starts",
+   "body": "One worker per dub, scales to zero"
+  },
+  {
+   "at": 10.4,
+   "x": 180,
+   "y": 690,
+   "title": "Chirp 3",
+   "body": "Every word timestamped, speakers separated"
+  },
+  {
+   "at": 13.4,
+   "x": 180,
+   "y": 820,
+   "title": "Gemini 3.8 Flash",
+   "body": "Listens, fixes the transcript, translates to time"
+  }
+ ],
+ "editFile": "film/edit.mp4",
+ "editTotal": 16.1,
+ "edit": [
+  {
+   "at": 0,
+   "dur": 16.1,
+   "trim": 0,
+   "rate": 1
+  }
+ ],
+ "repair": {
+  "start": 121.8,
+  "end": 128.44
+ },
+ "podcast": {
+  "attribution": "Excerpt: Google DeepMind: The Podcast, “The future of intelligence” (youtu.be/PqVbypvxDto). Dubbed with preset voices for demonstration.",
+  "cast": [
+   {
+    "spk": "0:1",
+    "name": "Demis Hassabis",
+    "voice": "Algieba",
+    "why": "“calm, male, and smooth”"
+   },
+   {
+    "spk": "0:2",
+    "name": "Hannah Fry",
+    "voice": "Despina",
+    "why": "“female, calm, smooth, measured”"
+   }
+  ],
+  "turns": [
+   {
+    "spk": "0:1",
+    "start": 34.21,
+    "end": 39.4,
+    "text": {
+     "ko": "결국 튜링 기계의 한계가 무엇인지라는 질문으로 돌아오죠.",
+     "en": "And this comes back to the Turing machine question of like, what is the limit of a Turing machine?"
+    }
+   },
+   {
+    "spk": "0:2",
+    "start": 39.4,
+    "end": 43.3,
+    "text": {
+     "ko": "이 계산 영역에서 못 할 건 없다는 건가요?",
+     "en": "So, there's nothing that cannot be done within this sort of computational…"
+    }
+   },
+   {
+    "spk": "0:1",
+    "start": 43.3,
+    "end": 44.4,
+    "text": {
+     "ko": "이렇게 보시죠.",
+     "en": "Well, no one's… Put it this way."
+    }
+   },
+   {
+    "spk": "0:1",
+    "start": 44.4,
+    "end": 48.7,
+    "text": {
+     "ko": "우주에서 계산 불가능한 건 아직 발견되지 않았죠.",
+     "en": "Nobody's found anything in the universe that's non-computable."
+    }
+   },
+   {
+    "spk": "0:1",
+    "start": 48.7,
+    "end": 49.45,
+    "text": {
+     "ko": "지금껏",
+     "en": "So far."
+    }
+   },
+   {
+    "spk": "0:2",
+    "start": 49.45,
+    "end": 51.2,
+    "text": {
+     "ko": "지금까지는요.",
+     "en": "So far."
+    }
+   }
+  ],
+  "takes": [
+   {
+    "l": "ko",
+    "lang": "ko",
+    "label": "Korean",
+    "file": "film/dm.ko.mp4",
+    "start": 34.0,
+    "end": 51.2
+   }
+  ]
+ }
+}

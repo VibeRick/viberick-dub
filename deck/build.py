@@ -1,7 +1,10 @@
 """Fill the official AI Builder Cup template → deck/VibeRick-Dub.pptx (+ PDF via LibreOffice).
 
 uv run --with python-pptx python deck/build.py
-Numbers come from the run reports in runs/, so the deck always matches the measured data."""
+Baseline run metrics come from runs/. Other historical comparisons remain explicitly labeled baseline.
+Use --output or DUB_DECK_OUTPUT to preserve the original deck when making a review draft."""
+import argparse
+import os
 import copy
 import json
 import subprocess
@@ -15,7 +18,8 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 TEMPLATE = ROOT.parent / "submission-template.pptx"
 A = HERE / "assets"
-OUT = HERE / "VibeRick-Dub.pptx"
+OUT = Path(os.environ.get("DUB_DECK_OUTPUT", HERE / "VibeRick-Dub.pptx"))
+RUN = os.environ.get("DUB_DECK_RUN", "Fty2sz3dBwU.180s")
 
 INK, MUTED, ACCENT = RGBColor(0x11, 0x12, 0x14), RGBColor(0x5A, 0x5D, 0x66), RGBColor(0x2F, 0x5B, 0xFF)
 FONT = "Arial"
@@ -23,8 +27,8 @@ L, TOP, W, BOTTOM = Emu(265350), Emu(1180000), Emu(8613300), Emu(5000000)
 
 LINKS = {
     "product": "https://viberick-dub.web.app",
-    "github": "https://github.com/jays0606/viberick-dub",
-    "video": "(demo video link — added at submission)",
+    "github": "Public repository: pending publication",
+    "video": "Demo video URL: pending approval and upload",
 }
 
 
@@ -110,16 +114,18 @@ def drop(prs, index: int) -> None:
 
 
 def build() -> Path:
-    demo, full, multi = report("Fty2sz3dBwU.180s"), report("Fty2sz3dBwU"), report("PqVbypvxDto.120s")
+    demo, full, multi = report(RUN), report("Fty2sz3dBwU"), report("PqVbypvxDto.120s")
+    if demo is None:
+        raise FileNotFoundError(f"Missing baseline report for run {RUN!r}; refusing placeholder metrics")
     prs = Presentation(str(TEMPLATE))
     s = prs.slides
 
     # 1 · Team details
     box = next(sh for sh in s[0].shapes if sh.has_text_frame)
     tf = box.text_frame
-    lines = ["Team Details", "", "Team name: VibeRick", "Team leader name: Jaeho Shin",
+    lines = ["VibeRick Dub", "", "Team name: VibeRick", "Team leader name: Jaeho Shin",
              "Problem Statement: Media, Content & Digital Experiences — creators reach only the viewers who "
-             "speak their language. VibeRick Dub turns one video into dubbed tracks in the creator's own voice."]
+             "speak their language. VibeRick Dub automates multilingual audio, subtitle timing and output delivery."]
     for i, p in enumerate(tf.paragraphs):
         for r in p.runs:
             r.text = ""
@@ -130,48 +136,44 @@ def build() -> Path:
         p.add_run().text = lines[len(tf.paragraphs) - 1]
     image(s[0], A / "logo-v.png", Emu(7900000), Emu(3150000), Emu(950000), Emu(950000))
 
-    # 3 · Brief
-    set_title(s[2], "Brief about the idea")
-    text(s[2], L, TOP, Emu(5300000), Emu(3700000), [
-        ("One video. Every language. Your own voice.", {"size": 22, "bold": True, "gap": 12}),
-        "Paste a YouTube link. An AI agent built on Gemini transcribes it, translates every sentence to fit its "
-        "timing, speaks it in the creator's own cloned voice, then listens back to every line and repairs what "
-        "doesn't sound right.",
-        "The creator gets dubbed tracks and subtitles ready for YouTube's multi-language audio — in minutes, for "
-        "cents per minute, with consent built in: the cloned voice is used only for the person who recorded it.",
-        ("Languages today: Korean · English · Japanese · Chinese (source detected automatically).",
-         {"color": MUTED, "size": 12}),
+    # 3 · Outcome first; detailed proof follows.
+    set_title(s[2], "You made the video. We handle the languages.")
+    text(s[2], L, TOP, Emu(5250000), Emu(3750000), [
+        ("One recording. Multilingual versions.", {"size": 22, "bold": True, "gap": 12}),
+        "Paste a video link and choose languages. VibeRick Dub translates for the available speaking time, generates audio, checks each take and exports video, audio and synced subtitles.",
+        "Creators can use a consented voice replica. Other speakers use distinct presets. Language switching keeps the same playback position; line editing is available when needed.",
+        ("Four tested pipeline languages: Korean, English, Japanese and Simplified Chinese. Automatic checks are not human quality certification.", {"color": MUTED, "size": 11}),
     ], size=14, gap=10)
-    image(s[2], A / "shot-studio-en.png", Emu(5750000), TOP, Emu(3150000), Emu(3700000))
+    text(s[2], Emu(6000000), Emu(TOP + 300000), Emu(2800000), Emu(3100000), [
+        ("Finished outputs", {"size": 16, "color": MUTED, "gap": 20}),
+        ("Dubbed video", {"size": 24, "bold": True, "gap": 20}),
+        ("Audio tracks", {"size": 24, "bold": True, "gap": 20}),
+        ("Synced subtitles", {"size": 24, "bold": True, "gap": 20}),
+        ("Play and download each language. Fine-tune only when needed.", {"size": 13, "color": MUTED}),
+    ])
 
-    # 4 · Opportunities
-    set_title(s[3], "Opportunities")
+    # 4 · Problem, differentiation and commercial hypothesis.
+    set_title(s[3], "A finished language version, without coordinating every step")
     text(s[3], L, TOP, W, Emu(3800000), [
-        ("How is it different from existing ideas?", {"bold": True, "size": 14}),
-        ("YouTube auto-dubbing: not the creator's voice, cannot be edited, and Korean sources get only English and "
-         "Indonesian. VibeRick Dub speaks in the creator's own voice, in any of our languages, and shows every line.",
-         {"bullet": True}),
-        ("Voice-clone dubbing services (ElevenLabs, Rask, Perso) charge ~$0.33–2.20 per minute and run open-loop. "
-         "Our agent listens to every dubbed line with Gemini and repairs it, for ~$0.05 per dubbed minute.",
-         {"bullet": True}),
-        ("How will it solve the problem?", {"bold": True, "size": 14}),
-        ("YouTube: creators who add multi-language audio get over 25% of watch time from other languages. "
-         "VibeRick Dub makes that track a one-link job instead of a studio booking.", {"bullet": True}),
-        ("USP", {"bold": True, "size": 14}),
-        ("Own voice + time-fitted translation + a self-verifying agent + consent by design (two locks: channel "
-         "consent and speaker verification), all on Google Cloud.", {"bullet": True}),
-    ], size=13, gap=7)
+        ("The work repeats for every language", {"bold": True, "size": 17}),
+        "Translation, recording, timing, subtitle preparation and quality checks form a connected production task. Our first users are independent tutorial creators, podcasters and small course teams.",
+        ("The system measures and repairs its own output", {"bold": True, "size": 17}),
+        "Translation length is a starting estimate. Actual speech duration and model listening checks drive retries; unresolved issues remain visible. Outputs can be downloaded and edited before creator-controlled publishing.",
+        ("A focused route to a business", {"bold": True, "size": 17}),
+        "Test paid usage per output minute with creators who localize repeatedly. Measure active labor, generation cost and the share of lines needing intervention before setting pricing.",
+        ("YouTube documents that automatic dubs cannot be edited. We do not claim superior audio quality without a matched comparison. Source: support.google.com/youtube/answer/15569972", {"size": 10, "color": MUTED}),
+    ], size=14, gap=10)
 
     # 5 · Features
     set_title(s[4], "List of features offered by the solution")
     feats = [
-        ("Creator's own voice", "Gemini 3.8 Flash TTS voice replication from a 20 s sample + spoken consent"),
+        ("Distinct speaker voices", "Current demo: Charon for Lex, Algieba for Demis. Consented voice replication is a separate tested feature."),
         ("Translation that fits the clock", "Each sentence gets a character budget from its time slot and the voice's measured speed"),
-        ("Self-verifying agent", "Gemini listens to every dubbed line; too long → shorten, wrong → re-speak → re-translate → flag"),
-        ("Accurate transcript", "Chirp 3 timings + Gemini proofreading by listening (7.6% CER, on par with the best tool we tested)"),
-        ("Multi-speaker", "Chirp 3 diarization; Gemini casts a fitting preset voice for every other speaker"),
+        ("Automatic audio checks and repair", "Checks language, content and source meaning; retries or flags unresolved issues."),
+        ("Audio-led transcription", "Chirp timestamps + Gemini audio proofreading; source captions can contain editorial edits."),
+        ("Multiple speakers", "Speaker labels and separate voice assignments; the podcast excerpt uses transcript-assisted source alignment."),
         ("Consent lock", "Clone only for the channel owner whose voice verifies against the consent recording"),
-        ("Live studio", "Watch the agent work in real time; switch languages on the video; synced transcript"),
+        ("Play, download, optionally edit", "Same-position language switching, per-language outputs and preview / accept / discard"),
         ("Ready to upload", "Dubbed MP4 + M4A (−14 LUFS, original music kept) + SRT/VTT subtitles"),
     ]
     for k, (h, d) in enumerate(feats):
@@ -183,10 +185,15 @@ def build() -> Path:
     set_title(s[5], "Process flow diagram")
     image(s[5], A / "flow.png", L, TOP, W, Emu(3800000))
 
-    # 7 · Wireframes → the real UI
-    set_title(s[6], "Wireframes / mock: the live product")
-    image(s[6], A / "shot-hero.png", L, TOP, Emu(6100000), Emu(3800000))
-    image(s[6], A / "shot-mobile.png", Emu(6550000), TOP, Emu(2300000), Emu(3800000))
+    # 7 · Actual outcome-first UI, preserved aspect ratio.
+    set_title(s[6], "The finished video leads the experience")
+    image(s[6], ROOT / "docs/review-2026-10-10/outcome-studio.jpg", L, TOP, Emu(4600000), Emu(3650000))
+    text(s[6], Emu(5100000), TOP, Emu(3600000), Emu(3650000), [
+        ("Listen. Switch languages. Download.", {"bold": True, "size": 20}),
+        "A large player, aligned captions and language-specific video, audio and subtitle files make the result immediately usable.",
+        "Detailed timing, transcript and quality records are expandable. Optional edits preserve the user's exact words, with preview before acceptance.",
+        ("Actual local UI capture. Outcome-first layout is awaiting deployment; the previous studio is deployed. This screenshot uses a recorded creator sample.", {"size": 11, "color": MUTED}),
+    ], size=14, gap=12)
 
     # 8 · Architecture
     set_title(s[7], "Architecture diagram of the proposed solution")
@@ -207,66 +214,81 @@ def build() -> Path:
         ["Open source", "demucs (music bed), ECAPA-TDNN (speaker verification for the consent lock), yt-dlp, ffmpeg"],
     ], [0.36, 0.64], size=11, row_h=330000)
 
-    # 10 · Cost
+    # 10 · Cost: only the text usage comes from the recorded report.
     set_title(s[9], "Estimated implementation cost")
-    usd = demo["gemini_text_usd"] if demo else 0.28
-    dubbed_min = (demo["duration"] / 60 * len(demo["langs"])) if demo else 9
-    text_pm = usd / dubbed_min
-    table(s[9], L, TOP, Emu(4800000), [
-        ["Per dubbed minute (measured)", "USD"],
-        ["Gemini 3.8 Flash text + listening checks", f"{text_pm:.3f}"],
-        ["Gemini 3.8 Flash TTS (25 audio tokens/s, $9/1M)", "0.014"],
-        ["Chirp 3 (per source min ÷ 3 languages)", "0.005"],
-        ["Cloud Run Job (4 vCPU)", "0.003"],
-        ["Total", f"≈ {text_pm + 0.022:.2f}"],
-    ], [0.78, 0.22], size=12, row_h=360000)
-    table(s[9], Emu(5300000), TOP, Emu(3580000), [
-        ["Voice-clone dubbing", "USD / min"],
-        ["ElevenLabs", "0.33 – 2.20"],
-        ["Rask AI", "≈ 1.56"],
-        ["Perso AI", "≈ 0.55 – 0.73"],
-        ["VibeRick Dub", f"≈ {text_pm + 0.022:.2f}"],
-    ], [0.6, 0.4], size=12, row_h=360000)
-    text(s[9], L, Emu(3500000), W, Emu(1200000), [
-        ("Competitor list prices checked 2026-10-10. Fixed cost: Cloud Run scales to zero; Firestore and Hosting "
-         "stay within the free tier for the demo.", {"color": MUTED, "size": 11})])
+    usd = demo.get("gemini_text_usd") if demo else None
+    dubbed_min = (demo["duration"] / 60 * len(demo["langs"])) if demo else 1
+    text_pm = usd / dubbed_min if usd is not None else None
+    table(s[9], L, TOP, W, [
+        ["Selected run: cost per dubbed minute", "USD", "Evidence"],
+        ["Gemini text + listening checks", f"{text_pm:.3f}" if text_pm is not None else "Pending", "Usage recorded; rate-based estimate" if text_pm is not None else "Aggregation pending"],
+        ["Gemini TTS", "0.014", "Planning estimate"],
+        ["Chirp (source minutes split across 3 languages)", "0.005", "Planning estimate"],
+        ["Cloud Run compute", "0.003", "Planning estimate"],
+        ["Illustrative subtotal", f"~ {text_pm + 0.022:.2f}" if text_pm is not None else "Pending", "Not a billing reconciliation"],
+    ], [0.57, 0.13, 0.30], size=12, row_h=360000)
+    text(s[9], L, Emu(3600000), W, Emu(1150000), [
+        "Storage, downloads/proxy, retries and additional line previews can add cost. "
+        "Fresh aggregate usage and actual billing are still being reconciled; no revised cost claim is made.",
+        ("Infrastructure uses Google Cloud. Voice generation uses a separately billed Google project; "
+         "credits and cash billing must be tracked separately.", {"color": MUTED, "size": 11})], size=13)
 
-    # 11 · Snapshots
-    set_title(s[10], "Snapshots of the prototype")
-    image(s[10], A / "shot-studio-ja.png", L, TOP, Emu(4250000), Emu(2700000))
-    image(s[10], A / "shot-log.png", Emu(4628650), TOP, Emu(4250000), Emu(2700000))
-    text(s[10], L, Emu(3950000), W, Emu(900000), [
-        ("Left: Japanese dub with subtitles and the synced transcript. Right: the agent log — every shorten, "
-         "re-speak, re-translate and Gemini verdict, streamed live from Firestore.", {"color": MUTED, "size": 12})])
+    # 11 · Current podcast run evidence.
+    set_title(s[10], "A real two-speaker dubbing run")
+    podcast = report("podcast-demo-2026-10-11")
+    passed = sum(row["ok"] for row in podcast["langs"])
+    total = sum(row["lines"] for row in podcast["langs"])
+    table(s[10], L, TOP, W, [
+        ["Recorded demo", "Evidence"],
+        ["Source", "Lex Fridman Podcast #475 · Demis Hassabis · 56:27–57:07"],
+        ["Speaker assignments", "Lex: Charon preset · Demis: Algieba preset"],
+        ["Target tracks", "Korean · Japanese · Chinese (Simplified)"],
+        ["Automatic listening checks", f"{passed}/{total} passed; this is not native listening certification"],
+        ["Source timing", "Audio-estimated alignment against the published transcript"],
+        ["Later editorial repair", "Korean opening terminology revised and rechecked"],
+    ], [0.32, 0.68], size=12, row_h=390000)
+    text(s[10], L, Emu(4100000), W, Emu(700000), [
+        ("The recorded run and later editorial repair are preserved separately. No end-to-end Cloud Run speed or "
+         "automatic diarization claim is inferred from this selected demo.", {"size": 11, "color": MUTED})])
 
-    # 12 · Performance
-    set_title(s[11], "Prototype performance report / benchmarking")
-    rows = [["Measure", "Result"]]
-    if demo:
-        ok = sum(l["ok"] for l in demo["langs"]); n = sum(l["lines"] for l in demo["langs"])
-        rows += [["3-min Korean video → en, ja, zh: lines verified by Gemini listening", f"{ok} / {n}"],
-                 ["Timing drift (p95, worst language)", f"{max(l['late_p95'] for l in demo['langs']):.2f} s"],
-                 ["Wall-clock, 3 languages", mmss(demo["sec_total"])]]
-    if full:
-        okf = sum(l["ok"] for l in full["langs"]); nf = sum(l["lines"] for l in full["langs"])
-        rows += [[f"Full {mmss(full['duration'])} video → 3 languages: verified · wall-clock",
-                  f"{okf} / {nf} · {mmss(full['sec_total'])}"]]
-    if multi:
-        rows += [["2-speaker English podcast → Korean: lines verified; voices cast", "28 / 28 · male + female presets"]]
-    rows += [["Transcript CER vs creator's edited captions (3 runs)", "Chirp 3 + Gemini 7.6–7.9% · Chirp 8.6% · Gemini 10.6–11.8%"],
-             ["Gemini-only timestamps drift (why Chirp is the clock)", "up to 42 s"],
-             ["Speaker similarity to the creator (ECAPA cosine)", "English clone 0.68 · creator 0.90 · others 0.00–0.09"]]
-    table(s[11], L, TOP, W, rows, [0.62, 0.38], size=11, row_h=330000)
+    # 12 · Fresh comparative evidence, measured over the same 180 seconds.
+    set_title(s[11], "Separate creator test: measured pauses over 3 minutes")
+    before_doc = json.loads((ROOT / "docs/review-2026-10-10/quality-fresh-3min-2026-10-11.json").read_text())
+    after_doc = json.loads((ROOT / "runs/refined-3min-2026-10-11/refinement-quality.json").read_text())
+    before = next(a for a in before_doc["audits"] if Path(a["run"]).name == "Fty2sz3dBwU.180s")
+    after = next(a for a in after_doc["audits"] if Path(a["run"]).name == "refined-3min-2026-10-11")
+    def longest(audio):
+        return max((g["seconds"] for g in audio["gaps"] if g["source_active_seconds"] > 0), default=0)
+    rows = [["Language", "Detected silence: old → refined", "Longest gap*: old → refined"]]
+    for lang, label in [("en", "English"), ("ja", "Japanese"), ("zh-Hans", "Chinese")]:
+        old, new = before["languages"][lang]["audio"], after["languages"][lang]["audio"]
+        assert old["comparison_window_seconds"] == new["comparison_window_seconds"] == 180
+        rows.append([label, f"{old['dub_detected_silence_seconds']:.2f} → {new['dub_detected_silence_seconds']:.2f} s",
+                     f"{longest(old):.2f} → {longest(new):.2f} s"])
+    table(s[11], L, TOP, W, rows, [0.19, 0.40, 0.41], size=12, row_h=390000)
+    refined = report("refined-3min-2026-10-11")
+    ok = sum(l["ok"] for l in refined["langs"])
+    n = sum(l["lines"] for l in refined["langs"])
+    trials = json.loads((ROOT / "runs/refined-3min-2026-10-11/refinement-results.json").read_text())
+    accepted = sum(t["accepted"] is True for t in trials)
+    text(s[11], L, Emu(2900000), W, Emu(1900000), [
+        ("Separate Korean creator recording: RMS energy at −40 dBFS over the same 180 s. This is an energy heuristic, not a test of naturalness or intelligibility.", {"size": 12}),
+        ("*Dub-silent intervals with any source-active overlap. Music or noise can affect detection.", {"size": 11, "color": MUTED}),
+        (f"Refined run: {ok}/{n} automatic checks passed; {accepted}/{len(trials)} candidate line refinements retained. Native listening review remains pending.", {"size": 12}),
+        ("Chinese longest gap increased 2.82 → 2.94 s vs the first revision. Improvements are not universal.", {"size": 11, "color": MUTED}),
+        ("Separate historical 15:05 baseline: 366/369 checks passed; 3 lines flagged. Fresh generation ran as serial local validation, not a Cloud Run latency benchmark.", {"size": 11, "color": MUTED}),
+    ], gap=7)
 
-    # 13 · Future
-    set_title(s[12], "Additional details / future development")
+    # 13 · Architecture depth and evidence still needed.
+    set_title(s[12], "Operate reliably, then expand language coverage")
     text(s[12], L, TOP, W, Emu(3800000), [
-        ("More languages: the same path covers every language Gemini TTS speaks; subtitles for 100+.", {"bullet": True}),
-        ("One-click publish to YouTube multi-language audio via the YouTube Data API.", {"bullet": True}),
-        ("Guest consent in the browser: guests record the consent line and get their own cloned voice.", {"bullet": True}),
-        ("Line editor: fix one line, re-speak only that line; glossary per channel.", {"bullet": True}),
-        ("Emotion and emphasis transfer from the original delivery; lip-sync for on-camera close-ups.", {"bullet": True}),
-        ("Shorts and podcasts: the same agent for vertical video and audio-only feeds.", {"bullet": True}),
+        ("Implemented reliability controls", {"bold": True, "size": 16}),
+        "Shared preprocessing, bounded language concurrency and independent language completion. Idempotent job creation, owner-protected edits, durable workspace snapshots, worker leases and usage caps.",
+        ("Verified cloud behavior", {"bold": True, "size": 16}),
+        "Recorded smoke tests cover job creation, duplicate-request recovery, unauthorized edit rejection, preview acceptance/discard and exact-wording preservation. API revision 00010-rih was promoted after validation.",
+        ("Scale by measuring the bottlenecks", {"bold": True, "size": 16}),
+        "Next: sustained load tests, quota/backpressure tuning, per-stage cost accounting and retention enforcement. Wider language support requires separate listening and timing validation.",
+        ("Release gates: representative media rights, human listening, matched timing/cost evidence and final public repository/video links. New UI is local; no scale or hours-saved claim is made.", {"color": MUTED, "size": 11}),
     ], size=14, gap=10)
 
     # 14 · Links
@@ -285,24 +307,42 @@ def build() -> Path:
         ("2. Speaker lock: the diarized speaker's voice verifies against that recording (ECAPA cosine ≥ 0.45).",
          {"size": 13}),
         ("Everyone else gets a Gemini preset voice chosen by Gemini after listening to them.", {"size": 13}),
-        ("Only a 192-number voice embedding is stored, never the audio. Every clip carries SynthID.",
+        ("Verification stores an embedding. Voice replication also uses provider-side voice state; local consent/reference "
+         "recordings and generated media need explicit retention controls.",
          {"size": 13, "color": MUTED}),
     ], gap=9)
     table(s[14], Emu(5500000), TOP, Emu(3380000), [
-        ["Speaker vs consent recording", "Cosine"],
-        ["Creator (own video)", "0.90"],
-        ["Creator's consent take", "0.88"],
-        ["Podcast speaker A", "0.09"],
-        ["Podcast speaker B", "0.00"],
-        ["Threshold", "0.45"],
-    ], [0.68, 0.32], size=12, row_h=360000)
+        ["Boundary", "Behavior"],
+        ["Consent absent", "Use preset"],
+        ["Speaker match ambiguous", "Use preset"],
+        ["Automated checks fail", "Retry or flag"],
+        ["Manual edit", "Preserve wording"],
+        ["Public output", "Disclosed before creation"],
+    ], [0.50, 0.50], size=11, row_h=430000)
 
+    sources = {
+        3: "YouTube automatic dubbing documentation checked 2026-10-11: https://support.google.com/youtube/answer/15569972 . User/labor benefit is a hypothesis pending measured workflow comparison.",
+        2: "The main screenshot is an actual local creator result. Separate podcast evidence uses official Lex Fridman Podcast #475, https://www.youtube.com/watch?v=-HzgcbRXUK8 , selected 56:27–57:07. Actual local frames from runs/podcast-demo-2026-10-11/source.mp4. Charon and Algieba are preset voices; these are not cloned celebrity voices. Source-alignment.json documents transcript-assisted alignment.",
+        6: "Actual local UI capture docs/review-2026-10-10/outcome-studio.jpg. The current outcome-first layout is local, not proof of a deployed revision.",
+        10: "runs/podcast-demo-2026-10-11/out/report.json; units.json; source-alignment.json; revisions/ko0-before. All18 target rows passed automatic checks. Local run timing is not advertised as deployment latency.",
+        9: f"Baseline: runs/{RUN}/out/report.json. gemini_text_usd is token usage priced at configured rates in dub/gem.py, not an invoice. Other rows are planning estimates from the previous deck.",
+        11: "Measured comparison: docs/review-2026-10-10/quality-fresh-3min-2026-10-11.json and runs/refined-3min-2026-10-11/refinement-quality.json, RMS threshold -40 dBFS, 180-second common window. Candidate acceptance: runs/refined-3min-2026-10-11/refinement-results.json. Chinese longest gap regressed from 2.82 to 2.94 seconds relative to the first revision, despite improvement against original 6.56 seconds. Energy is not native listening quality. Historical full-run baseline retains 3 flagged lines. Fresh sec_total is local serial-validation artifact timing, not deployed Cloud Run latency.",
+        14: "Implementation: dub/speakers.py, dub/config.py. Reference/consent audio and provider voice state require separate retention treatment.",
+    }
+    for idx, source in sources.items():
+        s[idx].notes_slide.notes_text_frame.text = source
     drop(prs, 1)   # the template's "how to download" instruction slide
+    OUT.parent.mkdir(parents=True, exist_ok=True)
     prs.save(OUT)
-    subprocess.run(["soffice", "--headless", "--convert-to", "pdf", "--outdir", str(HERE), str(OUT)],
+    subprocess.run(["soffice", "--headless", "--convert-to", "pdf", "--outdir", str(OUT.parent), str(OUT)],
                    check=True, capture_output=True)
     return OUT
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--run", default=RUN, help="Existing runs/ directory used for baseline metrics")
+    parser.add_argument("--output", type=Path, default=OUT, help="Separate review PPTX path (PDF written beside it)")
+    args = parser.parse_args()
+    RUN, OUT = args.run, args.output.resolve()
     print(build())
