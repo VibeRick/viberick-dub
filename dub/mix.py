@@ -76,12 +76,17 @@ def place(units: list[dict], clips: list[Path], total: float, out: Path,
     return stats
 
 
+# Gemini TTS clips carry sub-bass rumble (measured 2026-10-11: below 60 Hz only 7 dB under the voice,
+# against 18 dB in the original speech), heard as a low thump. Speech has nothing useful below 70 Hz.
+VOICE_HP = "highpass=f=70:poles=2,highpass=f=70:poles=2"
+
+
 def mix(voice_wav: Path, bed: Path | None, out: Path) -> None:
     if bed:
-        fc = ("[0:a]aresample=48000,pan=stereo|c0=c0|c1=c0[v];[1:a]aresample=48000[b];"
+        fc = (f"[0:a]aresample=48000,{VOICE_HP},pan=stereo|c0=c0|c1=c0[v];[1:a]aresample=48000[b];"
               "[v][b]amix=inputs=2:normalize=0:duration=first,loudnorm=I=-14:TP=-1.5:LRA=11")
         cmd = ["-i", str(voice_wav), "-i", str(bed), "-filter_complex", fc]
     else:
-        cmd = ["-i", str(voice_wav), "-af", "aresample=48000,pan=stereo|c0=c0|c1=c0,loudnorm=I=-14:TP=-1.5:LRA=11"]
+        cmd = ["-i", str(voice_wav), "-af", f"aresample=48000,{VOICE_HP},pan=stereo|c0=c0|c1=c0,loudnorm=I=-14:TP=-1.5:LRA=11"]
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", *cmd, "-ar", "48000", "-c:a", "aac", "-b:a", "160k",
                     str(out)], check=True)

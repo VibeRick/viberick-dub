@@ -54,7 +54,7 @@ const Brand: React.FC<{ opacity?: number }> = ({ opacity = 1 }) => (
 const OPEN = [
   { l: "orig", lang: "ko", label: "한국어", tag: "ORIGINAL", start: 8.88, end: 12.84, text: "제 부모님만 하더라도 이제 다 ChatGPT한테 물어보시는 것 같아요." },
   { l: "en", lang: "en", label: "English", tag: "AI DUB · HIS OWN VOICE", start: 9.0, end: 12.8, text: "Even my parents seem to ask ChatGPT about everything these days." },
-  { l: "ja", lang: "ja", label: "日本語", tag: "AI DUB · HIS OWN VOICE", start: 8.53, end: 12.65, text: "私の両親も最近はChatGPTに何でも聞いているようです。" },
+  { l: "hi", lang: "hi", label: "हिन्दी", tag: "AI DUB · HIS OWN VOICE", start: 8.53, end: 11.82, text: "लगता है मेरे माता-पिता भी अब सब ChatGPT से ही पूछते हैं।" },
   { l: "zh-Hans", lang: "zh-Hans", label: "中文", tag: "AI DUB · HIS OWN VOICE", start: 8.53, end: 12.62, text: "拿我父母来说，现在好像全都会去问ChatGPT了。" },
 ];
 const OPEN_PAD = 0.35;
@@ -83,7 +83,7 @@ const ColdOpenShot: React.FC<{ o: typeof OPEN[number]; i: number }> = ({ o, i })
         <Face src={src} trim={trim} />
         <div style={{ flex: 1 }}>
           <Eyebrow color={o.l === "orig" ? C.ink3 : C.accent}>{o.tag}</Eyebrow>
-          <div lang={o.lang} style={{ font: `600 168px/1 ${display}`, letterSpacing: o.lang === "en" ? "-.04em" : "normal", color: C.ink, marginTop: 18 }}>{o.label}</div>
+          <div lang={o.lang} style={{ font: `600 168px/1 ${display}`, letterSpacing: o.lang === "en" ? "-.04em" : "normal", color: C.ink, marginTop: 18, lineHeight: o.lang === "hi" ? 1.25 : 1 }}>{o.label}</div>
           <div lang={o.lang} style={{ font: `500 44px/1.4 ${ui}`, color: C.ink2, marginTop: 36, maxWidth: 820 }}>“{o.text}”</div>
         </div>
       </AbsoluteFill>
@@ -100,20 +100,53 @@ const ColdOpen = () => {
   return <>{OPEN.map((o, i) => { const from = at; at += openDur(o); return <Sequence key={o.l} from={from} durationInFrames={openDur(o)}><ColdOpenShot o={o} i={i} /></Sequence>; })}</>;
 };
 
+// ── 2b · YouTube auto-dubbing vs VibeRick Dub (support.google.com/youtube/answer/15569972, 2026-10-11) ─
+const COMPARE = [
+  ["From a Korean video", "English, Indonesian", "125 languages"],
+  ["Whose voice", "a synthetic voice", "your own, with consent"],
+  ["Fix a line", "“You cannot edit automatic dubs”", "edit and re-speak each line"],
+  ["Checks itself", "—", "Gemini listens to every line"],
+];
+const Compare: React.FC<{ f: number; at: number; until: number }> = ({ f, at, until }) => (
+  <AbsoluteFill style={{ justifyContent: "center", padding: "0 160px", opacity: Math.min(fadeIn(f, at, 8), 1 - fadeIn(f, until - 6, 6)) }}>
+    <div style={{ display: "grid", gridTemplateColumns: "0.9fr 1.45fr 1.2fr", font: `500 38px ${ui}` }}>
+      <span />
+      <span style={{ font: `500 26px ${mono}`, color: C.ink3, letterSpacing: ".08em", paddingBottom: 22 }}>YOUTUBE AUTO-DUBBING</span>
+      <span style={{ font: `500 26px ${mono}`, color: C.accent, letterSpacing: ".08em", paddingBottom: 22 }}>VIBERICK DUB</span>
+      {COMPARE.map(([k, a, b], i) => (
+        <React.Fragment key={k}>
+          {[k, a, b].map((x, j) => (
+            <span key={j} style={{ padding: "26px 0", borderTop: `1px solid ${C.line}`, color: j === 0 ? C.ink3 : j === 1 ? C.ink2 : C.ink, fontWeight: j === 2 ? 600 : 500, opacity: fadeIn(f, at + 6 + i * 7) }}>{x}</span>
+          ))}
+        </React.Fragment>
+      ))}
+    </div>
+    <div style={{ font: `400 22px ${ui}`, color: C.ink3, marginTop: 30, opacity: fadeIn(f, at + 30) }}>YouTube Help, “Automatic dubbing”, checked Oct 2026</div>
+  </AbsoluteFill>
+);
+
 // ── 2 · title + problem ─────────────────────────────────────────────────────────────────────
 const Title = () => {
   const f = useCurrentFrame();
   const out = sec(11.0);
   const steps = ["Translate the script", "Hire voice actors", "Re-time every line", "Build subtitles"];
+  const bridge = sec(N.N1 + .4), named = bridge + sec(6.7);
   return (
     <AbsoluteFill style={{ background: C.ground, color: C.ink }}>
       <Audio src={staticFile("film/N1.wav")} />
+      <Sequence from={bridge}><Audio src={staticFile("film/N1b.wav")} /></Sequence>
+      <Compare f={f} at={bridge} until={named} />
+      <AbsoluteFill style={{ justifyContent: "center", alignItems: "center", textAlign: "center", opacity: fadeIn(f, named, 8) }}>
+        <Img src={staticFile("film/logo.png")} style={{ width: 96, height: 96, borderRadius: 20 }} />
+        <div style={{ font: `600 150px/.95 ${display}`, letterSpacing: "-.045em", marginTop: 36, transform: `translateY(${rise(f, named)}px)` }}>VibeRick Dub</div>
+        <div style={{ font: `500 40px ${ui}`, color: C.ink2, marginTop: 30, opacity: fadeIn(f, named + 10) }}>AI dubbing in your own voice · timed to every sentence · <span style={{ color: C.accent }}>125 languages</span></div>
+      </AbsoluteFill>
       <Brand />
       <AbsoluteFill style={{ justifyContent: "center", padding: "0 160px", opacity: interpolate(f, [out, out + 8], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }) }}>
         <Eyebrow>AI dubbing agent · built on Google Cloud</Eyebrow>
         <div style={{ font: `600 196px/.92 ${display}`, letterSpacing: "-.045em", marginTop: 28, opacity: fadeIn(f, 4), transform: `translateY(${rise(f, 4)}px)` }}>Your voice.<br />Every language.</div>
       </AbsoluteFill>
-      <AbsoluteFill style={{ justifyContent: "center", padding: "0 160px", opacity: fadeIn(f, out + 6) }}>
+      <AbsoluteFill style={{ justifyContent: "center", padding: "0 160px", opacity: Math.min(fadeIn(f, out + 6), 1 - fadeIn(f, bridge - 8, 8)) }}>
         <Eyebrow>Today, for every language</Eyebrow>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 20, marginTop: 36 }}>
           {steps.map((s, i) => {
@@ -343,26 +376,14 @@ const Arch = () => {
 // ── 8 · consent + close ─────────────────────────────────────────────────────────────────────
 const Close = () => {
   const f = useCurrentFrame();
-  const end = sec(3.6);
+  const end = 0;
   return (
     <AbsoluteFill style={{ background: C.ground, color: C.ink }}>
       <Audio src={staticFile("film/N7.wav")} />
-      <AbsoluteFill style={{ justifyContent: "center", padding: "0 160px", opacity: interpolate(f, [end - 6, end + 2], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }) }}>
-        <Eyebrow color={C.accent}>Two locks on a cloned voice</Eyebrow>
-        <div style={{ display: "flex", gap: 24, marginTop: 32 }}>
-          {[["1", "Channel consent", "a recorded consent statement"], ["2", "Voice match", "speaker embedding ≥ 0.45 · creator 0.90 · others ≤ 0.09"]].map(([n, t, s], i) => (
-            <div key={n} style={{ flex: 1, padding: "34px 38px", borderRadius: 18, background: C.s1, border: `1px solid ${C.line}`, opacity: fadeIn(f, 4 + i * 10) }}>
-              <div style={{ font: `500 26px ${mono}`, color: C.accent }}>{n}</div>
-              <div style={{ font: `600 56px ${display}`, letterSpacing: "-.025em", marginTop: 12 }}>{t}</div>
-              <div style={{ font: `400 26px ${ui}`, color: C.ink2, marginTop: 10 }}>{s}</div>
-            </div>
-          ))}
-        </div>
-      </AbsoluteFill>
       <AbsoluteFill style={{ justifyContent: "center", alignItems: "center", textAlign: "center", opacity: fadeIn(f, end) }}>
         <Img src={staticFile("film/logo.png")} style={{ width: 88, height: 88, borderRadius: 18 }} />
         <div style={{ font: `600 120px/.98 ${display}`, letterSpacing: "-.045em", marginTop: 40 }}>Any video. 125 languages.<br /><span style={{ color: C.accent }}>Your own voice.</span></div>
-        <div style={{ font: `500 40px ${ui}`, color: C.ink2, marginTop: 36 }}>You make the video. We’ll handle the rest of the world.</div>
+        <div style={{ font: `500 40px ${ui}`, color: C.ink2, marginTop: 36 }}>You make the video. We take it to the world.</div>
         <div style={{ font: `500 36px ${mono}`, color: C.ink2, marginTop: 56 }}>viberick-dub.web.app</div>
         <div style={{ font: `400 24px ${ui}`, color: C.ink3, marginTop: 18 }}>Team VibeRick · Google Cloud AI Builder Cup 2026</div>
       </AbsoluteFill>
@@ -373,7 +394,7 @@ const Close = () => {
 // ── timeline ────────────────────────────────────────────────────────────────────────────────
 export const SCENES: { id: string; frames: number; C: React.FC }[] = [
   { id: "open", frames: coldOpenFrames, C: ColdOpen },
-  { id: "title", frames: sec(N.N1 + 1.2), C: Title },
+  { id: "title", frames: sec(N.N1 + .4 + N.N1b + 1.4), C: Title },
   { id: "live", frames: sec(Math.max(N.N2 + .8, F.liveTotal)), C: Live },
   { id: "conversation", frames: sec(N.N3 + .4) + F.podcast.takes.reduce((n, t) => n + sec(t.end - t.start + .5), 0), C: Conversation },
   { id: "repair", frames: sec(N.N4 + .4) + sec(F.repair.end - F.repair.start + .8), C: Repair },

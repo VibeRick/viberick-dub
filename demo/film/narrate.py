@@ -4,7 +4,7 @@ from pathlib import Path
 from dub import check, config, voice
 
 script = Path("demo/film/SCRIPT.md").read_text()
-lines = dict(re.findall(r"^(N\d) — (.+)$", script, re.M))
+lines = dict(re.findall(r"^(N\d[a-z]?) — (.+)$", script, re.M))
 out = Path("demo/film/narration"); out.mkdir(parents=True, exist_ok=True)
 man = json.loads((out / "manifest.json").read_text()) if (out / "manifest.json").exists() else {}
 for key, text in lines.items():

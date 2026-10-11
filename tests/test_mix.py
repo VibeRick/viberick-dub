@@ -32,3 +32,19 @@ def test_flowing_line_starts_at_most_max_early(tmp_path):
         clips.append(p)
     st = mix.place([{"start": 0.0}, {"start": 3.0}], clips, total=4.0, out=tmp_path / "t.wav", flow=[None, 0.12])
     assert st["starts"] == [0.0, 3.0 - mix.MAX_EARLY]
+
+
+def test_mix_removes_sub_bass_rumble_from_the_voice(tmp_path):
+    import re
+    import subprocess
+    src = tmp_path / "v.wav"
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "lavfi", "-i",
+                    "aevalsrc=0.4*sin(2*PI*30*t)+0.4*sin(2*PI*300*t):s=24000:d=3", str(src)], check=True)
+    out = tmp_path / "m.m4a"
+    mix.mix(src, None, out)
+
+    def low(p):
+        r = subprocess.run(["ffmpeg", "-i", str(p), "-af", "lowpass=f=60,lowpass=f=60,volumedetect", "-f", "null", "-"],
+                           capture_output=True, text=True)
+        return float(re.search(r"mean_volume: ([-\d.]+)", r.stderr).group(1))
+    assert low(src) - low(out) > 20   # 30 Hz rumble cut by well over 20 dB
