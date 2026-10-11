@@ -1,3 +1,4 @@
+import re
 from dub import fetch
 
 
@@ -39,4 +40,11 @@ def test_download_error_never_exposes_proxy_credentials(tmp_path, monkeypatch):
     with pytest.raises(RuntimeError, match="Check that it is public") as error:
         fetch.fetch("https://youtu.be/test", tmp_path)
     assert "secret" not in str(error.value)
-    assert run.call_count == 2
+    assert run.call_count == 1 + fetch.PROXY_ATTEMPTS
+
+
+def test_rotating_webshare_user_becomes_a_sticky_session_per_attempt():
+    s = fetch.sticky("http://acct-rotate:pw@p.webshare.io:80")
+    assert re.fullmatch(r"http://acct-\d+:pw@p\.webshare\.io:80", s)
+    assert fetch.sticky("http://plain:pw@host:1") == "http://plain:pw@host:1"
+    assert fetch._redact("ERROR via http://acct-7:pw@p.webshare.io:80") == "ERROR via http://***@p.webshare.io:80"

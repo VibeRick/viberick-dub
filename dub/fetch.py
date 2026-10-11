@@ -1,10 +1,13 @@
 """YouTube URL → source.mp4, source.wav (48 kHz stereo), source.stt.flac (16 kHz mono), info.json.
 
-YouTube asks cloud IPs to sign in, so on failure the download is retried through DUB_PROXY (a residential
-proxy). With max_sec only that section is downloaded, at ≤720p, to keep proxy bandwidth small."""
+YouTube asks cloud IPs to sign in, so on failure the download is retried through DUB_PROXY (a Webshare
+residential proxy). A "-rotate" user changes IP on every request, but YouTube binds media URLs to the IP
+that fetched the page, so each attempt instead pins one sticky session (user-N) for the whole download. With max_sec only that section is downloaded, at ≤720p, to keep proxy bandwidth small."""
 import json
+import logging
 import math
 import os
+import random
 import re
 import subprocess
 from pathlib import Path
@@ -31,6 +34,19 @@ def _cmd(url: str, out_tmpl: str, max_sec: float | None, proxy: str | None) -> l
     return cmd
 
 
+PROXY_ATTEMPTS = 3
+WEBSHARE_SESSIONS = 20000   # sticky sessions user-1 … user-20000 on the same account
+
+
+def sticky(proxy: str) -> str:
+    """http://acct-rotate:pw@host → http://acct-<random N>:pw@host; other proxies are used as given."""
+    return re.sub(r"-rotate:", f"-{random.randint(1, WEBSHARE_SESSIONS)}:", proxy, count=1)
+
+
+def _redact(text: str) -> str:
+    return re.sub(r"//[^/@\s]+@", "//***@", text)
+
+
 def fetch(url: str, run_dir: Path, max_sec: float | None = None) -> dict:
     run_dir.mkdir(parents=True, exist_ok=True)
     info_p = run_dir / "info.json"
@@ -40,9 +56,14 @@ def fetch(url: str, run_dir: Path, max_sec: float | None = None) -> dict:
             return info
     tmpl = str(run_dir / "source.%(ext)s")
     r = subprocess.run(_cmd(url, tmpl, max_sec, None), capture_output=True, text=True)
-    if r.returncode != 0 and (proxy := os.environ.get("DUB_PROXY")):
-        r = subprocess.run(_cmd(url, tmpl, max_sec, proxy), capture_output=True, text=True)
+    proxy = os.environ.get("DUB_PROXY")
+    for attempt in range(PROXY_ATTEMPTS if proxy else 0):
+        if r.returncode == 0:
+            break
+        logging.warning("download attempt failed: %s", _redact((r.stderr or "").strip()[-300:]))
+        r = subprocess.run(_cmd(url, tmpl, max_sec, sticky(proxy)), capture_output=True, text=True)
     if r.returncode != 0:
+        logging.warning("download failed: %s", _redact((r.stderr or "").strip()[-300:]))
         raise RuntimeError("Could not download the video. Check that it is public and available, then retry.")
     raw = json.loads((run_dir / "source.info.json").read_text())
     duration = raw.get("duration")
