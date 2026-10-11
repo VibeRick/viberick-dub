@@ -24,7 +24,11 @@ GCP_ACCOUNT = os.environ.get("DUB_GCP_ACCOUNT", "jaeho.shin@viberick.com")
 BUCKET = os.environ.get("DUB_BUCKET", "viberick-dub-lab")
 STT_LOCATION = "us"          # chirp_3 runs only in us / eu
 
-LANGS = {"ko": "Korean", "en": "English", "ja": "Japanese", "zh-Hans": "Chinese (Simplified)"}
+from .languages import LANGUAGES  # noqa: E402
+
+LANGS = {code: name for code, (name, _) in LANGUAGES.items()}   # every target Gemini TTS speaks
+DEFAULT_LANGS = ("ko", "en", "ja", "zh-Hans")                     # when a job names none
+MAX_LANGS_PER_JOB = 4
 CHIRP_CODES = {"ko": "ko-KR", "en": "en-US", "ja": "ja-JP", "zh-Hans": "cmn-Hans-CN"}
 
 

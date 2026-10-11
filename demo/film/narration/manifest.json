@@ -1,10 +1,10 @@
 {
   "N1": {
-    "text": "I make videos in Korean. That was me in English, Japanese and Chinese. I never recorded those lines. VibeRick Dub did, in my own voice, from one YouTube link. Reaching a new audience used to mean translators, voice actors, re-timing and subtitles, for every language.",
-    "seconds": 18.236291666666666,
+    "text": "I make videos in Korean. That was me in English, Japanese and Chinese. I never recorded those lines. VibeRick Dub did, in my own voice, from one YouTube link. Creators who add dubbed audio already get over a quarter of their watch time from other languages. But today that means translators, voice actors, re-timing and subtitles, for every language.",
+    "seconds": 20.5895,
     "ok": true,
     "verdict": {
-      "heard": "I make videos in Korean. That was me in English, Japanese and Chinese. I never recorded those lines. VibeRick Dub did, in my own voice, from one YouTube link. Reaching a new audience used to mean translators, voice actors, re-timing and subtitles, for every language.",
+      "heard": "I make videos in Korean. That was me in English, Japanese and Chinese. I never recorded those lines. VibeRick Dub did, in my own voice, from one YouTube link. Creators who add dubbed audio already get over a quarter of their watch time from other languages. But today that means translators, voice actors, retiming and subtitles for every language.",
       "language_ok": true,
       "content_ok": true,
       "meaning_ok": true,
@@ -12,11 +12,11 @@
     }
   },
   "N2": {
-    "text": "Paste a link and choose languages. A Cloud Run job starts, and you watch the agent work. Chirp 3 timestamps every word and tells the speakers apart. Gemini listens to the audio, fixes the transcript, and translates each sentence to fit the time it was spoken.",
-    "seconds": 15.588333333333333,
+    "text": "Paste a link and choose from a hundred and twenty-five languages. A Cloud Run job starts, and you watch the agent work. Chirp 3 timestamps every word and tells the speakers apart. Gemini listens to the audio, fixes the transcript, and translates each sentence to fit the time it was spoken.",
+    "seconds": 15.852375,
     "ok": true,
     "verdict": {
-      "heard": "Paste a link and choose languages. A Cloud Run job starts, and you watch the agent work. Chirp 3 timestamps every word and tells the speakers apart. Gemini listens to the audio, fixes the transcript, and translates each sentence to fit the time it was spoken.",
+      "heard": "Paste a link and choose from 125 languages. A Cloud Run job starts and you watch the agent work. Chirp 3 timestamps every word and tells the speakers apart. Gemini listens to the audio, fixes the transcript and translates each sentence to fit the time it was spoken.",
       "language_ok": true,
       "content_ok": true,
       "meaning_ok": true,
@@ -24,11 +24,11 @@
     }
   },
   "N3": {
-    "text": "It handles conversations too. Here is Google DeepMind's podcast. Gemini listens to each speaker and casts a matching voice. Nobody's voice is cloned without consent.",
-    "seconds": 9.604791666666667,
+    "text": "It handles conversations too. Here is Google DeepMind's podcast, in Hindi. Gemini listens to each speaker and gives each one their own matching voice. Nobody's voice is cloned without consent.",
+    "seconds": 11.276583333333333,
     "ok": true,
     "verdict": {
-      "heard": "It handles conversations too. Here is Google DeepMind's podcast. Gemini listens to each speaker and casts a matching voice. Nobody's voice is cloned without consent.",
+      "heard": "It handles conversations too. Here is Google DeepMind's podcast, in Hindi. Gemini listens to each speaker and gives each one their own matching voice. Nobody's voice is cloned without consent.",
       "language_ok": true,
       "content_ok": true,
       "meaning_ok": true,
@@ -36,11 +36,11 @@
     }
   },
   "N4": {
-    "text": "Then every line is checked by ear. Gemini listens to each clip: right language, every word, right length. Here it heard my company's name come out as \"WhyBrick\". The agent spoke the line again, listened again, and it passed. Whatever it can't fix, it flags for a human.",
-    "seconds": 17.882666666666665,
+    "text": "Then Gemini listens to every line it made: the right language, every word, the right length. Here it heard my company's name come out as \"WhyBrick\". The agent spoke the line again, listened again, and it passed. Whatever it can't fix, it flags for a human.",
+    "seconds": 16.778791666666667,
     "ok": true,
     "verdict": {
-      "heard": "Then every line is checked by ear. Gemini listens to each clip: right language, every word, right length. Here it heard my company's name come out as \"WhyBrick\". The agent spoke the line again, listened again, and it passed. Whatever it can't fix, it flags for a human.",
+      "heard": "Then Gemini listens to every line it made. The right language, every word, the right length. Here it heard my company's name come out as WhyBrick. The agent spoke the line again, listened again, and it passed. Whatever it can't fix, it flags for a human.",
       "language_ok": true,
       "content_ok": true,
       "meaning_ok": true,
@@ -72,11 +72,11 @@
     }
   },
   "N7": {
-    "text": "My voice is only used because I recorded my consent, and my voice matches it. You made the video. We'll handle the languages.",
-    "seconds": 7.085208333333333,
+    "text": "My voice is only used because I recorded my consent, and my voice matches it. Any video. A hundred and twenty-five languages. Your own voice. You make the video. We'll handle the rest of the world.",
+    "seconds": 12.338083333333334,
     "ok": true,
     "verdict": {
-      "heard": "My voice is only used because I recorded my consent, and my voice matches it. You made the video. We'll handle the languages.",
+      "heard": "My voice is only used because I recorded my consent, and my voice matches it. Any video. A hundred and twenty-five languages. Your own voice. You make the video. We'll handle the rest of the world.",
       "language_ok": true,
       "content_ok": true,
       "meaning_ok": true,

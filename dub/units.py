@@ -13,7 +13,7 @@ def detect_language(text: str) -> str:
 
 
 def targets_for(src: str) -> list[str]:
-    return [lang for lang in config.LANGS if lang != src]
+    return [lang for lang in config.DEFAULT_LANGS if lang != src]
 
 
 MAX_UNIT_SEC = 14.0   # longest sentence unit; longer runs split at a fragment boundary

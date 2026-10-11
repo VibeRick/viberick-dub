@@ -1,3 +1,5 @@
+import { LANG } from "./langs.js?v=1";
+
 // Recorded review mode stays local: no Firebase SDK, listeners or generation requests.
 const LOCAL = window.LOCAL_JOB || null;
 const reviewParam = new URLSearchParams(location.search).get("review");
@@ -30,12 +32,6 @@ if (!recordedMode) {
   db = firestore.getFirestore(app);
 }
 
-const LANG = {
-  ko: "한국어",
-  en: "English",
-  ja: "日本語",
-  "zh-Hans": "中文"
-};
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({
   "&": "&amp;",
@@ -199,12 +195,31 @@ async function createFromBody(requestBody) {
     renderPendingCreate();
   }
 }
+const MAX_LANGS = 4;
+function addLangOption(code, checked) {
+  let input = document.querySelector(`#langs input[value="${CSS.escape(code)}"]`);
+  if (!input) {
+    const label = document.createElement("label");
+    label.innerHTML = `<input type="checkbox" value="${esc(code)}"><span lang="${esc(code)}">${esc(LANG[code] || code)}</span>`;
+    $("#more-langs").before(label);
+    input = label.querySelector("input");
+  }
+  input.checked = checked;
+}
+$("#more-langs").innerHTML += Object.keys(LANG).filter(code => !document.querySelector(`#langs input[value="${CSS.escape(code)}"]`))
+  .map(code => `<option value="${esc(code)}">${esc(LANG[code])}</option>`).join("");
+$("#more-langs").addEventListener("change", e => {
+  if (e.target.value) addLangOption(e.target.value, true);
+  e.target.value = "";
+  renderPendingCreate();
+});
 $("#new").addEventListener("submit", e => {
   e.preventDefault();
   if (recordedMode) return;
   const body = currentCreateBody();
-  if (!JSON.parse(body).langs.length) {
-    $("#err").textContent = "Pick at least one language.";
+  const count = JSON.parse(body).langs.length;
+  if (!count || count > MAX_LANGS) {
+    $("#err").textContent = count ? `Pick up to ${MAX_LANGS} languages per video.` : "Pick at least one language.";
     $("#err").hidden = false;
     return;
   }
@@ -214,7 +229,8 @@ $("#resume-create").onclick = () => {
   if (!pendingCreate || creating) return;
   const body = JSON.parse(pendingCreate.body);
   $("#url").value = body.url;
-  document.querySelectorAll("#langs input").forEach(input => input.checked = body.langs.includes(input.value));
+  document.querySelectorAll("#langs input").forEach(input => input.checked = false);
+  body.langs.forEach(code => addLangOption(code, true));
   createFromBody(pendingCreate.body);
 };
 $("#new").addEventListener("input", renderPendingCreate);

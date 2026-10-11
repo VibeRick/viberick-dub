@@ -48,6 +48,8 @@ def create_job(j: JobIn, idempotency_key: str | None = Header(default=None, max_
     bad = [l for l in langs if l not in config.LANGS]
     if bad:
         raise HTTPException(400, f"Unsupported language: {', '.join(bad)}")
+    if len(langs) > config.MAX_LANGS_PER_JOB:
+        raise HTTPException(400, f"Pick up to {config.MAX_LANGS_PER_JOB} languages per video.")
     vid = fetch._ID.search(j.url).group(1)
     source_url = f"https://www.youtube.com/watch?v={vid}"
     job_id = f"{vid}-{uuid.uuid4().hex[:6]}"

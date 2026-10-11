@@ -56,7 +56,7 @@ def build():
     # 2 · Brief about the idea
     t(s[2], L, TOP, Emu(3900000), Emu(3700000), [
         ("Your voice. Every language.", {"size": 26, "bold": True, "gap": 12}),
-        "Paste a YouTube link and pick languages. An agent on Google Cloud transcribes it, translates each sentence to fit "
+        "Paste a YouTube link and pick from 125 languages. An agent on Google Cloud transcribes it, translates each sentence to fit "
         "the moment it is spoken, says it in the creator's own cloned voice, then listens to every line and repairs what is wrong.",
         "Out come dubbed MP4s, M4A audio tracks ready for YouTube's multi-language audio, and SRT/VTT subtitles. "
         "Creators review any line, edit it, and regenerate only that line.",
@@ -76,6 +76,7 @@ def build():
     ], size=12, gap=7)
     t(s[3], Emu(4650000), TOP, Emu(4230000), Emu(3800000), [
         ("How VibeRick Dub is different", {"bold": True, "size": 16, "color": ACC}),
+        ("125 target languages: every language Gemini 3.8 TTS speaks, Hindi, Tamil and Bangla included.", {"bullet": True}),
         ("Own voice, consent-gated: two locks (channel consent + speaker verification) before a clone is used.", {"bullet": True}),
         ("An agent that listens: Gemini hears every generated line and repairs wrong language, missing words and overruns.", {"bullet": True}),
         ("Timed to the speaker: translation is budgeted to each sentence's slot and the voice's measured speaking rate.", {"bullet": True}),
@@ -86,13 +87,13 @@ def build():
     # 4 · Features
     feats = [
         ("Creator's own voice", "Gemini TTS voice replication from a 20 s reference, used only behind two consent locks."),
-        ("Every speaker, matched", "Chirp 3 diarization; Gemini listens to each speaker and casts the closest preset."),
+        ("Every speaker, own voice", "Chirp 3 tells speakers apart; each gets the creator's clone (with consent) or the closest preset Gemini picks by ear."),
         ("Translation that fits the clock", "Per-sentence character budgets from the slot and the voice's measured speed."),
         ("Listen-back repair loop", "Measure → shorten → time-fit → Gemini listens → re-speak → re-translate → flag."),
         ("Live studio", "Agent events stream from Firestore; switch languages at the same playback position."),
         ("Line edit with preview", "Edit one line, hear the preview in the same voice, accept or discard."),
         ("Upload-ready outputs", "MP4 + M4A (−14 LUFS over the original music bed) + SRT/VTT per language."),
-        ("Safe public demo", "Daily quota, idempotent job creation, owner tokens, outputs expire after 7 days."),
+        ("125 languages", "Any target Gemini 3.8 TTS speaks, up to 4 per video; Korean, English, Japanese, Chinese sources."),
     ]
     for k, (h, d) in enumerate(feats):
         col, row = k % 2, k // 2

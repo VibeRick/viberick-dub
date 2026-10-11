@@ -117,12 +117,16 @@ const Title = () => {
         <Eyebrow>Today, for every language</Eyebrow>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 20, marginTop: 36 }}>
           {steps.map((s, i) => {
-            const at = out + sec(1.6) + i * sec(.9);
+            const at = out + sec(3.4) + i * sec(.8);
             return <div key={s} style={{ padding: "34px 40px", borderRadius: 18, background: C.s1, border: `1px solid ${C.line}`, font: `600 58px ${display}`, letterSpacing: "-.025em", opacity: fadeIn(f, at), transform: `translateY(${rise(f, at)}px)` }}>
               <span style={{ font: `500 24px ${mono}`, color: C.accent, marginRight: 22 }}>0{i + 1}</span>{s}</div>;
           })}
         </div>
-        <div style={{ marginTop: 40, font: `500 34px ${ui}`, color: C.ink2, opacity: fadeIn(f, out + sec(5.4)) }}>× every language you want to reach.</div>
+        <div style={{ marginTop: 40, font: `500 34px ${ui}`, color: C.ink2, opacity: fadeIn(f, out + sec(6.8)) }}>× every language you want to reach.</div>
+        <div style={{ marginTop: 28, display: "flex", alignItems: "baseline", gap: 24, opacity: fadeIn(f, out + sec(.6)) }}>
+          <span style={{ font: `600 64px ${display}`, color: C.accent, letterSpacing: "-.03em" }}>25%+</span>
+          <span style={{ font: `400 28px ${ui}`, color: C.ink2 }}>of watch time comes from other languages for creators who add multi-language audio · YouTube, Sep 2025</span>
+        </div>
       </AbsoluteFill>
     </AbsoluteFill>
   );
@@ -244,7 +248,7 @@ const Repair = () => {
   return (
     <AbsoluteFill style={{ background: C.ground, color: C.ink }}>
       <Audio src={staticFile("film/N4.wav")} />
-      <Sequence from={playAt}><Audio src={staticFile("film/repair.zh-Hans.mp4")} trimBefore={sec(F.repair.start)} trimAfter={sec(F.repair.end)} /></Sequence>
+      <Sequence from={playAt}><Audio src={staticFile("film/fixed.zh.wav")} /></Sequence>
       <Brand />
       <div style={{ position: "absolute", left: 160, top: 150 }}>
         <Eyebrow color={C.accent}>Check &amp; repair · every line</Eyebrow>
@@ -325,7 +329,7 @@ const Arch = () => {
         </div>
       ))}
       <div style={{ position: "absolute", left: 120, right: 120, top: 780, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", borderTop: `1px solid rgba(255,255,255,.18)`, opacity: fadeIn(f, numbersAt) }}>
-        {[["366/369", "lines passed the listening check · full 15-min video"], ["7.6–7.9%", "transcript error · Chirp 3 + Gemini"], ["≈$0.03", "per dubbed minute"]].map(([b, s], i) => (
+        {[["366/369", "lines passed the listening check · full 15-min video"], ["125", "languages · Gemini 3.8 TTS, own or matched voice"], ["≈$0.03", "per dubbed minute"]].map(([b, s], i) => (
           <div key={b} style={{ paddingTop: 26, opacity: fadeIn(f, numbersAt + i * 12) }}>
             <div style={{ font: `600 96px/1 ${display}`, letterSpacing: "-.04em" }}>{b}</div>
             <div style={{ font: `400 24px ${ui}`, color: C.ink2, marginTop: 12 }}>{s}</div>
@@ -357,7 +361,8 @@ const Close = () => {
       </AbsoluteFill>
       <AbsoluteFill style={{ justifyContent: "center", alignItems: "center", textAlign: "center", opacity: fadeIn(f, end) }}>
         <Img src={staticFile("film/logo.png")} style={{ width: 88, height: 88, borderRadius: 18 }} />
-        <div style={{ font: `600 120px/.98 ${display}`, letterSpacing: "-.045em", marginTop: 40 }}>You made the video.<br /><span style={{ color: C.accent }}>We’ll handle the languages.</span></div>
+        <div style={{ font: `600 120px/.98 ${display}`, letterSpacing: "-.045em", marginTop: 40 }}>Any video. 125 languages.<br /><span style={{ color: C.accent }}>Your own voice.</span></div>
+        <div style={{ font: `500 40px ${ui}`, color: C.ink2, marginTop: 36 }}>You make the video. We’ll handle the rest of the world.</div>
         <div style={{ font: `500 36px ${mono}`, color: C.ink2, marginTop: 56 }}>viberick-dub.web.app</div>
         <div style={{ font: `400 24px ${ui}`, color: C.ink3, marginTop: 18 }}>Team VibeRick · Google Cloud AI Builder Cup 2026</div>
       </AbsoluteFill>

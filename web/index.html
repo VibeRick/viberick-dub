@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="style.css?v=r4">
+<link rel="stylesheet" href="style.css?v=r5">
 </head>
 <body>
 <header class="bar">
@@ -49,7 +49,7 @@
   </section>
 
   <section class="make" id="make">
-    <div class="section-head"><p class="num">01</p><h2>Make yours</h2><p>Paste a link, choose languages. The first three minutes are dubbed into each one.</p></div>
+    <div class="section-head"><p class="num">01</p><h2>Make yours</h2><p>Paste a link, choose up to four of 125 languages. The first three minutes are dubbed into each one.</p></div>
     <form id="new" class="new" autocomplete="off">
       <label class="url-label" for="url">YouTube link</label>
       <div class="url-row">
@@ -61,6 +61,7 @@
         <label><input type="checkbox" value="ja" checked><span lang="ja">日本語</span></label>
         <label><input type="checkbox" value="zh-Hans" checked><span lang="zh-Hans">中文</span></label>
         <label><input type="checkbox" value="ko" checked><span lang="ko">한국어</span></label>
+        <select id="more-langs" aria-label="Add another language"><option value="">More languages…</option></select>
       </div>
       <p class="fine" id="form-help">The source language is skipped. A creator’s cloned voice is used only with recorded consent and a voice match; everyone else gets a matched Gemini voice. Results are public by link.</p>
       <div id="pending-create" hidden><p id="pending-create-description"></p><button type="button" id="resume-create" class="btn ghost small">Resume saved request</button></div>
@@ -85,11 +86,11 @@
   </section>
 
   <section class="proof" id="proof">
-    <div class="section-head"><p class="num">03</p><h2>Measured, not promised</h2><p>From real runs on a 15-minute Korean tech video.</p></div>
+    <div class="section-head"><p class="num">03</p><h2>Measured, not promised</h2><p>From real runs on a 15-minute Korean tech video and a two-speaker podcast.</p></div>
     <div class="figures">
       <div><b>366<small>/369</small></b><span>lines passed Gemini’s listening check on the full 15-minute video, after repairs</span></div>
       <div><b>2:52</b><span>end to end for 3 minutes into 3 languages, download to finished MP4s</span></div>
-      <div><b>7.6<small>–7.9%</small></b><span>transcript error with Chirp 3 + Gemini over 3 runs, against 8.6% for Chirp alone</span></div>
+      <div><b>125</b><span>languages to dub into, each spoken by Gemini TTS in the creator’s own voice or a matched one</span></div>
       <div><b>≈$0.03</b><span>per dubbed minute in model and compute cost</span></div>
     </div>
   </section>
@@ -219,6 +220,6 @@
   <a class="card"><img alt=""><div><b></b><span></span></div></a>
 </template>
 
-<script type="module" src="app.js?v=r5"></script>
+<script type="module" src="app.js?v=r6"></script>
 </body>
 </html>

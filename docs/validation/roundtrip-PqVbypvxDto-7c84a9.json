@@ -1,0 +1,890 @@
+[
+ {
+  "lang": "hi",
+  "lines": 41,
+  "mean_cer": 0.134,
+  "median_cer": 0.04,
+  "over_30pct": 5,
+  "rows": [
+   {
+    "id": 0,
+    "said": "देखा जाए तो आप मान सकते हैं कि 50% प्रयास स्केलिंग पर और 50% इनोवेशन पर है।",
+    "chirp": "देखा जाए तो आप मान सकते हैं कि 50% प्रयास स्केलिंग पर और 50% इनोवेशन पर है।",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 1,
+    "said": "मेरे हिसाब से AGI के लिए दोनों चाहिए।",
+    "chirp": "मेरे हिसाब से एजीआई के लिए दोनों चाहिए।",
+    "cer": 0.172,
+    "gemini_ok": true
+   },
+   {
+    "id": 2,
+    "said": "मुझे हमेशा लगा है कि अगर हम AGI बनाकर दिमाग के सिमुलेशन की तरह इस्तेमाल करें,",
+    "chirp": "मुझे हमेशा लगा है कि अगर हम एजीआई बनाकर दिमाग के सिमुलेशन की तरह इस्तेमाल करें",
+    "cer": 0.082,
+    "gemini_ok": true
+   },
+   {
+    "id": 3,
+    "said": "और फिर उसकी तुलना असली दिमाग से करें, तो हमें फर्क साफ दिखेगा, और शायद यह भी कि इंसानी दिमाग में ऐसा क्या खास बाकी बचा है, ठीक है? शायद रचनात्मकता, भावनाएं या सपने।",
+    "chirp": "और फिर उसकी तुलना असली दिमाग से करें तो हमें फर्क साफ दिखेगा और शायद यह भी कि इंसानी दिमाग में ऐसा क्या खास बाकी बचा है। ठीक है? शायद रचनात्मकता, भावनाएं या सपने।",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 4,
+    "said": "चेतना को लेकर ऐसी कई परिकल्पनाएं मौजूद हैं कि क्या गणना योग्य हो सकता है और क्या नहीं।",
+    "chirp": "चेतना को लेकर ऐसी कई परिकल्पनाएं मौजूद हैं कि क्या गणना योग्य हो सकता है और क्या नहीं।",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 5,
+    "said": "और यह बात फिर Turing machine के उस सवाल पर आती है कि आखिर Turing machine की सीमा क्या है?",
+    "chirp": "और यह बात फिर ट्यूरिंग मशीन के उस सवाल पर आती है कि आखिर ट्यूरिंग मशीन की सीमा क्या है?",
+    "cer": 0.377,
+    "gemini_ok": true
+   },
+   {
+    "id": 6,
+    "said": "तो ऐसा कुछ नहीं जो इस तरह की गणनाओं से न हो सके...",
+    "chirp": "तो ऐसा कुछ नहीं जो इस तरह की गणनाओं से ना हो सके। तो",
+    "cer": 0.086,
+    "gemini_ok": true
+   },
+   {
+    "id": 7,
+    "said": "खैर, यूं कहें कि ब्रह्मांड में ऐसा कुछ नहीं मिला जो नॉन-कंप्यूटेबल हो।",
+    "chirp": "खैर, यूं कहें कि ब्रह्मांड में ऐसा कुछ नहीं मिला जो नॉन कंप्यूटबल हो।",
+    "cer": 0.018,
+    "gemini_ok": true
+   },
+   {
+    "id": 8,
+    "said": "अब तक।",
+    "chirp": "अब तक.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 9,
+    "said": "हाँ, अब तक।",
+    "chirp": "हां, अब तक।",
+    "cer": 0.143,
+    "gemini_ok": true
+   },
+   {
+    "id": 10,
+    "said": "Google DeepMind पॉडकास्ट में स्वागत है, मैं हूँ Hannah Fry।",
+    "chirp": "Google डीप माइंड पॉडकास्ट में स्वागत है। मैं हूं हैना फ्राई।",
+    "cer": 0.375,
+    "gemini_ok": true
+   },
+   {
+    "id": 11,
+    "said": "AI के लिए यह साल असाधारण रहा है।",
+    "chirp": "एआई के लिए यह साल असाधारण रहा है।",
+    "cer": 0.125,
+    "gemini_ok": true
+   },
+   {
+    "id": 12,
+    "said": "हमने देखा कि फोकस बड़े लैंग्वेज मॉडल्स से agentic AI की ओर बढ़ा है।",
+    "chirp": "हमने देखा कि फोकस बड़े लैंग्वेज मॉडल से एजेंटिक एआई की ओर बढ़ा है। हमने",
+    "cer": 0.302,
+    "gemini_ok": true
+   },
+   {
+    "id": 13,
+    "said": "AI ने ड्रग डिस्कवरी तेज की और मल्टीमॉडल मॉडल्स रोबोटिक्स व ड्राइवरलेस कारों से जुड़े हैं।",
+    "chirp": "एआई ने ड्रग डिस्कवरी तेज की और मल्टी मॉडल मॉडल्स रोबोटिक्स व ड्राइवरलेस कारों से जुड़े हैं।",
+    "cer": 0.041,
+    "gemini_ok": true
+   },
+   {
+    "id": 14,
+    "said": "इन सभी विषयों पर हमने पॉडकास्ट में बात की है।",
+    "chirp": "इन सभी विषयों पर हमने पॉडकास्ट में बात की है।",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 15,
+    "said": "लेकिन इस साल के आखिरी एपिसोड में हम सुर्खियों और प्रोडक्ट लॉन्च से परे एक बड़े सवाल पर विचार करना चाहते हैं।",
+    "chirp": "लेकिन इस साल के आखिरी एपिसोड में हम सुर्खियों और प्रोडक्ट लॉन्च से परे एक बड़े सवाल पर विचार करना चाहते हैं।",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 16,
+    "said": "आखिर यह सब किस दिशा में जा रहा है?",
+    "chirp": "आखिर ये सब किस दिशा में जा रहा है?",
+    "cer": 0.04,
+    "gemini_ok": true
+   },
+   {
+    "id": 17,
+    "said": "वे कौन-से वैज्ञानिक और तकनीकी सवाल हैं जो अगले दौर को परिभाषित करेंगे?",
+    "chirp": "वे कौन से वैज्ञानिक और तकनीकी सवाल हैं जो अगले दौर को परिभाषित करेंगे?",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 18,
+    "said": "और इस बारे में काफी सोचने वाले शख्स हैं Demis Hassabis, Google DeepMind के CEO और सह-संस्थापक।",
+    "chirp": "और इस बारे में काफी सोचने वाले शख्स हैं डेविस हैसिबिस। Google डीप माइंड के CEO और सह संस्थापक।",
+    "cer": 0.28,
+    "gemini_ok": true
+   },
+   {
+    "id": 19,
+    "said": "पॉडकास्ट में फिर स्वागत है, Demis.",
+    "chirp": "पॉडकास्ट में फिर स्वागत है डेविस।",
+    "cer": 0.185,
+    "gemini_ok": true
+   },
+   {
+    "id": 20,
+    "said": "आकर खुशी हुई।",
+    "chirp": "आकर खुशी हुई।",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 21,
+    "said": "पिछले एक साल में बहुत कुछ हुआ है।",
+    "chirp": "पिछले एक साल में बहुत कुछ हुआ है।",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 22,
+    "said": "हाँ। [हँसी]",
+    "chirp": "हां। आपके मुताबिक",
+    "cer": 1.714,
+    "gemini_ok": true
+   },
+   {
+    "id": 23,
+    "said": "आपके मुताबिक सबसे बड़ा बदलाव क्या रहा?",
+    "chirp": "आपके मुताबिक सबसे बड़ा बदलाव क्या रहा?",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 24,
+    "said": "अरे वाह, जैसा आपने कहा, बहुत कुछ हुआ। लगा जैसे 10 साल एक ही साल में सिमट गए हों।",
+    "chirp": "अरे वाह, जैसा आपने कहा, बहुत कुछ हुआ। लगा जैसे 10 साल एक ही साल में सिमट गए हों।",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 25,
+    "said": "मुझे लगता है कि बहुत कुछ हुआ है, यानी खास तौर पर हमारे लिए मॉडल्स की प्रगति,",
+    "chirp": "मुझे लगता है कि बहुत कुछ हुआ है यानी खासतौर पर हमारे लिए मॉडल की प्रगति",
+    "cer": 0.034,
+    "gemini_ok": true
+   },
+   {
+    "id": 26,
+    "said": "हमने Gemini 1.5 पेश किया, जिससे हम बेहद खुश हैं।",
+    "chirp": "हमने जेमिनाई 1.5 पेश किया जिससे हम बेहद खुश हैं।",
+    "cer": 0.194,
+    "gemini_ok": true
+   },
+   {
+    "id": 27,
+    "said": "इसकी मल्टीमॉडल क्षमताएं।",
+    "chirp": "इसकी मल्टी-मॉडल क्षमताएं।",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 28,
+    "said": "यह सब बहुत शानदार तरीके से आगे बढ़ा है।",
+    "chirp": "यह सब बहुत शानदार तरीके से आगे बढ़ा है।",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 29,
+    "said": "और गर्मियों में world models में हुई प्रगति को लेकर मैं काफी उत्साहित हूँ।",
+    "chirp": "और गर्मियों में वर्ल्ड मॉडल्स में हुई प्रगति को लेकर मैं काफी उत्साहित हूं। और",
+    "cer": 0.25,
+    "gemini_ok": true
+   },
+   {
+    "id": 30,
+    "said": "हम इस पर जरूर बात करेंगे।",
+    "chirp": "हम इस पर जरूर बात करेंगे।",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 31,
+    "said": "बिल्कुल।",
+    "chirp": "बिल्कुल।",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 32,
+    "said": "हम थोड़ी ही देर में इन सब पर विस्तार से चर्चा करेंगे।",
+    "chirp": "हम थोड़ी ही देर में इन सब पर विस्तार से चर्चा करेंगे। हम",
+    "cer": 0.049,
+    "gemini_ok": true
+   },
+   {
+    "id": 33,
+    "said": "मुझे पहला इंटरव्यू याद है जब आपने root-node problems का जिक्र किया था।",
+    "chirp": "मुझे पहला इंटरव्यू याद है जब आपने रूट नोड प्रॉब्लम्स का जिक्र किया था।",
+    "cer": 0.286,
+    "gemini_ok": true
+   },
+   {
+    "id": 34,
+    "said": "इस विचार पर कि AI से आगे के ये फायदे हासिल किए जा सकते हैं।",
+    "chirp": "इस विचार पर कि ए आई से आगे के ये फायदे हासिल किए जा सकते हैं।",
+    "cer": 0.068,
+    "gemini_ok": true
+   },
+   {
+    "id": 35,
+    "said": "और मानना पड़ेगा कि आपने वादा निभाया। क्या बताएंगे अभी हम कहाँ तक पहुँचे हैं?",
+    "chirp": "और मानना पड़ेगा कि आपने वादा निभाया। क्या आप बताएंगे अभी हम कहां तक पहुंचे हैं?",
+    "cer": 0.067,
+    "gemini_ok": true
+   },
+   {
+    "id": 36,
+    "said": "वो क्या है जो जल्द आने वाला है और क्या है जिसे लगभग सुलझा लिया गया है?",
+    "chirp": "वह क्या है, जो जल्द आने वाला है और क्या है, जिसे लगभग सुलझा लिया गया है?",
+    "cer": 0.019,
+    "gemini_ok": true
+   },
+   {
+    "id": 37,
+    "said": "हाँ, बेशक सबसे बड़ा सबूत तो AlphaFold ही था, और यह सोचना भी अजीब लगता है कि दुनिया के सामने AlphaFold 2 के ऐलान को लगभग पाँच साल पूरे होने वाले हैं।",
+    "chirp": "हां, बेशक। सबसे बड़ा सबूत तो अल्फा फोल्ड ही था और यह सोचना भी अजीब लगता है कि दुनिया के सामने अल्फा फोल्ड 2 के ऐलान को लगभग 5 साल पूरे होने वाले हैं।",
+    "cer": 0.219,
+    "gemini_ok": true
+   },
+   {
+    "id": 38,
+    "said": "तो शायद वही सबूत था कि ऐसी root-node problems को हल करना मुमकिन था।",
+    "chirp": "तो शायद वही सबूत था कि ऐसी रूट नोट प्रॉब्लम्स को हल करना मुमकिन था। तो",
+    "cer": 0.346,
+    "gemini_ok": true
+   },
+   {
+    "id": 39,
+    "said": "और अब हम बाकी पहलुओं पर काम कर रहे हैं।",
+    "chirp": "और अब हम बाकी पहलुओं पर काम कर रहे हैं।",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 40,
+    "said": "मटीरियल साइंस में, मुझे रूम-टेंपरेचर...",
+    "chirp": "मटेरियल साइंस में मुझे रूम टेंपरेचर",
+    "cer": 0.033,
+    "gemini_ok": true
+   }
+  ]
+ },
+ {
+  "lang": "ta",
+  "lines": 41,
+  "mean_cer": 0.116,
+  "median_cer": 0.058,
+  "over_30pct": 6,
+  "rows": [
+   {
+    "id": 0,
+    "said": "எங்கள் உழைப்பில் 50% scaling-க்கும், 50% புதுமைக்கும் செலவிடப்படுகிறது.",
+    "chirp": "எங்கள் உழைப்பில் 50% ஸ்கேலிங் க்கும் 50% புதுமைக்கும் செலவிடப்படுகிறது.",
+    "cer": 0.133,
+    "gemini_ok": true
+   },
+   {
+    "id": 1,
+    "said": "AGI அடைய இரண்டுமே தேவைப்படும்.",
+    "chirp": "ஏஜி-ஐ அடைய இரண்டுமே தேவைப்படும்.",
+    "cer": 0.154,
+    "gemini_ok": true
+   },
+   {
+    "id": 2,
+    "said": "நாம் AGI-ஐ உருவாக்கி அதை மனித மனதின் மாதிரியாகப் பயன்படுத்தினால்,",
+    "chirp": "நாம் ஏஜிஐஐ உருவாக்கி அதை மனித மனத்தின் மாதிரியாக பயன்படுத்தினால்",
+    "cer": 0.143,
+    "gemini_ok": true
+   },
+   {
+    "id": 3,
+    "said": "அதை உண்மை மனதோடு ஒப்பிட்டால், வேறுபாடுகளையும் மனித மனதின் விசேஷமான மீதமுள்ளவற்றையும் நாம் பார்க்கலாம், இல்லையா? ஒருவேளை அது படைப்பாற்றலாக, உணர்வுகளாக, கனவாக இருக்கலாம்.",
+    "chirp": "அதை உண்மை மனதோடு ஒப்பிட்டால் வேறுபாடுகளையும் மனித மனத்தின் விசேஷமான மீதமுள்ளவற்றையும் நாம் பார்க்கலாம் இல்லையா ஒருவேளை அது படைப்பாற்றலாக உணர்வுகளாக கனவாக இருக்கலாம்",
+    "cer": 0.014,
+    "gemini_ok": true
+   },
+   {
+    "id": 4,
+    "said": "நனவுநிலை பற்றியும், எது கணக்கிடப்படலாம் அல்லது முடியாது என்பது குறித்தும் பல கருதுகோள்கள் உள்ளன.",
+    "chirp": "நனவு நிலை பற்றியும் எது கணக்கிட படலாம் அல்லது முடியாது என்பது குறித்தும் பல கருதுகோள்கள் உள்ளன.",
+    "cer": 0.024,
+    "gemini_ok": true
+   },
+   {
+    "id": 5,
+    "said": "Turing machine-ன் எல்லை என்ன என்ற கேள்விக்கு இது நம்மை கொண்டு செல்கிறது.",
+    "chirp": "டூரிங் மெஷின் எல்லை என்ன என்ற கேள்விக்கு இது நம்மை கொண்டு செல்கிறது.",
+    "cer": 0.213,
+    "gemini_ok": true
+   },
+   {
+    "id": 6,
+    "said": "அப்படியானால் இந்த கணக்கீட்டுக்குள் செய்ய முடியாதது எதுவுமே இல்லையா?",
+    "chirp": "அப்படியானா இந்த கணக்கீட்டுக்குள்ள செய்ய முடியாதது எதுவுமே இல்லையா?",
+    "cer": 0.05,
+    "gemini_ok": true
+   },
+   {
+    "id": 7,
+    "said": "பிரபஞ்சத்தில் கணக்கிட முடியாத எதையும் இதுவரை யாரும் கண்டுபிடிக்கவில்லை.",
+    "chirp": "பிரபஞ்சத்தில் கணக்கிட முடியாத எதையும் இதுவரை யாரும் கண்டுபிடிக்கவில்லை.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 8,
+    "said": "இதுவரை.",
+    "chirp": "இதுவரை.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 9,
+    "said": "இதுவரை மட்டுமே.",
+    "chirp": "இதுவரை மட்டுமே.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 10,
+    "said": "Google DeepMind பாட்காஸ்ட்டிற்கு வரவேற்கிறேன், நான் Hannah Fry.",
+    "chirp": "கூகுள் டீப் மைண்ட் பாட்காஸ்டிற்கு வரவேற்கிறேன் நான் ஹனா பிரை",
+    "cer": 0.491,
+    "gemini_ok": true
+   },
+   {
+    "id": 11,
+    "said": "AI உலகிற்கு இது மிகச் சிறந்த ஆண்டு.",
+    "chirp": "ஏஐ உலகிற்கு இது மிகச் சிறந்த ஆண்டு.",
+    "cer": 0.069,
+    "gemini_ok": true
+   },
+   {
+    "id": 12,
+    "said": "கவனம் மொழி மாடல்களிலிருந்து agentic AI-க்கு நகர்ந்துள்ளது.",
+    "chirp": "கவனம் மொழி மாடல்களிலிருந்து ஏஜென்ட் கே ஐ க்கு நகர்ந்துள்ளது.",
+    "cer": 0.196,
+    "gemini_ok": true
+   },
+   {
+    "id": 13,
+    "said": "AI மருந்து கண்டுபிடிப்பை விரைவுபடுத்துவதையும், மல்டிமாடல் மாடல்கள் ரோபாட்டிக்ஸ், ஓட்டுநரில்லா கார்களில் இணைவதையும் பார்த்தோம்.",
+    "chirp": "ஏஐ மருந்து கண்டுபிடிப்பை விரைவு படுத்துவதையும் மல்டி மாடல் மாடல்கள் ரோபோட்டிக்ஸ் ஓட்டுனர் இல்லா கார்களில் இணைவதையும் பார்த்தோம்.",
+    "cer": 0.053,
+    "gemini_ok": true
+   },
+   {
+    "id": 14,
+    "said": "இவற்றை இந்த பாட்காஸ்டில் விரிவாக பேசியுள்ளோம்.",
+    "chirp": "இவற்றை இந்த பாட்காஸ்டில் விரிவாக பேசியுள்ளோம்.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 15,
+    "said": "ஆனால், ஆண்டின் இறுதிப் பகுதியில் செய்திகளையும் வெளியீடுகளையும் கடந்து, ஒரு பெரிய கேள்வியை பரிசீலிக்க விரும்புகிறோம்.",
+    "chirp": "ஆனா ஆண்டின் இறுதி பகுதியில் செய்திகளையும் வெளியீடுகளையும் கடந்து ஒரு பெரிய கேள்வியை பரிசீலிக்க விரும்புகிறோம்.",
+    "cer": 0.039,
+    "gemini_ok": true
+   },
+   {
+    "id": 16,
+    "said": "உண்மையில் இவை எங்கு செல்கின்றன?",
+    "chirp": "உண்மையில இவ எங்க செல்கின்றன?",
+    "cer": 0.111,
+    "gemini_ok": true
+   },
+   {
+    "id": 17,
+    "said": "அடுத்த கட்டத்தைத் தீர்மானிக்கப் போகும் அறிவியல், தொழில்நுட்பக் கேள்விகள் எவை?",
+    "chirp": "அடுத்த கட்டத்தை தீர்மானிக்க போகும் அறிவியல் தொழில்நுட்ப கேள்விகள் எவை?",
+    "cer": 0.088,
+    "gemini_ok": true
+   },
+   {
+    "id": 18,
+    "said": "இதைப்பற்றி அதிக நேரம் யோசிப்பவர் Google DeepMind-ன் CEO மற்றும் இணை நிறுவனர் Demis Hassabis.",
+    "chirp": "இதை பற்றி அதிக நேரம் யோசிப்பவர் கூகுள் டீப் மைண்டின் சி இ ஓ மற்றும் இணை நிறுவனர் டெமிஸ் ஹசாபிஸ்",
+    "cer": 0.443,
+    "gemini_ok": true
+   },
+   {
+    "id": 19,
+    "said": "பாட்காஸ்ட் வருக Demis",
+    "chirp": "பாட்காஸ்ட்க்கு வருக டெமஸ்.",
+    "cer": 0.474,
+    "gemini_ok": true
+   },
+   {
+    "id": 20,
+    "said": "மீண்டும்!",
+    "chirp": "மீண்டும்.",
+    "cer": 0.0,
+    "gemini_ok": false
+   },
+   {
+    "id": 21,
+    "said": "கடந்த ஆண்டில் பல மாற்றங்கள்.",
+    "chirp": "கடந்த ஆண்டில் பல மாற்றங்கள்",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 22,
+    "said": "ஆம், சரி.",
+    "chirp": "ஆ, சரி.",
+    "cer": 0.333,
+    "gemini_ok": true
+   },
+   {
+    "id": 23,
+    "said": "எது மிகப்பெரிய மாற்றம் என்று நினைக்கிறீர்கள்?",
+    "chirp": "எது மிகப்பெரிய மாற்றம் என்று நினைக்கிறீர்கள்?",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 24,
+    "said": "அடடா, நீங்கள் கூறியது போல, பத்து வருடங்கள் ஒரே ஆண்டில் அடங்கிவிட்டது போல் உள்ளது.",
+    "chirp": "அடடா நீங்கள் கூறியது போல 10 வருடங்கள் ஒரே ஆண்டில் அடங்கிவிட்டது போல் உள்ளது.",
+    "cer": 0.074,
+    "gemini_ok": true
+   },
+   {
+    "id": 25,
+    "said": "நிறைய நடந்திருக்கு, குறிப்பா எங்களுக்கு மாடல்களின் வளர்ச்சி.",
+    "chirp": "நிறைய நடந்திருக்கு. குறிப்பா எங்களுக்கு மாடல்களின் வளர்ச்சி.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 26,
+    "said": "நாங்கள் Gemini 1.5 வெளியிட்டதில் மகிழ்ச்சி.",
+    "chirp": "நாங்கள் ஜெமினி 1.5 வெளியிட்டதில் மகிழ்ச்சி.",
+    "cer": 0.162,
+    "gemini_ok": true
+   },
+   {
+    "id": 27,
+    "said": "மல்டிமாடல் திறன்களும் கூட.",
+    "chirp": "மல்டி மாடல் திறன்களும் கூட.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 28,
+    "said": "இவையெல்லாம் சிறப்பாக முன்னேறியுள்ளன.",
+    "chirp": "இவையெல்லாம் சிறப்பாக முன்னேறியுள்ளன.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 29,
+    "said": "அடுத்து, இந்த கோடையில் world models முன்னேற்றம் எனக்கு மிகுந்த உற்சாகம் தருகிறது.",
+    "chirp": "அடுத்து இந்த கோடையில் வேர்ல்டு மாடல்ஸ் முன்னேற்றம் எனக்கு மிகுந்த உற்சாகம் தருகிறது.",
+    "cer": 0.214,
+    "gemini_ok": true
+   },
+   {
+    "id": 30,
+    "said": "அதையும் பேசுவோம்.",
+    "chirp": "அதையும் பேசுவோம்.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 31,
+    "said": "கண்டிப்பாக.",
+    "chirp": "கண்டிப்பாக.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 32,
+    "said": "இதைப் பற்றி நாம் சற்று விரிவாகப் பார்ப்போம்.",
+    "chirp": "இதை பற்றி நாம் சற்று விரிவாக பார்ப்போம்.",
+    "cer": 0.105,
+    "gemini_ok": true
+   },
+   {
+    "id": 33,
+    "said": "முதல் நேர்காணலில் நீங்கள் root-node problems பற்றி பேசியது நினைவிருக்கிறது.",
+    "chirp": "முதல் நேர்காணலில் நீங்க ரூட் நோட் ப்ராબ્ளம்ஸ் பத்தி பேசியது நினைவு இருக்கிறது.",
+    "cer": 0.348,
+    "gemini_ok": true
+   },
+   {
+    "id": 34,
+    "said": "AI மூலம் அதன் அடுத்தடுத்த பயன்களை பெறுவது பற்றிய கருத்து அது.",
+    "chirp": "ஏஐ மூலம் அதன் அடுத்த அடுத்த பயன்களை பெறுவது பற்றிய கருத்து அது.",
+    "cer": 0.058,
+    "gemini_ok": true
+   },
+   {
+    "id": 35,
+    "said": "அதில் வெற்றி பெற்றுள்ளீர்கள். தற்போதைய நிலை குறித்து சொல்ல முடியுமா?",
+    "chirp": "அதில் வெற்றி பெற்றுள்ளீர்கள். தற்போதைய நிலை குறித்து சொல்ல முடியுமா?",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 36,
+    "said": "விரைவில் வரவிருப்பவை என்ன, நீங்கள் தீர்த்த அல்லது தீர்க்கவிருக்கும் விஷயங்கள் எவை?",
+    "chirp": "விரைவில் வரவிருப்பவை என்ன நீங்கள் தீர்த்த அல்லது தீர்க்க விருக்கும் விஷயங்கள் எவை",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 37,
+    "said": "ஆமாம், மிக முக்கிய சான்று AlphaFold; AlphaFold 2 உலகிற்கு அறிமுகமாகி ஐந்து ஆண்டுகள் ஆகப்போகிறது என நினைத்தால் ஆச்சரியமாகத்தான் இருக்கிறது.",
+    "chirp": "ஆமா மிக முக்கிய சான்றுகள் ஆல்பா போல்ட் ஆல்பா போல்ட் 2 உலகிற்கு அறிமுகமாகி 5 ஆண்டுகள் ஆக போகிறது என நினைத்தால் ஆச்சரியமாகத்தான் இருக்கிறது.",
+    "cer": 0.283,
+    "gemini_ok": true
+   },
+   {
+    "id": 38,
+    "said": "root-node problems-ஐ தீர்க்க முடியும் என்பதற்கான ஆதாரம் அது.",
+    "chirp": "ரூட் நோட் ப்ராப்ளம்ஸ தீர்க்க முடியும் என்பதற்கான ஆதாரம் எது?",
+    "cer": 0.373,
+    "gemini_ok": true
+   },
+   {
+    "id": 39,
+    "said": "மற்றவற்றையும் இப்போது ஆராய்கிறோம்.",
+    "chirp": "மற்றவற்றையும் இப்போது ஆராய்கிறோம்.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 40,
+    "said": "பொருளறிவியல், ரூம் டெம்பரேச்சர்ல செய்ய ஆசை,",
+    "chirp": "பொருள் அறிவியலில் ரூம் டெம்பரேச்சர்ல செய்ய ஆசை.",
+    "cer": 0.108,
+    "gemini_ok": true
+   }
+  ]
+ },
+ {
+  "lang": "es",
+  "lines": 41,
+  "mean_cer": 0.113,
+  "median_cer": 0.0,
+  "over_30pct": 1,
+  "rows": [
+   {
+    "id": 0,
+    "said": "Se puede decir que el 50 % es escalado y el otro 50 % innovación.",
+    "chirp": "Se puede decir que el 50% es escalado y el otro 50% innovación.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 1,
+    "said": "Creo que harán falta ambos para la AGI.",
+    "chirp": "Creo que harán falta ambos para la G.",
+    "cer": 0.065,
+    "gemini_ok": true
+   },
+   {
+    "id": 2,
+    "said": "Siempre he pensado que al crear la AGI y usarla como simulación de la mente,",
+    "chirp": "Siempre he pensado que al crear la AGI y usarla como simulación de la mente",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 3,
+    "said": "Y al compararla con la mente real, veremos las diferencias y qué tiene de especial y único la mente humana, ¿no? Quizá sea la creatividad, las emociones o soñar.",
+    "chirp": "Y al compararla con la mente real, veremos las diferencias y qué tiene de especial y único la mente humana, ¿no? Quizás sea la creatividad, las emociones o soñar.",
+    "cer": 0.008,
+    "gemini_ok": true
+   },
+   {
+    "id": 4,
+    "said": "Hay un montón de, bueno, sobre la consciencia hay muchas hipótesis de lo que es computable.",
+    "chirp": "Hay un montón de, bueno, sobre la conciencia hay muchas hipótesis de lo que es computable.",
+    "cer": 0.014,
+    "gemini_ok": true
+   },
+   {
+    "id": 5,
+    "said": "Esto nos lleva de nuevo a la Turing machine: ¿cuál es su límite?",
+    "chirp": "Esto nos lleva de nuevo a la Turing Machine. ¿Cuál es su límite?",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 6,
+    "said": "O sea, nada queda fuera de esta computación...",
+    "chirp": "O-sea, nada queda fuera de esta computación. O-sea,",
+    "cer": 0.114,
+    "gemini_ok": true
+   },
+   {
+    "id": 7,
+    "said": "Bueno, nadie ha hallado aún nada en el universo que no sea computable.",
+    "chirp": "Bueno, nadie ha hallado aún nada en el universo que no sea computable.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 8,
+    "said": "Por ahora.",
+    "chirp": "por ahora.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 9,
+    "said": "Hasta el momento.",
+    "chirp": "Hasta el momento.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 10,
+    "said": "Google DeepMind: El podcast, conmigo, Hannah Fry.",
+    "chirp": "Google Deep Mind, el podcast, conmigo Hannah Fry.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 11,
+    "said": "Ha sido un año clave para la IA.",
+    "chirp": "Ha sido un año clave para la IA.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 12,
+    "said": "El centro de gravedad pasó de grandes modelos de lenguaje a agentic AI.",
+    "chirp": "El centro de gravedad pasó de grandes modelos de lenguaje a agentic AI.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 13,
+    "said": "Vimos a la IA acelerar fármacos e integrar modelos multimodales en robótica y coches autónomos.",
+    "chirp": "Vimos a la IA acelerar fármacos e integrar modelos multimodales en robótica y coches autónomos.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 14,
+    "said": "Son temas que exploramos a fondo en este podcast.",
+    "chirp": "Son temas que exploramos a fondo en este podcast.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 15,
+    "said": "Pero, para cerrar el año, queremos ampliar la perspectiva, ir más allá de los titulares y lanzamientos, hacia algo más grande.",
+    "chirp": "Pero para cerrar el año queremos ampliar la perspectiva, ir más allá de los titulares y lanzamientos hacia algo más grande.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 16,
+    "said": "¿Hacia dónde nos dirigimos en realidad?",
+    "chirp": "¿Hacia dónde nos dirigimos en realidad?",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 17,
+    "said": "¿Qué preguntas científicas y tecnológicas van a definir la próxima fase?",
+    "chirp": "¿Qué preguntas científicas y tecnológicas van a definir la próxima fase?",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 18,
+    "said": "Y alguien que dedica mucho tiempo a reflexionar sobre ello es Demis Hassabis, cofundador de Google DeepMind.",
+    "chirp": "Y alguien que dedica mucho tiempo a reflexionar sobre ello es de Demis Hassabis, cofundador de Google DeepMind.",
+    "cer": 0.022,
+    "gemini_ok": true
+   },
+   {
+    "id": 19,
+    "said": "Bienvenido de nuevo.",
+    "chirp": "Bienvenido de nuevo.",
+    "cer": 0.0,
+    "gemini_ok": false
+   },
+   {
+    "id": 20,
+    "said": "De vuelta.",
+    "chirp": "de vuelta.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 21,
+    "said": "Han pasado muchas cosas este año.",
+    "chirp": "Han pasado muchas cosas este año.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 22,
+    "said": "Sí. [risas]",
+    "chirp": "¿Cuál crees que ha sido el mayor cambio",
+    "cer": 3.857,
+    "gemini_ok": true
+   },
+   {
+    "id": 23,
+    "said": "¿Cuál crees que ha sido el mayor cambio?",
+    "chirp": "¿Cuál crees que ha sido el mayor cambio?",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 24,
+    "said": "Ha pasado tanto, como dices... Es como si hubiéramos comprimido 10 años en solo uno.",
+    "chirp": "Ha pasado tanto, como dices, es como si hubiéramos comprimido 10 años en solo uno.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 25,
+    "said": "Muchísimo. Al menos para nosotros, el avance de los modelos,",
+    "chirp": "muchísimo. Al menos para nosotros el avance de los modelos",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 26,
+    "said": "acabamos de lanzar Gemini 1.5, muy satisfechos,",
+    "chirp": "Acabamos de lanzar Gemini 1.5, muy satisfechos.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 27,
+    "said": "las funciones multimodales...",
+    "chirp": "las funciones multimodales.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 28,
+    "said": "Todas esas cosas han avanzado bien.",
+    "chirp": "Todas esas cosas han avanzado bien. ¿Qué",
+    "cer": 0.103,
+    "gemini_ok": true
+   },
+   {
+    "id": 29,
+    "said": "Y lo que más me entusiasma de este verano es el progreso en world models.",
+    "chirp": "Y lo que más me entusiasma de este verano es el progreso en World Models.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 30,
+    "said": "Seguro lo tratamos.",
+    "chirp": "Seguro lo tratamos.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 31,
+    "said": "Sí, claro.",
+    "chirp": "Sí, claro. Sí.",
+    "cer": 0.286,
+    "gemini_ok": true
+   },
+   {
+    "id": 32,
+    "said": "Enseguida veremos todo eso con más detalle.",
+    "chirp": "En seguida veremos todo eso con más detalle.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 33,
+    "said": "Recuerdo la primera vez que te entrevisté: hablabas de root-node problems.",
+    "chirp": "Recuerdo la primera vez que te entrevisté. Hablabas de root note problems.",
+    "cer": 0.016,
+    "gemini_ok": true
+   },
+   {
+    "id": 34,
+    "said": "De usar la IA para desbloquear todas esas ventajas derivadas.",
+    "chirp": "de usar la IA para desbloquear todas esas ventajas derivadas.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 35,
+    "said": "Y has cumplido lo prometido, la verdad. ¿Nos cuentas en qué punto estamos?",
+    "chirp": "y has cumplido lo prometido, la verdad. ¿Nos cuentas en qué punto estamos?",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 36,
+    "said": "¿Qué tenemos a la vuelta de la esquina y qué habéis resuelto ya?",
+    "chirp": "¿Qué tenemos a la vuelta de la esquina y qué habéis resuelto ya?",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 37,
+    "said": "Sí, claro, la gran prueba fue AlphaFold, y es una locura pensar que ya casi son cinco años desde que se anunció al mundo AlphaFold 2, al menos.",
+    "chirp": "Sí, claro, la gran prueba fue AlphaFold y es una locura pensar que ya casi son 5 años desde que se anunció al mundo AlphaFold 2, al menos.",
+    "cer": 0.045,
+    "gemini_ok": true
+   },
+   {
+    "id": 38,
+    "said": "Eso demostró que era posible abordar este tipo de root-node problems.",
+    "chirp": "Eso demostró que era posible abordar este tipo de root node problems.",
+    "cer": 0.0,
+    "gemini_ok": true
+   },
+   {
+    "id": 39,
+    "said": "Y ahora exploramos todos los demás.",
+    "chirp": "Y ahora exploramos todos los demás. ¿Qué",
+    "cer": 0.103,
+    "gemini_ok": true
+   },
+   {
+    "id": 40,
+    "said": "Ciencia de materiales; lograr temperatura ambiente",
+    "chirp": "Ciencia de materiales, lograr temperatura ambiente.",
+    "cer": 0.0,
+    "gemini_ok": true
+   }
+  ]
+ }
+]

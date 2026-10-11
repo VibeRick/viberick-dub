@@ -55,6 +55,14 @@ def test_duplicate_langs_are_collapsed(monkeypatch):
     assert r.status_code == 200 and FakeDoc.store[r.json()["id"]]["langs"] == ["en"] and len(started) == 1
 
 
+def test_any_supported_language_up_to_the_cap(monkeypatch):
+    c, started = client(monkeypatch)
+    url = "https://youtu.be/Fty2sz3dBwU"
+    assert c.post("/api/jobs", json={"url": url, "langs": ["hi", "es", "sw", "ar"]}).status_code == 200
+    assert c.post("/api/jobs", json={"url": url, "langs": ["hi", "es", "sw", "ar", "fr"]}).status_code == 400
+    assert c.post("/api/jobs", json={"url": url, "langs": ["xx"]}).status_code == 400
+
+
 def test_worker_receives_only_canonical_video_url(monkeypatch):
     c, started = client(monkeypatch)
     response = c.post("/api/jobs", json={"url": "https://www.youtube.com/redirect?v=Fty2sz3dBwU&next=https://example.org"})
