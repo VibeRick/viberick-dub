@@ -1,0 +1,148 @@
+{
+  "mode": "dry_run",
+  "job_id": "sample--HzgcbRXUK8-e373ec4e62b51a00d8f75d37",
+  "fingerprint": "e373ec4e62b51a00d8f75d37f5df44d664868dce1bea3b88ea5c2d149ac15cb7",
+  "public_prefix": "gs://viberick-dub-public/demo/sample--HzgcbRXUK8-e373ec4e62b51a00d8f75d37/",
+  "metadata": {
+    "title": "Demis Hassabis × Lex Fridman — new scientific discoveries",
+    "src": "en",
+    "url": "https://www.youtube.com/watch?v=-HzgcbRXUK8&t=3387s",
+    "source_interval": {
+      "start": 3387,
+      "end": 3427
+    },
+    "voice_disclosure": "AI preset dubbing. Charon portrays Lex; Algieba portrays Demis. These are not cloned voices.",
+    "alignment_provenance": "Gemini audio-estimated timings against official transcript, not forced alignment",
+    "validation_scope": "prepared_source_turns",
+    "source_captioned": false,
+    "speakers": {
+      "lex": {
+        "name": "Lex Fridman",
+        "voice": "Charon",
+        "voice_type": "preset"
+      },
+      "demis": {
+        "name": "Demis Hassabis",
+        "voice": "Algieba",
+        "voice_type": "preset"
+      }
+    }
+  },
+  "languages": [
+    "ko",
+    "ja",
+    "zh-Hans"
+  ],
+  "duration_seconds": 40.0,
+  "line_count": 18,
+  "event_count": 53,
+  "file_count": 19,
+  "bytes": 10842317,
+  "files": [
+    {
+      "name": "dub.ja.m4a",
+      "bytes": 708627,
+      "sha256": "32ea3bfcbc6a82f882d94fe2e0b1f2024aeddc5cb5fcff93cfe5993e04d2ef92"
+    },
+    {
+      "name": "dub.ko.m4a",
+      "bytes": 728327,
+      "sha256": "4686a4309d728f8c7d91461f27599468464def79e100fb76c278efbed19ce02a"
+    },
+    {
+      "name": "dub.zh-Hans.m4a",
+      "bytes": 700638,
+      "sha256": "24eab183210af9ae3e3aa4d3d6b2311d6b2cc1c35f78f4611f69a5c9604a28d4"
+    },
+    {
+      "name": "report.json",
+      "bytes": 3001,
+      "sha256": "ca9dd8d305e8d249a5fb2794df6a69e75c0bfde27b528d6e6a9848fcb1c3d9b7"
+    },
+    {
+      "name": "subs.en.srt",
+      "bytes": 1337,
+      "sha256": "9830afdbf779b92385384196d69eb38b5a1a8b539c79a732d6f7164b78bbad31"
+    },
+    {
+      "name": "subs.en.vtt",
+      "bytes": 1345,
+      "sha256": "886b7caa1cd219ebc94798b36fcf59bbf52da5cc1ddd4ab6749c2440d0e98733"
+    },
+    {
+      "name": "subs.ja.srt",
+      "bytes": 1127,
+      "sha256": "e0e22f5496a417cfac56531040cb0d12beecdec38bfd41ee646316b5fb17af0a"
+    },
+    {
+      "name": "subs.ja.vtt",
+      "bytes": 1135,
+      "sha256": "faaad0eaefd894169adca2764b5d2fdd8e9e01cd9e1c6514c1f1a34c8becf8f5"
+    },
+    {
+      "name": "subs.ko.srt",
+      "bytes": 1004,
+      "sha256": "af7a37f9ec14b1f0e91ae12f5c8e5fbf50cd1bcd7c842fe91240d4000567559b"
+    },
+    {
+      "name": "subs.ko.vtt",
+      "bytes": 1012,
+      "sha256": "b8694f5b109da81e28a3a3f3c1b7903aead5852fe907c2028dca8f39b0696ada"
+    },
+    {
+      "name": "subs.zh-Hans.srt",
+      "bytes": 1070,
+      "sha256": "72cd9dd4caa3e711eb8e0676ce88f2bc0d33a2f8067ff0a280ab6d3291c53c4b"
+    },
+    {
+      "name": "subs.zh-Hans.vtt",
+      "bytes": 1078,
+      "sha256": "d6afa060d8eadce577a240bba0e18db694a359085855c712103a75307a2f00c6"
+    },
+    {
+      "name": "timeline.ja.json",
+      "bytes": 1387,
+      "sha256": "241985da36a4089237d118e955cc9fea18cb5bd41e4bee2e0ab5759e9f1914b7"
+    },
+    {
+      "name": "timeline.ko.json",
+      "bytes": 1388,
+      "sha256": "bc0ddfe0eb5a145d4beb0f33ffc6bbc8e28b22cca42d8c387340bc3a25c2b764"
+    },
+    {
+      "name": "timeline.zh-Hans.json",
+      "bytes": 1383,
+      "sha256": "9ae3bc35a49f996ab04366118cab8edd11cc957e722b5d2905e1faf268de673a"
+    },
+    {
+      "name": "video.ja.mp4",
+      "bytes": 2185971,
+      "sha256": "228435fe20f76e603e1a5e5387a862d5a999ac3321bd1f89a475311406beabac"
+    },
+    {
+      "name": "video.ko.mp4",
+      "bytes": 2205671,
+      "sha256": "9a49952fdec961e2c94031a4a2fbe32a51825ca265128e39b5c7dfbd3d5741d7"
+    },
+    {
+      "name": "video.orig.mp4",
+      "bytes": 2118834,
+      "sha256": "4981f24e766d0b02e126c562cebc69091907ef10e1bc7fb95004ac436b8c4d20"
+    },
+    {
+      "name": "video.zh-Hans.mp4",
+      "bytes": 2177982,
+      "sha256": "377be24d267121cec33faaecd9067a84fc734ac7e4bbda2806d41659c343b644"
+    }
+  ],
+  "initial_visibility": {
+    "demo": false,
+    "featured": false
+  },
+  "final_visibility": {
+    "demo": true,
+    "featured": true,
+    "can_regenerate": false
+  },
+  "note": "No network calls in dry-run. Execution makes files public by link before enabling showcase listing."
+}

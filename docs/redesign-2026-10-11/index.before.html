@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VibeRick Dub — You made the video. We’ll handle the languages.</title>
+<meta name="description" content="Turn your video into multilingual audio and synced subtitles. Timing-aware translation, automatic audio checks, and consented creator voices.">
+<link rel="icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500&family=Noto+Sans+JP:wght@400;500&family=Noto+Sans+SC:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=acd33d402b9f">
+</head>
+<body>
+<header class="bar">
+  <a class="brand" href="/"><img src="logo.png" alt="" width="28" height="28"><span>VibeRick <b>Dub</b></span></a>
+  <nav><a href="#how">How it works</a><a href="#examples">Examples</a><a href="#new" class="nav-create">Create a dub</a></nav>
+</header>
+
+<main>
+  <section class="hero">
+    <p class="eyebrow">From one recording to more audiences</p>
+    <h1>You made the video.<br>We’ll handle the languages.</h1>
+    <p class="lede">Turn your video into natural-sounding multilingual audio and synced subtitles. Translation, voice generation and timing come together in one automatic workflow.</p>
+    <div class="hero-actions"><button class="primary-link" id="sample-open" disabled>Loading samples…</button><a href="#new">Create a dub</a></div>
+    <form id="new" class="new" autocomplete="off">
+      <div class="form-heading"><h2>Start with your video</h2><p>Paste a link. Choose languages. Get your versions.</p></div>
+      <label class="url-label" for="url">YouTube video link</label>
+      <input id="url" type="url" required placeholder="https://youtu.be/…" aria-label="YouTube link" aria-describedby="form-help err">
+      <div class="langs" id="langs" role="group" aria-label="Target languages">
+        <label><input type="checkbox" value="en" checked><span>English</span></label>
+        <label><input type="checkbox" value="ja" checked><span>日本語</span></label>
+        <label><input type="checkbox" value="zh-Hans" checked><span>中文</span></label>
+        <label><input type="checkbox" value="ko" checked><span>한국어</span></label>
+      </div>
+      <button type="submit" id="go">Create my dubs</button>
+      <p class="fine" id="form-help">Four tested languages · First 3 minutes · The source language is skipped. Videos, audio and previews are public by link; use content you may share. Creator clones require recorded consent and a voice match. Other speakers use AI preset voices.</p>
+      <div id="pending-create" hidden><p id="pending-create-description"></p><button type="button" id="resume-create">Resume pending creation</button><p class="caption-note">Continue the saved request. If it already started, its existing run opens. Submitting a different URL or language selection replaces this saved request.</p></div>
+      <p class="err" id="err" role="alert" hidden></p>
+    </form>
+  </section>
+
+  <section class="studio" id="studio" hidden>
+    <div class="studio-head">
+      <div>
+        <p class="eyebrow" id="j-status" role="status">—</p><button type="button" id="worker-check" hidden>Check stalled processing</button><p id="worker-check-status" class="caption-note" role="status" hidden></p>
+        <h2 id="j-title">—</h2>
+      </div>
+      <a class="yt" id="j-yt" target="_blank" rel="noopener">Open on YouTube ↗</a>
+    </div>
+
+    <div id="review-context" class="review-context" hidden></div>
+    <div id="speaker-legend" class="speaker-legend" aria-label="Source speakers" hidden></div>
+    <ol class="steps" id="steps"></ol>
+
+    <div class="grid">
+      <div class="player">
+        <div class="frame">
+          <video id="video" controls playsinline crossorigin="anonymous" preload="metadata"></video>
+          <div class="placeholder" id="ph"><img id="ph-img" alt=""><span id="ph-text">Working…</span></div>
+        </div>
+        <div class="tracks" id="tracks" role="group" aria-label="Audible language"></div>
+        <div class="caption-display" id="caption-display"><p id="caption-target">Captions appear here during playback.</p><p id="caption-source" hidden></p></div>
+        <div class="caption-controls"><label>Captions <select id="caption-mode"><option value="below">Below video</option><option value="overlay">On video</option><option value="off">Off</option></select></label><label><input type="checkbox" id="source-subs"> Show source text</label></div>
+        <p class="caption-note" id="source-caption-note">Text burned into the original video cannot be removed by this player. For a clean dub, use a source without burned-in captions.</p>
+        <div class="downloads" id="downloads"></div>
+      </div>
+      <details class="inspector-panel"><summary>Fine-tune a line <span>Optional edits and audio checks</span></summary><div class="panel-heading"><h3>Inspect a line</h3><span id="inspect-label"></span></div><div id="inspector"><p class="muted">Choose a segment when transcript data is ready.</p></div></details>
+    </div>
+    <p id="result-summary" class="result-summary" role="status"></p>
+    <details class="production-details"><summary>See timing, transcript and quality checks</summary>
+    <section id="timeline-wrap" class="timeline" hidden aria-labelledby="timeline-title"><div class="panel-heading"><h3 id="timeline-title">Shared timeline</h3><span id="timeline-clock">0:00</span></div><p id="timing-note" class="caption-note"></p><div class="timeline-scroll"><div class="timeline-inner"><div id="ruler"></div><div id="lanes"></div></div></div><label class="seek-label">Seek video <input type="range" id="timeline-seek" min="0" max="180" step="0.05" value="0"></label></section>
+    <div class="detail-grid"><section class="transcript-panel"><div class="panel-heading"><h3>Transcript</h3></div><ol id="tx" class="tx"><li class="muted pad">Transcript is not ready yet.</li></ol></section><section class="activity-panel"><div class="panel-heading"><h3><span class="dot" id="live-dot"></span> Agent activity</h3><span class="muted" id="log-count"></span></div><p id="activity-mode" class="caption-note"></p><ol id="log"></ol></section></div>
+
+    <div class="stats" id="stats"></div>
+    <p id="stats-provenance" class="caption-note" hidden></p>
+
+    <div class="lines" id="lines-wrap" hidden>
+      <div class="lines-head">
+        <h3>Line review</h3>
+        <div class="seg" id="line-lang" role="group" aria-label="Line language"></div>
+        <label class="muted"><input type="checkbox" id="only-fixed"> Only adjusted or flagged</label>
+      </div>
+      <div class="table-wrap"><table id="lines"><thead><tr><th>Time</th><th>Source</th><th>Dub</th><th>Fit</th><th>Automated checks and actions</th></tr></thead><tbody></tbody></table></div>
+    </div>
+    </details>
+  </section>
+
+  <section class="examples" id="examples">
+    <h2>One recording. Hear the possibilities.</h2><p class="section-intro">Finished samples are ready to explore. No new generation is needed.</p>
+    <div class="cards" id="cards"><p class="muted">Loading…</p></div>
+  </section>
+
+  <section class="how" id="how">
+    <h2>How it works</h2>
+    <ol class="pipeline">
+      <li><b>Listen</b><span>Chirp 3 gives every word a timestamp. Gemini 3.8 Flash listens to the audio and corrects names and jargon; the corrected text is aligned back onto Chirp's timings.</span><em>Chirp 3 · Gemini</em></li>
+      <li><b>Understand</b><span>Gemini writes a dubbing brief: topic, speaker style, and how each brand and technical term must be rendered.</span><em>Gemini 3.8 Flash</em></li>
+      <li><b>Translate to time</b><span>Each line gets a character budget from its time slot and the target language's speaking rate, so the dub lands where the speaker talks.</span><em>Gemini 3.8 Flash</em></li>
+      <li><b>Speak</b><span>Gemini TTS generates each translated line with a structured voice and speaking-style instruction. Approved creator voices are used only after consent and speaker checks.</span><em>Gemini 3.8 Flash TTS</em></li>
+      <li><b>Listen back &amp; repair</b><span>The agent measures every clip, shortens lines that run long, then Gemini listens to each one. Wrong words or language → re-synthesize, then re-translate, then flag for a human.</span><em>Gemini agent loop</em></li>
+      <li><b>Mix &amp; ship</b><span>Clips are placed on the original timeline over the separated music bed, loudness-normalized, and published with subtitles.</span><em>Cloud Run Jobs · Firestore · Cloud Storage · Firebase</em></li>
+    </ol>
+  </section>
+</main>
+
+<footer>
+  <p>Built by team VibeRick for the Google Cloud AI Builder Cup 2026. Dubbed audio carries Gemini's SynthID watermark.</p>
+</footer>
+
+<template id="t-card">
+  <a class="card"><img alt=""><div><b></b><span></span></div></a>
+</template>
+
+<script type="module" src="app.js?v=d5583bd049b5"></script>
+</body>
+</html>

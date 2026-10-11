@@ -1,0 +1,154 @@
+{
+  "source_directory": "/Users/jaehoshin/Code/viberick/media/youtube/sources/2026-09-30-geo-recording/edit-v002",
+  "source_parts": [
+    "part-000.mov",
+    "part-001.mov",
+    "part-002.mov",
+    "part-003.mov",
+    "part-004.mov",
+    "part-005.mov"
+  ],
+  "source_edit_map_sha256": "08b2f66436716a7e6c8bb94e8cb6f7d74a3869c29717a3e55847099e6b7826be",
+  "excerpt_seconds": [
+    0,
+    180
+  ],
+  "master_audio_decoded_pcm_equals_cached_source": true,
+  "render": "concat existing precaption parts; H264 CRF18 fast 1080p30, lossless ALAC master; browser original AAC160k; dubbed audio stream copy from offline remix",
+  "visual_checks": {
+    "frames_seconds": [
+      2,
+      90,
+      175
+    ],
+    "result": "No burned speech captions at sampled frames. Existing top privacy blur, camera, screen text and editorial notes retained."
+  },
+  "limitations": [
+    "Three sampled frames are not exhaustive frame-by-frame privacy review.",
+    "No new human listening or lip-sync approval.",
+    "Underlying Korean slide text remains unchanged.",
+    "Existing dubbed speech retains quality limitations measured in quality-audit-180s-v1.json."
+  ],
+  "outputs": [
+    {
+      "path": "/Users/jaehoshin/Code/hackathons/ai-builder-cup-2026/viberick-dub/runs/review-2026-10-10/clean-source.mp4",
+      "sha256": "ac66fabc758b7c0f7d54e72e6c06e76878c32a6419880efb544068a5c51012ad",
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1920,
+          "height": 1080,
+          "r_frame_rate": "30/1",
+          "duration": "180.000000",
+          "nb_frames": "5400"
+        },
+        {
+          "codec_name": "alac",
+          "codec_type": "audio",
+          "r_frame_rate": "0/0",
+          "duration": "180.000000",
+          "nb_frames": "2110"
+        }
+      ],
+      "full_decode_ok": true,
+      "decode_diagnostics": ""
+    },
+    {
+      "path": "/Users/jaehoshin/Code/hackathons/ai-builder-cup-2026/viberick-dub/runs/review-2026-10-10/out/video.clean.en.mp4",
+      "sha256": "4ba2f0142d462f58f113efc34e34250ea0fe669f9f1eccff4ba26570be157385",
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1920,
+          "height": 1080,
+          "r_frame_rate": "30/1",
+          "duration": "180.000000",
+          "nb_frames": "5400"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio",
+          "r_frame_rate": "0/0",
+          "duration": "180.000000",
+          "nb_frames": "8439"
+        }
+      ],
+      "full_decode_ok": true,
+      "decode_diagnostics": ""
+    },
+    {
+      "path": "/Users/jaehoshin/Code/hackathons/ai-builder-cup-2026/viberick-dub/runs/review-2026-10-10/out/video.clean.ja.mp4",
+      "sha256": "1e3ed6921043cc84b8823fb7fbf3e8325e59c9d375cd62ff6aa064b7bb15b3e0",
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1920,
+          "height": 1080,
+          "r_frame_rate": "30/1",
+          "duration": "180.000000",
+          "nb_frames": "5400"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio",
+          "r_frame_rate": "0/0",
+          "duration": "180.000000",
+          "nb_frames": "8439"
+        }
+      ],
+      "full_decode_ok": true,
+      "decode_diagnostics": ""
+    },
+    {
+      "path": "/Users/jaehoshin/Code/hackathons/ai-builder-cup-2026/viberick-dub/runs/review-2026-10-10/out/video.clean.orig.mp4",
+      "sha256": "4e6ec5b0debbeb2737c4e0567765f4f76d6727b8ba6c7b73550d2cb4e24f7d3a",
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1920,
+          "height": 1080,
+          "r_frame_rate": "30/1",
+          "duration": "180.000000",
+          "nb_frames": "5400"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio",
+          "r_frame_rate": "0/0",
+          "duration": "180.000000",
+          "nb_frames": "8439"
+        }
+      ],
+      "full_decode_ok": true,
+      "decode_diagnostics": ""
+    },
+    {
+      "path": "/Users/jaehoshin/Code/hackathons/ai-builder-cup-2026/viberick-dub/runs/review-2026-10-10/out/video.clean.zh-Hans.mp4",
+      "sha256": "7fe3ee43acf998a6c7177261dc8ed8e491a005b0d41f5457363a5f78c737b535",
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1920,
+          "height": 1080,
+          "r_frame_rate": "30/1",
+          "duration": "180.000000",
+          "nb_frames": "5400"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio",
+          "r_frame_rate": "0/0",
+          "duration": "180.000000",
+          "nb_frames": "8439"
+        }
+      ],
+      "full_decode_ok": true,
+      "decode_diagnostics": ""
+    }
+  ]
+}

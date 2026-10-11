@@ -3,109 +3,222 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>VibeRick Dub</title>
-<meta name="description" content="Paste a YouTube link. Get dubbed tracks in the creator's own voice, plus subtitles. Built on Gemini, Chirp 3, Cloud Run, Firestore and Firebase.">
+<title>VibeRick Dub — Your voice. Every language.</title>
+<meta name="description" content="An AI dubbing agent on Google Cloud. Paste a YouTube link; get dubbed video, audio tracks and subtitles in your own voice, with every line timed, checked by Gemini and repaired.">
+<meta name="theme-color" content="#0c0c0d">
 <link rel="icon" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500&family=Noto+Sans+JP:wght@400;500&family=Noto+Sans+SC:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="style.css?v=r4">
 </head>
 <body>
 <header class="bar">
-  <a class="brand" href="/"><img src="logo.png" alt="" width="28" height="28"><span>VibeRick <b>Dub</b></span></a>
-  <nav><a href="#how">How it works</a><a href="#examples">Examples</a><a href="https://github.com/jays0606/viberick-dub" target="_blank" rel="noopener">GitHub</a></nav>
+  <a class="brand" href="/"><img src="logo.png" alt="" width="26" height="26"><span>VibeRick <b>Dub</b></span></a>
+  <nav>
+    <a href="/#agent">How it works</a>
+    <a href="/#cloud">Architecture</a>
+    <a href="/#examples">Samples</a>
+    <a href="/#new" class="nav-create">Dub a video</a>
+  </nav>
 </header>
 
 <main>
+<div id="landing">
   <section class="hero">
-    <p class="eyebrow">AI dubbing agent · Gemini end to end</p>
-    <h1>One video. Every language.<br><span>Your own voice.</span></h1>
-    <p class="lede">Paste a YouTube link. An agent transcribes it, translates every line to fit its timing, speaks it in the creator's cloned voice, then listens back and repairs what doesn't sound right.</p>
+    <div class="hero-copy">
+      <p class="eyebrow">AI dubbing agent · Built on Google Cloud</p>
+      <h1>Your voice.<br>Every language.</h1>
+      <p class="lede">Paste a YouTube link. VibeRick Dub translates each line to fit the moment it’s spoken, says it in your own voice, then listens to every line and fixes what’s wrong.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#new">Dub a video</a>
+        <button class="btn ghost" id="sample-open" disabled>Loading sample…</button>
+      </div>
+    </div>
+
+    <figure class="stage" id="stage" aria-label="Sample dub player">
+      <div class="stage-frame">
+        <video id="hero-video" playsinline preload="metadata" crossorigin="anonymous"></video>
+        <button class="stage-play" id="hero-play" aria-label="Play sample"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg><span>Play with sound</span></button>
+        <p class="stage-caption" id="hero-caption" aria-live="polite"></p>
+      </div>
+      <div class="stage-rail" id="hero-langs" role="group" aria-label="Listen in"></div>
+      <figcaption class="stage-note"><span class="rec"></span><span id="hero-note">Same moment, same speaker. Switch languages while it plays.</span><span class="stage-time" id="hero-time">0:00</span></figcaption>
+    </figure>
+  </section>
+
+  <section class="make" id="make">
+    <div class="section-head"><p class="num">01</p><h2>Make yours</h2><p>Paste a link, choose languages. The first three minutes are dubbed into each one.</p></div>
     <form id="new" class="new" autocomplete="off">
-      <input id="url" type="url" required placeholder="https://youtu.be/…" aria-label="YouTube link">
+      <label class="url-label" for="url">YouTube link</label>
+      <div class="url-row">
+        <input id="url" type="url" required placeholder="https://youtu.be/…" aria-describedby="form-help err">
+        <button type="submit" id="go" class="btn primary">Create my dubs</button>
+      </div>
       <div class="langs" id="langs" role="group" aria-label="Target languages">
         <label><input type="checkbox" value="en" checked><span>English</span></label>
-        <label><input type="checkbox" value="ja" checked><span>日本語</span></label>
-        <label><input type="checkbox" value="zh-Hans" checked><span>中文</span></label>
-        <label><input type="checkbox" value="ko" checked><span>한국어</span></label>
+        <label><input type="checkbox" value="ja" checked><span lang="ja">日本語</span></label>
+        <label><input type="checkbox" value="zh-Hans" checked><span lang="zh-Hans">中文</span></label>
+        <label><input type="checkbox" value="ko" checked><span lang="ko">한국어</span></label>
       </div>
-      <button type="submit" id="go">Dub it</button>
-      <p class="fine">Public demo: first 3 minutes of the video. The source language is detected and skipped. The cloned voice is used only for channels whose owner recorded voice consent; other videos get a stock Gemini voice.</p>
-      <p class="err" id="err" hidden></p>
+      <p class="fine" id="form-help">The source language is skipped. A creator’s cloned voice is used only with recorded consent and a voice match; everyone else gets a matched Gemini voice. Results are public by link.</p>
+      <div id="pending-create" hidden><p id="pending-create-description"></p><button type="button" id="resume-create" class="btn ghost small">Resume saved request</button></div>
+      <p class="err" id="err" role="alert" hidden></p>
     </form>
   </section>
 
-  <section class="studio" id="studio" hidden>
-    <div class="studio-head">
-      <div>
-        <p class="eyebrow" id="j-status">—</p>
-        <h2 id="j-title">—</h2>
-      </div>
-      <a class="yt" id="j-yt" target="_blank" rel="noopener">Open on YouTube ↗</a>
-    </div>
-
-    <ol class="steps" id="steps"></ol>
-
-    <div class="grid">
-      <div class="player">
-        <div class="frame">
-          <video id="video" controls playsinline crossorigin="anonymous" preload="metadata"></video>
-          <div class="placeholder" id="ph"><img id="ph-img" alt=""><span id="ph-text">Working…</span></div>
+  <section class="agent" id="agent">
+    <div class="section-head"><p class="num">02</p><h2>An agent, not a pipeline</h2><p>Every line is measured, heard and repaired before it reaches you. Each step streams to the studio as it happens.</p></div>
+    <ol class="flow">
+      <li><span class="k">Listen</span><p>Chirp 3 timestamps every word and labels speakers. Gemini listens to the audio and corrects names and jargon; the fixes are aligned back onto Chirp’s timings.</p><em>Chirp 3 · Gemini 3.8 Flash</em></li>
+      <li><span class="k">Brief</span><p>Gemini writes a dubbing brief: topic, register, and how each brand and technical term is rendered.</p><em>Gemini 3.8 Flash</em></li>
+      <li><span class="k">Translate to time</span><p>Each sentence gets a character budget from its time slot and the voice’s measured speaking rate.</p><em>Gemini 3.8 Flash</em></li>
+      <li><span class="k">Speak</span><p>The creator’s own voice, if they consented and their voice matches. Other speakers are cast to the closest preset after Gemini listens to them.</p><em>Gemini TTS voice replication</em></li>
+      <li class="loop"><span class="k">Check &amp; repair</span>
+        <div class="loop-steps" aria-label="Repair loop">
+          <span>measure</span><span>shorten</span><span>time-fit</span><span>Gemini listens</span><span>re-speak</span><span>re-translate</span><span class="h">flag a human</span>
         </div>
-        <div class="tracks" id="tracks" role="tablist" aria-label="Audio track"></div>
-        <label class="subs-toggle"><input type="checkbox" id="subs-on" checked> Subtitles in the selected language</label>
-        <div class="downloads" id="downloads"></div>
-      </div>
-      <aside class="log">
-        <div class="log-head" role="tablist">
-          <button class="tab" id="tab-tx" role="tab" aria-selected="true">Transcript</button>
-          <button class="tab" id="tab-log" role="tab" aria-selected="false"><span class="dot" id="live-dot"></span>Agent log</button>
-          <span class="muted" id="log-count"></span>
-        </div>
-        <ol id="tx" class="tx"><li class="muted pad">The transcript appears when the dub is ready.</li></ol>
-        <ol id="log" hidden></ol>
-      </aside>
-    </div>
+        <p>Too long, wrong language, missing words: the agent fixes it and listens again. What it can’t fix, it flags.</p><em>Gemini agent loop</em></li>
+      <li><span class="k">Mix &amp; ship</span><p>Lines sit on the original timeline over the separated music bed at −14 LUFS. Out come MP4, M4A tracks, SRT and VTT.</p><em>Cloud Run Jobs · Cloud Storage</em></li>
+    </ol>
+  </section>
 
-    <div class="stats" id="stats"></div>
-
-    <div class="lines" id="lines-wrap" hidden>
-      <div class="lines-head">
-        <h3>Every line the agent touched</h3>
-        <div class="seg" id="line-lang" role="tablist"></div>
-        <label class="muted"><input type="checkbox" id="only-fixed"> Only repaired or flagged</label>
-      </div>
-      <div class="table-wrap"><table id="lines"><thead><tr><th>Time</th><th>Source</th><th>Dub</th><th>Fit</th><th>Agent actions</th></tr></thead><tbody></tbody></table></div>
+  <section class="proof" id="proof">
+    <div class="section-head"><p class="num">03</p><h2>Measured, not promised</h2><p>From real runs on a 15-minute Korean tech video.</p></div>
+    <div class="figures">
+      <div><b>366<small>/369</small></b><span>lines passed Gemini’s listening check on the full 15-minute video, after repairs</span></div>
+      <div><b>2:52</b><span>end to end for 3 minutes into 3 languages, download to finished MP4s</span></div>
+      <div><b>7.6<small>–7.9%</small></b><span>transcript error with Chirp 3 + Gemini over 3 runs, against 8.6% for Chirp alone</span></div>
+      <div><b>≈$0.03</b><span>per dubbed minute in model and compute cost</span></div>
     </div>
+  </section>
+
+  <section class="consent" id="consent">
+    <div class="section-head"><p class="num">04</p><h2>Two locks on a cloned voice</h2><p>A voice is the most personal thing a creator owns. It’s used only when both locks agree.</p></div>
+    <div class="locks">
+      <div class="lock"><span class="lock-n">1</span><h3>Channel consent</h3><p>The video’s channel belongs to a creator who recorded a spoken consent statement.</p></div>
+      <div class="lock"><span class="lock-n">2</span><h3>Voice match</h3><p>The diarized speaker verifies against that recording by speaker embedding. The creator scores 0.86–0.90; other people score 0.00–0.09; the gate is 0.45.</p></div>
+      <div class="lock lock-else"><h3>Everyone else</h3><p>Gets a preset voice that Gemini picks after listening to them. Dubbed audio carries Gemini’s SynthID watermark.</p></div>
+    </div>
+  </section>
+
+  <section class="cloud" id="cloud">
+    <div class="section-head"><p class="num">05</p><h2>Built on Google Cloud</h2><p>One deploy, serverless end to end. Every agent action is a Firestore event the browser subscribes to.</p></div>
+    <div class="arch" role="img" aria-label="Architecture: Firebase Hosting serves the studio; Cloud Run API starts a Cloud Run Job; the job calls Chirp 3, Gemini 3.8 Flash and Gemini TTS; progress goes to Firestore and media to Cloud Storage.">
+      <div class="arch-col">
+        <p class="arch-label">Browser</p>
+        <div class="node"><b>Firebase Hosting</b><span>Studio · live updates</span></div>
+        <div class="node"><b>Firestore</b><span>Jobs · agent events · lines</span></div>
+      </div>
+      <div class="arch-col">
+        <p class="arch-label">Serving</p>
+        <div class="node"><b>Cloud Run</b><span>API · jobs, line edits, quotas</span></div>
+        <div class="node"><b>Cloud Run Jobs</b><span>Dubbing worker · 4 vCPU</span></div>
+      </div>
+      <div class="arch-col arch-ai">
+        <p class="arch-label">Google AI</p>
+        <div class="node"><b>Chirp 3</b><span>Words · timestamps · speakers</span></div>
+        <div class="node"><b>Gemini 3.8 Flash</b><span>Proofread · brief · translate · listen · cast</span></div>
+        <div class="node"><b>Gemini TTS</b><span>Voice replication · presets</span></div>
+      </div>
+      <div class="arch-col">
+        <p class="arch-label">Storage</p>
+        <div class="node"><b>Cloud Storage</b><span>Audio · MP4 · M4A · SRT · VTT</span></div>
+        <div class="node"><b>Secret Manager</b><span>Keys</span></div>
+        <div class="node"><b>Artifact Registry · Cloud Build</b><span>Container</span></div>
+      </div>
+    </div>
+    <ol class="path" aria-label="Request path">
+      <li>The studio posts the link to the Cloud Run API, which checks the daily quota and creates the job in Firestore.</li>
+      <li>The API starts a Cloud Run Job execution for that one dub.</li>
+      <li>The worker separates speech from music, then calls Chirp 3, Gemini and Gemini TTS for each language.</li>
+      <li>Every agent decision is written to Firestore; the browser’s listener shows it live.</li>
+      <li>Finished MP4, M4A, SRT and VTT land in Cloud Storage; a line edit re-runs only that line.</li>
+    </ol>
+    <p class="scale"><b>Scales by the job.</b> Each dub is its own Cloud Run Job execution, so a hundred creators means a hundred parallel workers and an idle API costs nothing. Per-day quotas, idempotent job creation and per-job owner tokens keep the public demo safe.</p>
   </section>
 
   <section class="examples" id="examples">
-    <h2>Examples</h2>
+    <div class="section-head"><p class="num">06</p><h2>Samples</h2><p>Finished dubs. Open one to see every line, every check and every repair.</p></div>
     <div class="cards" id="cards"><p class="muted">Loading…</p></div>
   </section>
+  <section id="how" hidden></section>
+</div>
 
-  <section class="how" id="how">
-    <h2>How it works</h2>
-    <ol class="pipeline">
-      <li><b>Listen</b><span>Chirp 3 gives every word a timestamp. Gemini 3.8 Flash listens to the audio and corrects names and jargon; the corrected text is aligned back onto Chirp's timings.</span><em>Chirp 3 · Gemini</em></li>
-      <li><b>Understand</b><span>Gemini writes a dubbing brief: topic, speaker style, and how each brand and technical term must be rendered.</span><em>Gemini 3.8 Flash</em></li>
-      <li><b>Translate to time</b><span>Each line gets a character budget from its time slot and the target language's speaking rate, so the dub lands where the speaker talks.</span><em>Gemini 3.8 Flash</em></li>
-      <li><b>Speak</b><span>Gemini TTS voice replication speaks whole paragraphs in the creator's own voice; Chirp 3 cuts the take back into lines.</span><em>Gemini 3.8 Flash TTS</em></li>
-      <li><b>Listen back &amp; repair</b><span>The agent measures every clip, shortens lines that run long, then Gemini listens to each one. Wrong words or language → re-synthesize, then re-translate, then flag for a human.</span><em>Gemini agent loop</em></li>
-      <li><b>Mix &amp; ship</b><span>Clips are placed on the original timeline over the separated music bed, loudness-normalized, and published with subtitles.</span><em>Cloud Run Jobs · Firestore · Cloud Storage · Firebase</em></li>
-    </ol>
+<section class="studio" id="studio" hidden>
+  <div class="studio-head">
+    <div class="studio-title">
+      <a class="back" href="/">← VibeRick Dub</a>
+      <p class="eyebrow"><span class="dot" id="live-dot"></span><span id="j-status" role="status">—</span></p>
+      <h1 id="j-title">—</h1>
+      <div id="review-context" class="review-context" hidden></div>
+    </div>
+    <div class="studio-meta">
+      <a class="yt" id="j-yt" target="_blank" rel="noopener">Source on YouTube ↗</a>
+      <button type="button" id="worker-check" class="btn ghost small" hidden>Check stalled job</button>
+      <p id="worker-check-status" class="caption-note" role="status" hidden></p>
+    </div>
+  </div>
+  <ol class="steps" id="steps"></ol>
+
+  <div class="studio-grid">
+    <div class="player">
+      <div class="frame">
+        <video id="video" controls playsinline crossorigin="anonymous" preload="metadata"></video>
+        <div class="placeholder" id="ph"><img id="ph-img" alt=""><span id="ph-text">Working…</span></div>
+      </div>
+      <div class="tracks" id="tracks" role="group" aria-label="Listen in"></div>
+      <div class="caption-display" id="caption-display"><p id="caption-target">Captions appear here during playback.</p><p id="caption-source" hidden></p></div>
+      <div class="caption-controls">
+        <label>Captions <select id="caption-mode"><option value="below">Below video</option><option value="overlay">On video</option><option value="off">Off</option></select></label>
+        <label><input type="checkbox" id="source-subs"> Show source line</label>
+        <span id="speaker-legend" class="speaker-legend" aria-label="Speakers" hidden></span>
+      </div>
+      <p class="caption-note" id="source-caption-note"></p>
+      <p id="result-summary" class="result-summary" role="status"></p>
+      <div class="downloads" id="downloads"></div>
+    </div>
+
+    <aside class="side">
+      <section class="panel transcript-panel"><div class="panel-heading"><h3>Transcript</h3><span class="muted">click a line to jump</span></div><ol id="tx" class="tx"><li class="muted pad">Transcript is not ready yet.</li></ol></section>
+      <section class="panel activity-panel"><div class="panel-heading"><h3>Agent activity</h3><span class="muted" id="log-count"></span></div><p id="activity-mode" class="caption-note"></p><ol id="log"></ol></section>
+    </aside>
+  </div>
+
+  <div class="stats" id="stats"></div>
+  <p id="stats-provenance" class="caption-note" hidden></p>
+
+  <section id="timeline-wrap" class="timeline panel" hidden aria-labelledby="timeline-title">
+    <div class="panel-heading"><h3 id="timeline-title">Timeline</h3><span id="timeline-clock" class="mono">0:00</span></div>
+    <p id="timing-note" class="caption-note"></p>
+    <div class="timeline-scroll"><div class="timeline-inner"><div id="ruler"></div><div id="lanes"></div></div></div>
+    <label class="seek-label">Seek <input type="range" id="timeline-seek" min="0" max="180" step="0.05" value="0"></label>
   </section>
+
+  <div class="review-grid">
+    <div class="lines panel" id="lines-wrap" hidden>
+      <div class="lines-head">
+        <h3>Every line</h3>
+        <div class="seg" id="line-lang" role="group" aria-label="Line language"></div>
+        <label class="muted"><input type="checkbox" id="only-fixed"> Only repaired or flagged</label>
+      </div>
+      <div class="table-wrap"><table id="lines"><thead><tr><th>Time</th><th>Source</th><th>Dub</th><th>Fit</th><th>Agent</th></tr></thead><tbody></tbody></table></div>
+    </div>
+    <details class="inspector-panel panel" open><summary><span class="panel-title">Line inspector</span><span id="inspect-label" class="muted"></span></summary><div id="inspector"><p class="muted">Choose a line when the transcript is ready.</p></div></details>
+  </div>
+</section>
 </main>
 
 <footer>
-  <p>Built by team VibeRick for the Google Cloud AI Builder Cup 2026. Dubbed audio carries Gemini's SynthID watermark.</p>
+  <p><b>VibeRick Dub</b> · Team VibeRick · Google Cloud AI Builder Cup 2026 · Media, Content &amp; Digital Experiences</p>
+  <p class="muted">Gemini 3.8 Flash · Gemini TTS · Chirp 3 · Cloud Run · Firestore · Firebase · Cloud Storage</p>
 </footer>
 
 <template id="t-card">
   <a class="card"><img alt=""><div><b></b><span></span></div></a>
 </template>
 
-<script type="module" src="app.js"></script>
+<script type="module" src="app.js?v=r5"></script>
 </body>
 </html>
