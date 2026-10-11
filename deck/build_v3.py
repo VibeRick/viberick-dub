@@ -99,9 +99,9 @@ def build():
     B.image(s[6], A / "ui-studio.png", L, TOP, Emu(5500000), Emu(3600000))
     t(s[6], Emu(5950000), TOP, Emu(2930000), Emu(3600000), [
         ("The studio", {"bold": True, "size": 18}),
-        "NASA's Houston We Have a Podcast (public domain) dubbed into Hindi, Tamil and Spanish by the deployed app.",
+        "NASA's Curious Universe (public domain): a man and a woman, dubbed into Hindi and Spanish by the deployed app.",
         ("Switch language at the same playback moment.", {"bullet": True}),
-        ("Speakers numbered and coloured; each got its own matched voice.", {"bullet": True}),
+        ("Gemini heard two speakers and cast each one: a male voice for the host, a female voice for the guest.", {"bullet": True}),
         ("Transcript with source and dub, live agent log.", {"bullet": True}),
     ], size=12, gap=8)
 
@@ -211,7 +211,7 @@ def build():
     ], [0.48, 0.52], size=12, row_h=420000)
 
     notes = {
-        6: "Screens: deployed studio, job bc3_IC_5P_I-7ed4cd (NASA Johnson, Houston We Have a Podcast Ep. 200, public domain; preset voices).",
+        6: "Screens: deployed studio, job h0wLZJeYGxw-e8930d (NASA Curious Universe video episode, public domain; preset voices Puck/Sulafat; 88/90 lines passed). Slides 10-11: job bc3_IC_5P_I-7ed4cd (NASA Houston We Have a Podcast Ep. 200).",
         3: "ElevenLabs dubbing 90+ languages: elevenlabs.io/docs/capabilities/dubbing; Rask 130+: rask.ai. YouTube multi-language audio: blog.youtube/news-and-events/multi-language-audio/ (2025-09-10). Auto-dub viewers and 27 languages: blog.google/intl/en-in/products/platforms/unlocking-a-global-audience-with-auto-dubbing/ (2026-02-05). Korean → English/Indonesian only; cannot edit: support.google.com/youtube/answer/15569972. Prices: elevenlabs.io/pricing (Pro $99/600K credits, 3,000 credits/min), perso.ai/en/pricing (Pro $99 / 180 min), rask.ai/pricing (Creator Pro annual $799 / 1,200 min); per-minute values computed 2026-10-11. MrBeast quotes: fortune.com/2025/03/28/mrbeast-advice-mark-zuckerberg-meta-video-dubbing. Human dubbing $20–200/min: vendor price guides (checksub.com/blog/dubbing-price-guide, vozo.ai), wide range, not authoritative. YouTube expressive speech copies pitch and intonation for some pairs; it is not a voice clone.",
         9: "Gemini text cost is recorded token usage priced at configured rates (dub/gem.py), not an invoice. MrBeast on human dubbing via Unilingo (Spanish, Japanese actors): restofworld.org/2023/youtube-foreign-language-dub/. Korean overseas watch share: view.asiae.co.kr/en/article/2026081014010865557 (YouTube VP, paraphrased, 2026-08-10). Market estimate if asked: Valuates, AI dubbing USD 783M (2023) → 1.88B (2030), via Speech Technology Magazine.",
         11: "Full: runs/Fty2sz3dBwU/out/report.json. Podcast: Cloud Run job bc3_IC_5P_I-7ed4cd (NASA, public domain); round trip: docs/validation/roundtrip-bc3_IC_5P_I-7ed4cd.json. Live test: job Fty2sz3dBwU-95bdef (2026-10-11). Transcription comparison (Chirp 3 + Gemini 7.6–7.9% vs Chirp 8.6% CER): RESEARCH-2026-10-10.md.",

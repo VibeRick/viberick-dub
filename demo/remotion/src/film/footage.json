@@ -55,56 +55,74 @@
   "end": 4.03
  },
  "podcast": {
-  "attribution": "Source: NASA Johnson, Houston We Have a Podcast, Ep. 200 (youtu.be/bc3_IC_5P_I). NASA media, public domain; NASA does not endorse this project. Dubbed with preset voices.",
+  "attribution": "Source: NASA, NASA's Curious Universe video episode (youtu.be/h0wLZJeYGxw). NASA media, public domain; NASA does not endorse this project. Dubbed with preset voices.",
   "cast": [
    {
-    "spk": "0:3",
-    "name": "Gary Jordan",
+    "spk": "0:0",
+    "name": "Jacob Pinner",
     "voice": "Puck",
-    "why": "“youthful, upbeat, engaging male voice”"
+    "why": "“upbeat, youthful, engaging male voice”"
    },
    {
-    "spk": "0:4",
-    "name": "Dan Huot",
-    "voice": "Algieba",
-    "why": "“smooth, informative mid-range male voice”"
+    "spk": "0:1",
+    "name": "Padi Boyd",
+    "voice": "Sulafat",
+    "why": "“warm, conversational, mature female tone”"
    }
   ],
   "turns": [
    {
-    "spk": "0:4",
-    "start": 47.68,
-    "end": 50.408,
+    "spk": "0:1",
+    "start": 71.92,
+    "end": 74.561,
     "text": {
-     "hi": "हाँ, आखिरी पसंद बनने का मज़ा ही अलग है।",
-     "en": "Yeah, like I said, it's, it's always great to be the bottom of the barrel."
+     "hi": "मुझे खुशी है, और मैं बातचीत के लिए उत्सुक हूँ।",
+     "en": "I'm happy to do it, and I'm really looking forward to the conversation."
     }
    },
    {
-    "spk": "0:4",
-    "start": 50.528,
-    "end": 52.444,
+    "spk": "0:1",
+    "start": 74.681,
+    "end": 75.882,
     "text": {
-     "hi": "Gary, दोबारा बुलाने का शुक्रिया।",
-     "en": "So, thanks for letting me back in, Gary."
+     "hi": "तो शुक्रिया, Jacob।",
+     "en": "So, thank you, Jacob."
     }
    },
    {
-    "spk": "0:3",
-    "start": 52.56,
-    "end": 57.433,
+    "spk": "0:0",
+    "start": 75.84,
+    "end": 77.414,
     "text": {
-     "hi": "हम सच में आपको शो में लाना चाहते थे, क्योंकि शुरुआत आपने ही की थी।",
-     "en": "We actually did really want you to, uh, to come on this show because you kicked us off with episode one."
+     "hi": "तो, वैसे आप एक वैज्ञानिक हैं।",
+     "en": "So, you're a scientist."
     }
    },
    {
-    "spk": "0:3",
-    "start": 57.81,
-    "end": 61.5,
+    "spk": "0:0",
+    "start": 77.97,
+    "end": 79.824,
     "text": {
-     "hi": "और आज हम बात करेंगे कि तब से अब तक आप क्या कर रहे थे।",
-     "en": "And, uh, today's episode theme is going to be talking about what you have been doing since."
+     "hi": "अपनी पढ़ाई के बारे में कुछ बताइए?",
+     "en": "Why don't you run me through the basics of what you study?"
+    }
+   },
+   {
+    "spk": "0:0",
+    "start": 80.65,
+    "end": 81.791,
+    "text": {
+     "hi": "आपकी रुचि किसमें है?",
+     "en": "What are you interested in?"
+    }
+   },
+   {
+    "spk": "0:1",
+    "start": 82.16,
+    "end": 88.6,
+    "text": {
+     "hi": "ज़रूर। तो, मैं अध्ययन करती हूँ कि रोशनी कैसे बदलती है और हम उससे क्या सीख सकते हैं।",
+     "en": "Great. So, I study how light changes and what we can learn from those changes in light."
     }
    }
   ],
@@ -113,9 +131,9 @@
     "l": "hi",
     "lang": "hi",
     "label": "Hindi",
-    "file": "film/nasa.hi.mp4",
-    "start": 47.3,
-    "end": 61.5
+    "file": "film/cu.hi.mp4",
+    "start": 71.75,
+    "end": 88.6
    }
   ]
  }
