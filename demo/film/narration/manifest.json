@@ -12,11 +12,11 @@
     }
   },
   "N2": {
-    "text": "Paste a link and choose up to four of a hundred and twenty-five languages. A Cloud Run job starts, and you watch the agent work. Google's Chirp 3 speech model timestamps every word and tells the speakers apart. Gemini is multimodal, so it listens to the audio itself, fixes the transcript, and translates each sentence to fit the time it was spoken.",
-    "seconds": 18.924791666666668,
+    "text": "Paste a link and choose up to four of a hundred and twenty-five languages. A Cloud Run job starts, and you watch the agent work. Google's Chirp 3 speech model timestamps every word. Gemini is multimodal, so it listens to the audio itself: it fixes the transcript, hears who is speaking and casts a matching voice for each speaker, and translates every sentence to fit its time.",
+    "seconds": 20.091833333333334,
     "ok": true,
     "verdict": {
-      "heard": "Paste a link and choose up to four of a hundred and twenty-five languages. A Cloud Run job starts, and you watch the agent work. Google's Chirp 3 speech model timestamps every word and tells the speakers apart. Gemini is multimodal, so it listens to the audio itself, fixes the transcript, and translates each sentence to fit the time it was spoken.",
+      "heard": "Paste a link and choose up to four of 125 languages. A Cloud Run job starts, and you watch the agent work. Google's Chirp 3 speech model timestamps every word. Gemini is multimodal, so it listens to the audio itself: it fixes the transcript, hears who is speaking and casts a matching voice for each speaker, and translates every sentence to fit its time.",
       "language_ok": true,
       "content_ok": true,
       "meaning_ok": true,

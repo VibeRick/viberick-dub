@@ -1,36 +1,43 @@
 {
  "liveFile": "film/live.mp4",
- "liveTotal": 17.8,
+ "liveTotal": 20.89,
  "live": [
   {
    "at": 0,
-   "dur": 17.8,
+   "dur": 20.89,
    "trim": 0,
-   "rate": 1,
+   "rate": 0.852,
    "label": "Live · a real Cloud Run job"
   }
  ],
  "liveCallouts": [
   {
-   "at": 7.2,
+   "at": 3.84,
    "x": 180,
-   "y": 560,
+   "y": 500,
    "title": "Cloud Run Job starts",
    "body": "One worker per dub, scales to zero"
   },
   {
-   "at": 10.4,
+   "at": 6.8,
    "x": 180,
-   "y": 690,
+   "y": 630,
    "title": "Chirp 3",
-   "body": "Every word timestamped, speakers separated"
+   "body": "Every word timestamped"
   },
   {
-   "at": 13.4,
+   "at": 10.16,
    "x": 180,
-   "y": 820,
+   "y": 760,
    "title": "Gemini 3.8 Flash",
-   "body": "Listens, fixes the transcript, translates to time"
+   "body": "Listens to the audio, fixes the transcript, translates to time"
+  },
+  {
+   "at": 14.8,
+   "x": 180,
+   "y": 890,
+   "title": "Speakers → voices",
+   "body": "Gemini hears who is speaking and casts a voice for each"
   }
  ],
  "editFile": "film/edit.mp4",

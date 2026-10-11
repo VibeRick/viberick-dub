@@ -22,7 +22,7 @@ N1 — I make videos in Korean. That was me in English, Hindi and Chinese. I nev
 
 N1b — YouTube's own auto-dubbing takes a Korean video only into English or Indonesian, and you can't edit it. So I built VibeRick Dub.
 
-N2 — Paste a link and choose up to four of a hundred and twenty-five languages. A Cloud Run job starts, and you watch the agent work. Google's Chirp 3 speech model timestamps every word and tells the speakers apart. Gemini is multimodal, so it listens to the audio itself, fixes the transcript, and translates each sentence to fit the time it was spoken.
+N2 — Paste a link and choose up to four of a hundred and twenty-five languages. A Cloud Run job starts, and you watch the agent work. Google's Chirp 3 speech model timestamps every word. Gemini is multimodal, so it listens to the audio itself: it fixes the transcript, hears who is speaking and casts a matching voice for each speaker, and translates every sentence to fit its time.
 
 N3 — It handles conversations too. Here is Google DeepMind's podcast, dubbed into Hindi. Gemini listens to each speaker and gives each one a matching voice. Nobody's voice is cloned without consent.
 
