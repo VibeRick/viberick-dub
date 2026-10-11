@@ -3,6 +3,7 @@
 YouTube asks cloud IPs to sign in, so on failure the download is retried through DUB_PROXY (a residential
 proxy). With max_sec only that section is downloaded, at ≤720p, to keep proxy bandwidth small."""
 import json
+import math
 import os
 import re
 import subprocess
@@ -42,9 +43,13 @@ def fetch(url: str, run_dir: Path, max_sec: float | None = None) -> dict:
     if r.returncode != 0 and (proxy := os.environ.get("DUB_PROXY")):
         r = subprocess.run(_cmd(url, tmpl, max_sec, proxy), capture_output=True, text=True)
     if r.returncode != 0:
-        msg = r.stderr.strip().splitlines()[-1] if r.stderr.strip() else "yt-dlp failed"
-        raise RuntimeError(f"Could not download the video: {msg[:300]}")
+        raise RuntimeError("Could not download the video. Check that it is public and available, then retry.")
     raw = json.loads((run_dir / "source.info.json").read_text())
+    duration = raw.get("duration")
+    if raw.get("is_live") or raw.get("live_status") in {"is_live", "is_upcoming", "post_live"}:
+        raise ValueError("Live streams are not supported. Use a finished video with a known duration.")
+    if isinstance(duration, bool) or not isinstance(duration, (int, float)) or not math.isfinite(duration) or duration <= 0:
+        raise ValueError("This video's duration is unavailable. Use a finished video with a known duration.")
     for args, name in ((["-ac", "2", "-ar", "48000"], "source.wav"),
                        (["-ac", "1", "-ar", "16000", "-c:a", "flac"], "source.stt.flac")):
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(run_dir / "source.mp4"), "-vn",

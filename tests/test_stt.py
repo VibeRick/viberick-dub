@@ -35,3 +35,38 @@ class _Res:
 def test_speaker_labels_are_scoped_to_their_chunk():
     w = stt._words([_Res([_W("hi", 0.0, 0.5, "1")])], offset=1000.0, chunk=1)
     assert w[0]["spk"] == "1:1" and w[0]["start"] == 1000.0
+
+
+from types import SimpleNamespace
+from pathlib import Path
+from unittest.mock import Mock
+import pytest
+
+
+@pytest.mark.parametrize("recognition_fails,cleanup_fails", [(False, False), (True, False), (True, True), (False, True)])
+def test_uploaded_chunk_is_cleaned_up_even_when_recognition_fails(tmp_path, monkeypatch, recognition_fails, cleanup_fails):
+    blob = Mock(name="blob")
+    blob.name = "stt/test/part.flac"
+    if cleanup_fails:
+        blob.delete.side_effect = RuntimeError("private cleanup details")
+    bucket = Mock()
+    bucket.blob.return_value = blob
+    monkeypatch.setattr(stt.storage, "Client", lambda **kw: SimpleNamespace(bucket=lambda _: bucket))
+    monkeypatch.setattr(stt, "_creds", lambda: None)
+    monkeypatch.setattr(stt, "duration", lambda _: 1)
+    monkeypatch.setattr(stt, "silences", lambda _: [])
+    monkeypatch.setattr(stt.subprocess, "run", lambda args, **kw: Path(args[-1]).touch())
+    result = SimpleNamespace(error=None, transcript=SimpleNamespace(results=[]))
+    operation = Mock()
+    if recognition_fails:
+        operation.result.side_effect = RuntimeError("recognition failed")
+    else:
+        operation.result.return_value = SimpleNamespace(results={f"gs://{stt.config.BUCKET}/{blob.name}": result})
+    monkeypatch.setattr(stt, "_client", lambda: SimpleNamespace(batch_recognize=lambda **kw: operation))
+    if recognition_fails:
+        with pytest.raises(RuntimeError, match="recognition failed"):
+            stt.chirp_words(tmp_path / "input.wav", "en", tmp_path)
+    else:
+        assert stt.chirp_words(tmp_path / "input.wav", "en", tmp_path) == []
+    blob.delete.assert_called_once()
+    assert not (tmp_path / "stt.part0.flac").exists()

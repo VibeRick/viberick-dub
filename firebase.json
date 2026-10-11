@@ -3,6 +3,7 @@
   "hosting": {
     "site": "viberick-dub",
     "public": "web",
+    "ignore": ["**/.*", "**/node_modules/**", "review/**"],
     "cleanUrls": true,
     "rewrites": [{ "source": "/api/**", "run": { "serviceId": "viberick-dub", "region": "asia-northeast3" } }],
     "headers": [{ "source": "**/*.@(js|css)", "headers": [{ "key": "Cache-Control", "value": "max-age=300" }] }]

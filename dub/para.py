@@ -52,7 +52,7 @@ def quiet_point(pcm: bytes, t: float, rate: int, search: float = 0.15, win: floa
 
 def synth_group(lines: list[str], lang: str, d: Path, ids: list[int], voice_id: str | None = None) -> bool:
     take = d / f"take_{ids[0]:04d}.wav"
-    voice.synth(" ".join(lines), take, voice_id=voice_id)
+    voice.synth(" ".join(lines), take, voice_id=voice_id, lang=lang)
     if len(lines) == 1:
         take.replace(d / f"{ids[0]:04d}.tts.wav")
         return True

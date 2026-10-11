@@ -32,10 +32,12 @@ def sentences(cues: list[dict]) -> list[dict]:
     for c in cues:
         if out:
             cur = out[-1]
-            if (cur.get("spk") == c.get("spk") and not _ends_sentence(cur["text"])
+            if (not c.get("hard_anchor") and not c.get("scene_cut")
+                    and cur.get("spk") == c.get("spk") and not _ends_sentence(cur["text"])
                     and c["start"] - cur["end"] < MAX_JOIN_GAP
                     and c["end"] - cur["start"] <= MAX_UNIT_SEC):
-                out[-1] = {**cur, "end": c["end"], "text": f"{cur['text']} {c['text']}"}
+                out[-1] = {**cur, "end": c["end"], "text": f"{cur['text']} {c['text']}",
+                           "scene_cuts_inside": cur.get("scene_cuts_inside", []) + c.get("scene_cuts_inside", [])}
                 continue
         out.append(dict(c))
     return out
@@ -48,7 +50,8 @@ def make_units(cues: list[dict], duration: float) -> list[dict]:
         nxt = cues[i + 1]["start"] if i + 1 < len(cues) else duration
         slot = max(0.6, min(nxt, c["end"] + 0.8, duration) - c["start"])
         out.append({"id": i, "start": c["start"], "end": c["end"], "slot": round(slot, 3), "text": c["text"],
-                    **({"spk": c["spk"]} if "spk" in c else {})})
+                    **({"spk": c["spk"]} if "spk" in c else {}),
+                    **{k: c[k] for k in ("hard_anchor", "scene_cut", "scene_cuts_before", "scene_cuts_inside") if k in c}})
     return out
 
 
@@ -64,8 +67,14 @@ def flow_gaps(units: list[dict], from_take: list[bool], repaired: list[bool],
     A line flows on when the speaker did not pause, or only took a breath in the middle of the dubbed
     sentence (Korean breath pauses split English sentences otherwise). Sentence ends re-anchor to the
     video. mix.place caps how early a flowing line may start."""
+    if not units:
+        return []
     out: list[float | None] = [None]
     for i in range(1, len(units)):
+        if (units[i].get("spk") != units[i - 1].get("spk")
+                or units[i].get("hard_anchor") or units[i].get("scene_cut")):
+            out.append(None)
+            continue
         gap = units[i]["start"] - units[i - 1]["end"]
         mid_sentence = texts is not None and not _SENTENCE_END.search(texts[i - 1].strip())
         if gap >= CONTINUOUS and not (mid_sentence and gap < BREATH):

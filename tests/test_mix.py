@@ -10,7 +10,7 @@ def test_overlong_clip_pushes_next_and_catches_up(tmp_path):
     units = [{"start": 0.0}, {"start": 1.0}, {"start": 3.0}]
     st = mix.place(units, clips, total=4.0, out=tmp_path / "t.wav")
     assert abs(st["late_max"] - 0.58) < 0.01 and st["late_lines"] == 1
-    assert abs(voice.duration(tmp_path / "t.wav") - 5.0) < 0.01   # total + 1 s tail
+    assert abs(voice.duration(tmp_path / "t.wav") - 4.0) < 0.01   # no artificial tail
 
 
 def test_paragraph_lines_flow_back_to_back(tmp_path):
@@ -21,7 +21,7 @@ def test_paragraph_lines_flow_back_to_back(tmp_path):
         clips.append(p)
     units = [{"start": 0.0}, {"start": 1.0}, {"start": 3.0}]
     st = mix.place(units, clips, total=4.0, out=tmp_path / "t.wav", flow=[None, 0.0, None])
-    assert st["starts"] == [0.0, 0.5, 3.0]
+    assert st["starts"] == [0.0, max(0.5, 1.0 - mix.MAX_EARLY), 3.0]
 
 
 def test_flowing_line_starts_at_most_max_early(tmp_path):

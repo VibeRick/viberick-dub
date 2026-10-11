@@ -3,6 +3,7 @@
 Batch with word timestamps is capped at 20 min, so longer audio is cut at silences into ≤18-min
 chunks and the times are offset back. Sync recognize (<60 s) is used to cut paragraph TTS takes."""
 import re
+import logging
 import subprocess
 from pathlib import Path
 
@@ -79,17 +80,25 @@ def chirp_words(audio: Path, lang: str, run_dir: Path) -> list[dict]:
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", str(a), "-to", str(b), "-i", str(audio),
                         "-c:a", "flac", str(part)], check=True)
         blob = bucket.blob(f"stt/{run_dir.name}/{part.name}")
-        blob.upload_from_filename(part)
-        uri = f"gs://{config.BUCKET}/{blob.name}"
-        req = cs.BatchRecognizeRequest(
-            recognizer=f"projects/{config.GCP_PROJECT}/locations/{config.STT_LOCATION}/recognizers/_",
-            config=_cfg(lang, diarize=True), files=[cs.BatchRecognizeFileMetadata(uri=uri)],
-            recognition_output_config=cs.RecognitionOutputConfig(inline_response_config=cs.InlineOutputConfig()))
-        res = _client().batch_recognize(request=req).result(timeout=3600).results[uri]
-        if res.error and res.error.code:
-            raise RuntimeError(f"chirp_3 chunk {i}: {res.error.message}")
-        words += _words(res.transcript.results, a, chunk=i)
-        part.unlink()
+        try:
+            blob.upload_from_filename(part)
+            uri = f"gs://{config.BUCKET}/{blob.name}"
+            req = cs.BatchRecognizeRequest(
+                recognizer=f"projects/{config.GCP_PROJECT}/locations/{config.STT_LOCATION}/recognizers/_",
+                config=_cfg(lang, diarize=True), files=[cs.BatchRecognizeFileMetadata(uri=uri)],
+                recognition_output_config=cs.RecognitionOutputConfig(inline_response_config=cs.InlineOutputConfig()))
+            res = _client().batch_recognize(request=req).result(timeout=3600).results[uri]
+            if res.error and res.error.code:
+                raise RuntimeError(f"chirp_3 chunk {i}: {res.error.message}")
+            words += _words(res.transcript.results, a, chunk=i)
+        finally:
+            # Cleanup failures must not hide recognition errors or discard a valid result.
+            for cleanup in (blob.delete, lambda: part.unlink(missing_ok=True)):
+                try:
+                    cleanup()
+                except Exception as error:
+                    logging.getLogger(__name__).warning("STT chunk %s cleanup failed (%s)", i, type(error).__name__)
+
     return words
 
 

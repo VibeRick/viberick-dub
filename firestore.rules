@@ -8,6 +8,9 @@ service cloud.firestore {
       allow list: if resource.data.demo == true;
       allow write: if false;
     }
+    // Ownership hashes and resumable workspace pointers are server-only.
+    match /quotas/{document=**} { allow read, write: if false; }
+    match /job_access/{document=**} { allow read, write: if false; }
     match /jobs/{job}/{document=**} { allow read: if true; allow write: if false; }
   }
 }

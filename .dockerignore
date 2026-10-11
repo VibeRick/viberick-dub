@@ -8,3 +8,7 @@ tests
 deck
 demo
 **/__pycache__
+voice
+.env*
+*.pem
+*.key

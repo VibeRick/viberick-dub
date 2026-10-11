@@ -1,0 +1,13 @@
+# Cloud Build receives source code and dependency manifests only.
+*
+!Dockerfile
+!.dockerignore
+!pyproject.toml
+!uv.lock
+!dub/
+!dub/**
+!server/
+!server/**
+dub/**/__pycache__/
+server/**/__pycache__/
+**/*.pyc

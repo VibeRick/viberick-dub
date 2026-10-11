@@ -1,6 +1,7 @@
 """Gemini text calls on Vertex (project viberick credit) with retry, JSON mode and a cost ledger."""
 import json
 import random
+import re
 import sys
 import threading
 import time
@@ -41,7 +42,18 @@ def cost() -> float:
                      for m, r in LEDGER.items()), 4)
 
 
-def _call(contents, cfg: types.GenerateContentConfig, tries: int = 8):
+def _status_code(error: Exception) -> int | None:
+    for value in (getattr(error, "code", None), getattr(error, "status_code", None),
+                  getattr(getattr(error, "response", None), "status_code", None)):
+        if isinstance(value, int):
+            return value
+    match = re.match(r"^(?:HTTP\s+)?(\d{3})(?:\D|$)", str(error))
+    return int(match[1]) if match else None
+
+
+def _call(contents, cfg: types.GenerateContentConfig, tries: int = 8, parse=None):
+    if tries < 1:
+        raise ValueError("tries must be positive")
     for i in range(tries):
         try:
             with _gate:
@@ -49,18 +61,19 @@ def _call(contents, cfg: types.GenerateContentConfig, tries: int = 8):
             _record(config.TEXT_MODEL, resp)
             if not resp.text:
                 raise RuntimeError("empty model response")
-            return resp
+            return parse(resp.text) if parse else resp
         except Exception as e:  # noqa: BLE001  429/500 from the shared pool, empty output
-            if i == tries - 1 or str(e).startswith("400"):
+            if i == tries - 1 or _status_code(e) in {400, 401, 403, 404}:
                 raise
-            print(f"gemini retry {i + 1}/{tries}: {str(e)[:160]}", file=sys.stderr, flush=True)
+            print(f"gemini retry {i + 1}/{tries}: status={_status_code(e) or 'unavailable'} "
+                  f"type={type(e).__name__}", file=sys.stderr, flush=True)
             time.sleep(min(60, 2 ** i) * (0.5 + random.random()))
 
 
 def json_call(prompt: str, schema: dict, parts: list | None = None, thinking: str = "low") -> dict:
     cfg = types.GenerateContentConfig(response_mime_type="application/json", response_schema=schema,
                                       thinking_config=types.ThinkingConfig(thinking_level=thinking))
-    return json.loads(_call([*(parts or []), prompt], cfg).text)
+    return _call([*(parts or []), prompt], cfg, parse=json.loads)
 
 
 def text_call(prompt: str, parts: list | None = None, thinking: str = "low") -> str:

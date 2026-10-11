@@ -19,8 +19,8 @@ ACTIVE = {"voice": VOICE_ID}   # one job per process; set by pipeline.main
 def voice_for(info: dict) -> str:
     return VOICE_ID if info.get("channel_id") in CONSENTED_CHANNELS else FALLBACK_VOICE
 
-GCP_PROJECT = "viberick"
-GCP_ACCOUNT = "jaeho.shin@viberick.com"
+GCP_PROJECT = os.environ.get("DUB_GCP_PROJECT", "viberick")
+GCP_ACCOUNT = os.environ.get("DUB_GCP_ACCOUNT", "jaeho.shin@viberick.com")
 BUCKET = os.environ.get("DUB_BUCKET", "viberick-dub-lab")
 STT_LOCATION = "us"          # chirp_3 runs only in us / eu
 
@@ -30,24 +30,20 @@ CHIRP_CODES = {"ko": "ko-KR", "en": "en-US", "ja": "ja-JP", "zh-Hans": "cmn-Hans
 
 @cache
 def gemini_key() -> str:
-    if k := os.environ.get("GEMINI_API_KEY"):
-        return k
-    r = subprocess.run(["security", "find-generic-password", "-s", "gemini_api_key", "-w"],
-                       capture_output=True, text=True)
-    if not r.stdout.strip():
-        raise RuntimeError("GEMINI_API_KEY not set and not in Keychain (gemini_api_key)")
-    return r.stdout.strip()
+    """Use only an explicitly supplied key; never search other projects or Keychain."""
+    key = os.environ.get("GEMINI_API_KEY", "").strip()
+    if not key:
+        raise RuntimeError("Set GEMINI_API_KEY explicitly from this project's approved secret source")
+    return key
 
 
 @cache
 def tts_key() -> str:
-    """Gemini API key for TTS. The stored voice lives in this key's project (civil-oarlock, Tier 3:
-    the viberick key is Tier 1 = 10 TTS requests/min)."""
-    if k := os.environ.get("GEMINI_TTS_API_KEY"):
-        return k
-    r = subprocess.run(["security", "find-generic-password", "-s", "gemini_api_key_dub_tier3", "-w"],
-                       capture_output=True, text=True)
-    return r.stdout.strip() or gemini_key()
+    """TTS and stored voices must belong to the explicitly configured TTS project."""
+    key = os.environ.get("GEMINI_TTS_API_KEY", "").strip()
+    if not key:
+        raise RuntimeError("Set GEMINI_TTS_API_KEY explicitly from the approved project that owns the voice")
+    return key
 
 
 def gcp_token() -> str:

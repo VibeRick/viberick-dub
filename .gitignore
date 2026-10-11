@@ -13,3 +13,16 @@ demo/build/
 *.webm
 *.mp4
 deck/*.pptx
+.firebase/
+
+# Private local state and provider credentials are never source deliverables.
+.env.*
+*.pem
+*.key
+web/review/
+.gstack/
+
+# Built decks (rebuild with deck/build_v3.py)
+deck/**/*.pptx
+deck/**/*.pdf
+.DS_Store

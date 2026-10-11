@@ -6,6 +6,8 @@ Schema: jobs/{id} = {url, langs, max_sec, status, stage, title, thumbnail, src, 
 import json
 import mimetypes
 import os
+import tarfile
+import tempfile
 import time
 from pathlib import Path
 
@@ -17,7 +19,7 @@ PUBLIC_BUCKET = os.environ.get("DUB_PUBLIC_BUCKET", "viberick-dub-public")
 STAGES = {"start": "Downloading", "voice": "Checking voice consent", "separated": "Separating voice and music",
           "transcribed": "Transcribing (Chirp 3)", "proofread": "Proofreading (Gemini)",
           "brief": "Writing the dubbing brief", "translated": "Translating to fit timing",
-          "voiced": "Speaking in the creator's voice", "language_done": "Mixing", "done": "Done"}
+          "voiced": "Generating speech", "language_done": "Mixing", "done": "Done"}
 _db = None
 
 
@@ -50,11 +52,23 @@ def output_prefix(job_id: str, demo: bool) -> str:
     return f"{'demo' if demo else 'jobs'}/{job_id}"
 
 
-def upload_outputs(run_dir: Path, job_id: str, demo: bool = False) -> dict:
+def upload_outputs(run_dir: Path, job_id: str, demo: bool = False, *, lang: str | None = None,
+                   revision: str | None = None, include_source: str | None = None,
+                   skip_names: set[str] | None = None) -> dict:
     bucket = storage.Client(project=config.GCP_PROJECT, credentials=config.gcp_credentials()).bucket(PUBLIC_BUCKET)
     urls = {}
+    allowed = {f"dub.{lang}.m4a", f"video.{lang}.mp4", f"subs.{lang}.srt", f"subs.{lang}.vtt",
+               f"timeline.{lang}.json", "report.json"}
+    if include_source:
+        allowed.update({"video.orig.mp4", f"subs.{include_source}.srt", f"subs.{include_source}.vtt"})
     for p in sorted((run_dir / "out").iterdir()):
-        blob = bucket.blob(f"{output_prefix(job_id, demo)}/{p.name}")
+        if (not p.is_file() or p.name in (skip_names or set())
+                or (lang and p.name not in allowed and not p.name.startswith(f"line.{lang}."))):
+            continue
+        prefix = output_prefix(job_id, demo)
+        if revision:
+            prefix += f"/revisions/{revision}"
+        blob = bucket.blob(f"{prefix}/{p.name}")
         ctype = "application/x-subrip" if p.suffix == ".srt" else mimetypes.guess_type(p.name)[0]
         blob.cache_control = "public, max-age=3600"
         blob.upload_from_filename(p, content_type=ctype)
@@ -62,11 +76,66 @@ def upload_outputs(run_dir: Path, job_id: str, demo: bool = False) -> dict:
     return urls
 
 
-def publish_results(run_dir: Path, job_id: str, langs: list[str]) -> None:
+def result_document(run_dir: Path, lang: str) -> dict:
+    units = {u["id"]: u for u in json.loads((run_dir / "units.json").read_text())}
+    data = json.loads((run_dir / "dub" / f"{lang}.json").read_text())
+    rows = []
+    for r in data["rows"]:
+        u = units[r["id"]]
+        start = r.get("start", r.get("dub_start", u["start"]))
+        end = r.get("end", r.get("dub_end", start + r.get("dur", u["end"] - u["start"])))
+        rows.append({**r, "source_start": u["start"], "source_end": u["end"],
+                     "start": start, "end": end, "src": u["text"], "spk": u.get("spk"),
+                     "voice": u.get("voice")})
+    return {"report": data["report"], "rows": rows}
+
+
+def publish_results(run_dir: Path, job_id: str, langs: list[str], lease_token: str | None = None) -> None:
     ref = job(job_id)
-    units = json.loads((run_dir / "units.json").read_text())
-    for lang in langs:
-        data = json.loads((run_dir / "dub" / f"{lang}.json").read_text())
-        ref.collection("lines").document(lang).set({"report": data["report"], "rows": [
-            {**r, "start": u["start"], "end": u["end"], "src": u["text"], "spk": u.get("spk"),
-             "voice": u.get("voice")} for u, r in zip(units, data["rows"])]})
+    documents = {lang: result_document(run_dir, lang) for lang in langs}
+    if not lease_token:
+        for lang, document in documents.items():
+            ref.collection("lines").document(lang).set(document)
+        return
+    @firestore.transactional
+    def publish(tx):
+        data = ref.get(transaction=tx).to_dict() or {}
+        if (data.get("lease_token") != lease_token or data.get("status") != "running"
+                or data.get("lease_until", 0) < time.time()):
+            raise RuntimeError("Worker lease expired")
+        for lang, document in documents.items():
+            tx.set(ref.collection("lines").document(lang), document)
+    publish(db().transaction())
+
+
+def access(job_id: str):
+    return db().collection("job_access").document(job_id)
+
+
+def save_workspace(run_dir: Path, job_id: str, revision: str = "initial") -> str:
+    """Private resumable inputs; never upload these to the public output bucket."""
+    if config.BUCKET == PUBLIC_BUCKET:
+        raise ValueError("Private and public buckets must differ")
+    name = f"workspaces/{job_id}/{revision}.tar.gz"
+    with tempfile.TemporaryDirectory() as tmp:
+        archive = Path(tmp) / "workspace.tar.gz"
+        with tarfile.open(archive, "w:gz") as tar:
+            for p in run_dir.rglob("*"):
+                if (p.is_file() and not p.is_symlink()
+                        and ("out" not in p.relative_to(run_dir).parts or p.relative_to(run_dir) == Path("out/report.json"))):
+                    tar.add(p, arcname=str(p.relative_to(run_dir)), recursive=False)
+        bucket = storage.Client(project=config.GCP_PROJECT, credentials=config.gcp_credentials()).bucket(config.BUCKET)
+        bucket.blob(name).upload_from_filename(archive, content_type="application/gzip")
+    return name
+
+
+def load_workspace(name: str, destination: Path) -> None:
+    if config.BUCKET == PUBLIC_BUCKET or not name.startswith("workspaces/"):
+        raise ValueError("Invalid private workspace")
+    destination.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory() as tmp:
+        archive = Path(tmp) / "workspace.tar.gz"
+        bucket = storage.Client(project=config.GCP_PROJECT, credentials=config.gcp_credentials()).bucket(config.BUCKET)
+        bucket.blob(name).download_to_filename(archive)
+        with tarfile.open(archive) as tar:
+            tar.extractall(destination, filter="data")

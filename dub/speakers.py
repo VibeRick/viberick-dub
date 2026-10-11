@@ -1,10 +1,12 @@
 """Who speaks each line, and which voice speaks it in the dub.
 
-Chirp 3 labels every word with a speaker. The main speaker (most speaking time) gets the creator's cloned
-voice, only when the channel owner recorded consent. Every other speaker is cast to a Gemini preset voice:
+Chirp 3 labels every word with a speaker. Only a speaker who unambiguously matches
+the consent recording gets the creator's cloned voice. Every other speaker is cast to a Gemini preset voice:
 Gemini listens to a few seconds of that speaker and picks the closest preset."""
 import subprocess
 from collections import Counter
+from itertools import cycle
+import math
 from pathlib import Path
 
 from google.genai import types
@@ -36,17 +38,40 @@ def talk_time(units: list[dict]) -> Counter:
     return t
 
 
-def default_cast(units: list[dict], clone: str, consent: bool, verified: set[str] | None = None) -> dict[str, str]:
-    """verified = speakers whose voice matched the consent recording (None: not checked, then the main
-    speaker is assumed to be the channel owner). The clone goes to at most one speaker."""
+def _verified_owners(order: list[str], scores: dict[str, float], threshold: float,
+                     margin: float = 0.05) -> set[str]:
+    """Choose an unambiguous best match per recognition chunk, never by airtime.
+
+    Diarization IDs are scoped to chunks: the same owner can have a different ID
+    in each chunk. Close candidates within a chunk are deliberately left uncast.
+    """
+    groups: dict[str, list[tuple[float, str]]] = {}
+    for speaker in order:
+        score = scores.get(speaker)
+        if score is not None and math.isfinite(score):
+            chunk = speaker.split(":", 1)[0] if ":" in speaker else "unscoped"
+            groups.setdefault(chunk, []).append((score, speaker))
+    owners = set()
+    for candidates in groups.values():
+        candidates.sort(reverse=True)
+        score, speaker = candidates[0]
+        if score >= threshold and (len(candidates) == 1 or score - candidates[1][0] >= margin):
+            owners.add(speaker)
+    return owners
+
+
+def default_cast(units: list[dict], clone: str, consent: bool, verified: set[str] | None = None,
+                 *, scores: dict[str, float] | None = None) -> dict[str, str]:
+    """Only verified, unambiguous identities receive the clone; unchecked means presets."""
+    from . import verify
     order = [s for s, _ in talk_time(units).most_common()]
-    owner = None
+    owners = set()
     if consent:
-        owner = order[0] if verified is None else next((s for s in order if s in verified), None)
-    cast, presets = {}, iter(_ROTATION * 4)
-    for s in order:
-        cast[s] = clone if s == owner else next(presets)
-    return cast
+        # A legacy verification set contains no ranking evidence. Ties fail closed.
+        evidence = scores if scores is not None else {s: 1.0 for s in (verified or set())}
+        owners = _verified_owners(order, evidence, verify.THRESHOLD)
+    presets = cycle(_ROTATION)
+    return {s: clone if s in owners else next(presets) for s in order}
 
 
 def _sample(vocals: Path, units: list[dict], spk: str, out: Path, sec: float = 8.0) -> Path | None:
@@ -75,19 +100,15 @@ def verify_speakers(units: list[dict], vocals: Path | None, run_dir: Path) -> di
     for s in talk_time(units):
         p = verify.speaker_sample(vocals, units, s, run_dir / f"verify_{s}.wav")
         if p:
-            scores[s] = round(verify.cosine(ref, verify.embed(p)), 3)
+            scores[s] = verify.cosine(ref, verify.embed(p))
     return scores
 
 
 def cast(units: list[dict], vocals: Path | None, clone: str, consent: bool, run_dir: Path) -> dict[str, dict]:
     """{spk: {"voice", "why", "seconds", "match"}}. Consent is two locks: the channel has a consent recording
     on file, and the speaker's voice verifies against it. Gemini casts presets for everyone else."""
-    from . import verify
     scores = verify_speakers(units, vocals, run_dir) if consent else None
-    verified = None if scores is None else {s for s, v in scores.items() if v >= verify.THRESHOLD}
-    if consent and scores is None:
-        verified = set()   # cannot verify → never clone
-    base = default_cast(units, clone, consent, verified)
+    base = default_cast(units, clone, consent, scores=scores)
     tt = talk_time(units)
     out = {s: {"voice": v, "why": "creator's cloned voice (consent on file, voice verified)" if v == clone
                else "rotation", "seconds": round(tt[s], 1),
@@ -101,7 +122,7 @@ def cast(units: list[dict], vocals: Path | None, clone: str, consent: bool, run_
         smp = _sample(vocals, units, s, run_dir / f"spk_{s}.ogg")
         if not smp:
             continue
-        options = {k: v for k, v in PRESETS.items() if k not in taken}
+        options = {k: v for k, v in PRESETS.items() if k not in taken} or PRESETS
         pick = gem.json_call(
             "Listen to this speaker. Pick the dubbing voice from this list that best matches their perceived "
             f"gender, age and energy: {options}. why: one short phrase.",

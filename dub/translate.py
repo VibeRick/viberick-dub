@@ -4,6 +4,7 @@ CPS = characters per second of the cloned voice at natural speed, measured 2026-
 Fty2sz3dBwU (speech only, edge silence excluded). The old preset-voice table (en 15.1, ja 6.2, zh 5.2) was
 11–24 % too slow, so lines came out short and the dub had 2.5–4× the source's pauses."""
 from concurrent.futures import ThreadPoolExecutor
+import re
 
 from . import config, gem
 
@@ -27,6 +28,7 @@ def _batch(batch: list[dict], src: str, lang: str, brief: dict, prev: list[str])
         f"{config.LANGS[lang]} for a voice-over that replaces the original speech.\n"
         f"Topic: {brief.get('summary', '')}\nSpeaker: {brief.get('speaker_style', '')}\nTerms:\n{terms}\n"
         f"Previous lines (continuity): {' '.join(prev[-3:]) or '(start)'}\n\nRules:\n"
+        f"Previous candidate review (if any): {brief.get('repair_feedback', '(none)')}\n"
         "- Say it the way this speaker would naturally say it in the target language. Never exceed max_chars "
         "(100% = the slot at natural speed); aim for 80-100% by translating fully, but never pad with words the "
         "speaker would not say (no empty intensifiers). A natural line slightly short beats a padded one.\n"
@@ -34,6 +36,10 @@ def _batch(batch: list[dict], src: str, lang: str, brief: dict, prev: list[str])
         "- Drop spoken fillers and false starts unless they carry meaning. Keep the friendly, direct tone.\n"
         "- Consecutive lines may be fragments of one sentence; they must read naturally when joined.\n"
         "- Numbers, URLs and code as a speaker would say them.\n"
+        "- Translate source-language terms into the target language or use their established target-language "
+        "name. Do not leave Korean script in English, Japanese or Chinese output. Render 구글링 as the natural "
+        "target-language expression for searching Google. Preserve proper names through established spelling "
+        "or transliteration, and preserve negation, uncertainty, numbers and units.\n"
         "- Output every id exactly once, same order.\n\nLines:\n" + lines, SCHEMA)
     got = {l["id"]: l["text"].strip() for l in out["lines"]}
     return [got.get(u["id"], "") for u in batch]
@@ -94,3 +100,27 @@ def expand(units: list[dict], texts: list[str], src: str, lang: str, brief: dict
         if new and _chars(texts[k], lang) < _chars(new, lang) <= budget(lang, u["slot"]) * 1.05:
             res[k] = new
     return res
+
+
+def script_issue(text: str, lang: str) -> str:
+    """Conservative guard for script leakage in the four supported targets, not language detection."""
+    if lang != "ko" and re.search(r"[가-힣ㄱ-ㅎㅏ-ㅣ]", text):
+        return "Untranslated Korean script remains in the target line."
+    if lang in ("en", "zh-Hans") and re.search(r"[ぁ-ゖァ-ヺ]", text):
+        return "Untranslated Japanese script remains in the target line."
+    if lang == "en" and re.search(r"[一-鿿]", text):
+        return "Use English names or transliteration instead of untranslated CJK script."
+    return ""
+
+
+def fuller(u: dict, text: str, lang: str, measured_seconds: float, brief: dict) -> str:
+    """One measured underfill repair; source meaning takes precedence over filling the slot."""
+    return gem.json_call(
+        f"Rewrite this {config.LANGS[lang]} dubbing line only if a fuller natural translation of the source "
+        f"is possible. Its generated speech lasts {measured_seconds:.2f}s in a {u['slot']:.2f}s slot. "
+        "Restore omitted nuance, connectives or qualifiers from the source. Never add facts, empty fillers, "
+        "repetition, or unnatural verbosity to fill time. If the current version already conveys everything "
+        "naturally, return it unchanged. Preserve names, negation, numbers and uncertainty. "
+        f"Aim for at most {budget(lang, u['slot'])} characters.\nSource: {u['text']}\nCurrent: {text}\n"
+        f"Terminology rules: {brief.get('terms', [])}",
+        {"type": "object", "properties": {"text": {"type": "string"}}, "required": ["text"]})["text"].strip()

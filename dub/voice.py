@@ -1,6 +1,6 @@
 """gemini-3.8-flash-tts through the Gemini API with a stored replicated voice → trimmed 24 kHz WAV.
 
-Send the bare line only: the model reads style instructions aloud (measured 2026-10-08)."""
+The transcript stays verbatim; delivery directions belong in speech_metadata, never spoken text."""
 import base64
 import http.client
 import io
@@ -19,6 +19,7 @@ from . import config
 RATE = 24000
 URL = "https://generativelanguage.googleapis.com/v1beta/interactions"
 CALLS = {"n": 0}
+_calls_lock = threading.Lock()
 
 
 class RateGate:
@@ -51,14 +52,22 @@ def _find_audio(x) -> str | None:
     return None
 
 
-def _request(text: str, voice_id: str) -> bytes:
+def _request(text: str, voice_id: str, lang: str | None = None) -> bytes:
+    content = {"type": "text", "text": text}
+    if lang is not None:
+        if lang not in config.LANGS:
+            raise ValueError("Unsupported synthesis language")
+        content["annotations"] = [{"type": "speech_metadata", "style":
+            f"Speak naturally in {config.LANGS[lang]}, with native pronunciation and conversational pacing. "
+            "Preserve the speaker's voice. Read only the supplied transcript; do not translate or add words."}]
     body = {"model": config.TTS_MODEL,
-            "input": [{"type": "user_input", "content": [{"type": "text", "text": text}]}],
+            "input": [{"type": "user_input", "content": [content]}],
             "response_format": {"type": "audio"},
             "generation_config": {"speech_config": [{"voice": voice_id}]}}
     for i in range(8):
         GATE.wait()
-        CALLS["n"] += 1
+        with _calls_lock:
+            CALLS["n"] += 1
         req = urllib.request.Request(URL, data=json.dumps(body).encode(), method="POST",
                                      headers={"x-goog-api-key": config.tts_key(),
                                               "Content-Type": "application/json"})
@@ -67,7 +76,7 @@ def _request(text: str, voice_id: str) -> bytes:
             return base64.b64decode(data) if data else b""
         except urllib.error.HTTPError as e:
             if e.code not in (429, 500, 503) or i == 7:
-                raise RuntimeError(f"TTS {e.code}: {e.read().decode()[:300]}") from e
+                raise RuntimeError(f"Speech generation failed (HTTP {e.code})") from e
             time.sleep(min(60, 2 ** i))
         except (urllib.error.URLError, TimeoutError, http.client.HTTPException, ConnectionError, ValueError):
             if i == 7:
@@ -107,9 +116,10 @@ def _trim_fade(raw: bytes, out: Path) -> float:
     return duration(out)
 
 
-def synth(text: str, out: Path, voice_id: str | None = None) -> float:
+def synth(text: str, out: Path, voice_id: str | None = None, lang: str | None = None) -> float:
     for _ in range(4):
-        raw = _request(text, voice_id or config.ACTIVE["voice"])
+        args = (text, voice_id or config.ACTIVE["voice"])
+        raw = _request(*args, lang=lang) if lang is not None else _request(*args)
         if len(raw) > RATE // 5:
             return _trim_fade(raw, out)
     raise RuntimeError(f"TTS returned no audio for {text[:40]!r}")

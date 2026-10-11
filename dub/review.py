@@ -17,9 +17,11 @@ def job_data(run_dir: Path, units: list[dict], langs: list[str]) -> dict:
     for lang in langs:
         data = json.loads((run_dir / "dub" / f"{lang}.json").read_text())
         lines[lang] = {"report": data["report"], "rows": [
-            {**r, "start": u["start"], "end": u["end"], "src": u["text"], "spk": u.get("spk"), "voice": u.get("voice")}
+            {**r, "start": r.get("dub_start", u["start"]), "end": r.get("dub_end", u["end"]),
+             "source_start": u["start"], "source_end": u["end"], "src": u["text"], "spk": u.get("spk"), "voice": u.get("voice")}
             for u, r in zip(units, data["rows"])]}
-    events = [json.loads(l) for l in (run_dir / "events.jsonl").read_text().splitlines() if l.strip()]
+    event_file = run_dir / "events.jsonl"
+    events = [json.loads(l) for l in event_file.read_text().splitlines() if l.strip()] if event_file.exists() else []
     return {"job": {"id": run_dir.name, "title": info.get("title"), "url": f"https://youtu.be/{info.get('id')}",
                     "status": "done", "stage": "Done", "report": report, "outputs": outputs,
                     "thumbnail": f"https://i.ytimg.com/vi/{info.get('id')}/hqdefault.jpg"},
@@ -33,7 +35,7 @@ def write(run_dir: Path, wav: Path, units: list[dict], langs: list[str]) -> Path
     css = (WEB / "style.css").read_text()
     js = (WEB / "app.js").read_text()
     logo = "data:image/png;base64," + base64.b64encode((WEB / "logo.png").read_bytes()).decode()
-    data = json.dumps(job_data(run_dir, units, langs), ensure_ascii=False).replace("</", "<\\/")
+    data = json.dumps(job_data(run_dir, units, langs), ensure_ascii=False).replace("<", "\\u003c")
     page = page.replace('<link rel="stylesheet" href="style.css">', f"<style>{css}</style>")
     page = page.replace('src="logo.png"', f'src="{logo}"').replace('href="favicon.png"', f'href="{logo}"')
     page = page.replace('<script type="module" src="app.js"></script>',

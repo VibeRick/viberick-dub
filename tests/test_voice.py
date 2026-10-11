@@ -40,3 +40,19 @@ def test_dropped_connection_is_retried(monkeypatch):
 
 def test_default_rate_is_the_measured_one():
     assert abs(voice.GATE.gap - 0.5) < 1e-9 or voice.os.environ.get("DUB_TTS_PER_MIN")
+
+
+def test_language_direction_is_metadata_not_spoken_text(monkeypatch):
+    import io, json
+    requests = []
+    def respond(req, timeout):
+        requests.append(json.loads(req.data))
+        return io.BytesIO(json.dumps({"steps": [{"content": [{"type": "audio", "data": "QUFB" * 400}]}]}).encode())
+    monkeypatch.setattr(voice.urllib.request, "urlopen", respond)
+    monkeypatch.setattr(voice.GATE, "wait", lambda: None)
+    monkeypatch.setattr(voice.config, "tts_key", lambda: "test-only")
+    voice._request("こんにちは", "test-voice", "ja")
+    content = requests[0]["input"][0]["content"][0]
+    assert content["text"] == "こんにちは"
+    assert content["annotations"][0]["type"] == "speech_metadata"
+    assert "Japanese" in content["annotations"][0]["style"]
