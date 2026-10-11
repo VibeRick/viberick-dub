@@ -76,17 +76,21 @@ def place(units: list[dict], clips: list[Path], total: float, out: Path,
     return stats
 
 
-# Gemini TTS clips carry sub-bass rumble (measured 2026-10-11: below 60 Hz only 7 dB under the voice,
-# against 18 dB in the original speech), heard as a low thump. Speech has nothing useful below 70 Hz.
-VOICE_HP = "highpass=f=70:poles=2,highpass=f=70:poles=2"
+# The voice is mixed at the level the model gave it: no loudness normalization, no filters (2026-10-11,
+# matching Inzeum's hosted readings: normalizing to -14 LUFS lifted the take's faint hiss along with the
+# voice). Under the whole track runs a constant room tone at about -80 dBFS, so the hiss inside each clip
+# does not switch on and off at every gap between lines (digital zeros there were heard as crackle).
+# The limiter only catches peaks where voice and bed add up past full scale; it never changes the level.
+ROOM_TONE = "anoisesrc=color=pink:sample_rate=48000:amplitude=0.0003:seed=7"
+PEAK_GUARD = "alimiter=limit=0.95:level=disabled"
 
 
 def mix(voice_wav: Path, bed: Path | None, out: Path) -> None:
-    if bed:
-        fc = (f"[0:a]aresample=48000,{VOICE_HP},pan=stereo|c0=c0|c1=c0[v];[1:a]aresample=48000[b];"
-              "[v][b]amix=inputs=2:normalize=0:duration=first,loudnorm=I=-14:TP=-1.5:LRA=11")
-        cmd = ["-i", str(voice_wav), "-i", str(bed), "-filter_complex", fc]
-    else:
-        cmd = ["-i", str(voice_wav), "-af", f"aresample=48000,{VOICE_HP},pan=stereo|c0=c0|c1=c0,loudnorm=I=-14:TP=-1.5:LRA=11"]
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", *cmd, "-ar", "48000", "-c:a", "aac", "-b:a", "160k",
-                    str(out)], check=True)
+    inputs = ["-i", str(voice_wav)] + (["-i", str(bed)] if bed else [])
+    streams = "[v][b][t]" if bed else "[v][t]"
+    fc = ("[0:a]aresample=48000,pan=stereo|c0=c0|c1=c0[v];"
+          + ("[1:a]aresample=48000[b];" if bed else "")
+          + f"{ROOM_TONE},pan=stereo|c0=c0|c1=c0[t];"
+          + f"{streams}amix=inputs={3 if bed else 2}:normalize=0:duration=first,{PEAK_GUARD}")
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", *inputs, "-filter_complex", fc, "-ar", "48000",
+                    "-c:a", "aac", "-b:a", "160k", str(out)], check=True)

@@ -3,6 +3,7 @@
 CPS = characters per second of the cloned voice at natural speed, measured 2026-10-10 on 204 lines of
 Fty2sz3dBwU (speech only, edge silence excluded). The old preset-voice table (en 15.1, ja 6.2, zh 5.2) was
 11–24 % too slow, so lines came out short and the dub had 2.5–4× the source's pauses."""
+import os
 from concurrent.futures import ThreadPoolExecutor
 import re
 
@@ -15,8 +16,12 @@ SCHEMA = {"type": "object", "properties": {"lines": {"type": "array", "items": {
     "required": ["id", "text"]}}}, "required": ["lines"]}
 
 
+# Share of a slot the translation may fill. Below 1.0 the speaker's own pauses stay silent (calm lectures).
+FILL = float(os.environ.get("DUB_FILL", "1.0"))
+
+
 def budget(lang: str, seconds: float) -> int:
-    return max(4, int(CPS.get(lang, 14.0) * seconds))
+    return max(4, int(CPS.get(lang, 14.0) * seconds * FILL))
 
 
 def _batch(batch: list[dict], src: str, lang: str, brief: dict, prev: list[str]) -> list[str]:

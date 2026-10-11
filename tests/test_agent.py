@@ -5,7 +5,7 @@ def test_agent_shortens_then_retries_then_accepts(monkeypatch, tmp_path):
     durs = iter([3.0, 2.2, 2.2])                 # too long → shorter → resynth after failed check
     monkeypatch.setattr(agent.voice, "synth", lambda text, out, **k: (out.write_bytes(b"x"), next(durs))[1])
     monkeypatch.setattr(agent.translate, "shorten", lambda *a: "short line")
-    monkeypatch.setattr(agent.fit, "stretch", lambda s, d, t: d.write_bytes(b"x") or 2.0)
+    monkeypatch.setattr(agent.fit, "finish", lambda s, d: d.write_bytes(b"x") or 2.0)
     verdicts = iter([{"heard": "", "language_ok": True, "content_ok": False, "meaning_ok": True, "issue": "garbled"},
                      {"heard": "short line", "language_ok": True, "content_ok": True, "meaning_ok": True, "issue": ""}])
     monkeypatch.setattr(agent.check, "check", lambda *a: next(verdicts))
@@ -19,7 +19,7 @@ def test_agent_shortens_then_retries_then_accepts(monkeypatch, tmp_path):
 
 def test_silent_clip_fails_without_asking_gemini(monkeypatch, tmp_path):
     monkeypatch.setattr(agent.voice, "synth", lambda text, out, **k: (out.write_bytes(b"x"), 1.8)[1])
-    monkeypatch.setattr(agent.fit, "stretch", lambda s, d, t: (d.write_bytes(b"x"), 1.8)[1])
+    monkeypatch.setattr(agent.fit, "finish", lambda s, d: (d.write_bytes(b"x"), 1.8)[1])
     audible = iter([False, True])
     monkeypatch.setattr(agent.check, "audible", lambda p: next(audible))
     asked = []
@@ -44,7 +44,7 @@ def test_shorten_that_guts_the_line_is_rejected(monkeypatch, tmp_path):
     durs = iter([2.0])
     monkeypatch.setattr(agent.voice, "synth", lambda text, out, **k: (out.write_bytes(b"x"), next(durs))[1])
     monkeypatch.setattr(agent.translate, "shorten", lambda *a: "あ")
-    monkeypatch.setattr(agent.fit, "stretch", lambda s, d, t: (d.write_bytes(b"x"), 0.7)[1])
+    monkeypatch.setattr(agent.fit, "finish", lambda s, d: (d.write_bytes(b"x"), 0.7)[1])
     monkeypatch.setattr(agent.check, "audible", lambda p: True)
     monkeypatch.setattr(agent.check, "check", lambda *a: {"heard": "x", "language_ok": True, "content_ok": True, "meaning_ok": True, "issue": ""})
     monkeypatch.setattr(agent.events, "log", lambda *a, **k: None)
@@ -73,7 +73,7 @@ def test_script_leak_is_repaired_before_speech_and_invalidates_precomputed_take(
     spoken = []
     monkeypatch.setattr(agent.translate, "_batch", lambda *a: ["Search Google"])
     monkeypatch.setattr(agent.voice, "synth", lambda t, p, **kw: (spoken.append((t, kw)), p.write_bytes(b"audio"), 1.8)[-1])
-    monkeypatch.setattr(agent.fit, "stretch", lambda s, p, t: (p.write_bytes(b"audio"), 1.8)[-1])
+    monkeypatch.setattr(agent.fit, "finish", lambda s, p: (p.write_bytes(b"audio"), 1.8)[-1])
     monkeypatch.setattr(agent.check, "audible", lambda p: True)
     monkeypatch.setattr(agent.check, "check", lambda *a: {"heard":"Search Google", "language_ok":True,
                                                          "content_ok":True, "meaning_ok":True, "issue":""})
@@ -86,7 +86,7 @@ def test_script_leak_is_repaired_before_speech_and_invalidates_precomputed_take(
 def test_meaning_failure_is_not_a_pass_and_failed_audio_is_preserved(monkeypatch, tmp_path):
     monkeypatch.setattr(agent.translate, "_batch", lambda *a: ["It does not work"])
     monkeypatch.setattr(agent.voice, "synth", lambda t, p, **kw: (p.write_bytes(b"audio"), 1.8)[-1])
-    monkeypatch.setattr(agent.fit, "stretch", lambda s, p, t: (p.write_bytes(b"final"), 1.8)[-1])
+    monkeypatch.setattr(agent.fit, "finish", lambda s, p: (p.write_bytes(b"final"), 1.8)[-1])
     monkeypatch.setattr(agent.check, "audible", lambda p: True)
     verdicts = iter([False, True])
     def listen(*args):
@@ -108,7 +108,7 @@ def test_underfill_uses_measured_duration_and_keeps_better_fit(monkeypatch, tmp_
     monkeypatch.setattr(agent.voice, "synth", lambda t, p, **kw: (p.write_bytes(b"audio"), next(durations))[-1])
     measured = []
     monkeypatch.setattr(agent.translate, "fuller", lambda u,t,l,d,b: measured.append(d) or "This is a full translation")
-    monkeypatch.setattr(agent.fit, "stretch", lambda s,p,t: (p.write_bytes(b"audio"), 2.7)[-1])
+    monkeypatch.setattr(agent.fit, "finish", lambda s, p: (p.write_bytes(b"audio"), 2.7)[-1])
     monkeypatch.setattr(agent.check, "audible", lambda p: True)
     monkeypatch.setattr(agent.check, "check", lambda *a: {"heard":"", "language_ok":True,"content_ok":True,
                                                          "meaning_ok":True,"issue":""})
@@ -124,7 +124,7 @@ def test_manual_underfilled_text_is_not_rewritten_on_meaning_failure(monkeypatch
     for name in ('fuller','shorten','_batch'):
         monkeypatch.setattr(agent.translate,name,forbidden)
     monkeypatch.setattr(agent.voice,'synth',lambda text,p,**kw: (spoken.append(text),p.write_bytes(agent.voice._silence_wav(.3)),.3)[-1])
-    monkeypatch.setattr(agent.fit,'stretch',lambda src,p,tempo: (p.write_bytes(agent.voice._silence_wav(.3)),.3)[-1])
+    monkeypatch.setattr(agent.fit,'finish',lambda src,p: (p.write_bytes(agent.voice._silence_wav(.3)),.3)[-1])
     monkeypatch.setattr(agent.check,'audible',lambda p:True)
     monkeypatch.setattr(agent.check,'check',lambda *a:{'heard':'Brief edit','language_ok':True,'content_ok':True,
                                                       'meaning_ok':False,'issue':'Manual edit differs from source meaning'})
@@ -140,7 +140,7 @@ def test_manual_long_text_flags_timing_without_shortening(monkeypatch,tmp_path):
     def forbidden(*a,**kw): raise AssertionError('manual text rewrite attempted')
     for name in ('fuller','shorten','_batch'): monkeypatch.setattr(agent.translate,name,forbidden)
     monkeypatch.setattr(agent.voice,'synth',lambda text,p,**kw:(p.write_bytes(agent.voice._silence_wav(3)),3)[-1])
-    monkeypatch.setattr(agent.fit,'stretch',lambda src,p,tempo:(p.write_bytes(agent.voice._silence_wav(2.2)),2.2)[-1])
+    monkeypatch.setattr(agent.fit,'finish',lambda src,p:(p.write_bytes(agent.voice._silence_wav(2.2)),2.2)[-1])
     monkeypatch.setattr(agent.check,'audible',lambda p:True)
     monkeypatch.setattr(agent.check,'check',lambda *a:{'heard':'Manual text','language_ok':True,'content_ok':True,'meaning_ok':True,'issue':''})
     monkeypatch.setattr(agent.events,'log',lambda *a,**kw:None)

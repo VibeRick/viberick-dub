@@ -66,15 +66,14 @@ def repair_line(u: dict, text: str, src: str, lang: str, brief: dict, d: Path, r
             break
         shorter = translate.shorten(u["text"], text, lang, u["slot"], dur / u["slot"])
         if len(shorter.strip()) < MIN_KEEP * len(text.strip()) or translate.script_issue(shorter, lang):
-            break   # a tiny slot would gut the line ("あ"): keep it and let tempo + spill absorb it
+            break   # a tiny slot would gut the line ("あ"): keep it and let the spill absorb it
         text = shorter
         act("shorten", text=text)
         dur = voice.synth(text, raw, voice_id=u.get("voice"), lang=lang)
         act("synth", dur=round(dur, 2), slot=u["slot"])
     v = {"heard": "", "issue": ""}
     for attempt in range(MAX_STEPS):
-        tempo = fit.decide_tempo(dur, u["slot"], allow_slow=not pre)
-        final = fit.stretch(raw, out, tempo)
+        final = fit.finish(raw, out)
         v = check.normalize_verdict(check.check(out, text, lang, u["text"], src) if check.audible(out) else
              {"heard": "", "language_ok": False, "content_ok": False, "meaning_ok": False,
               "issue": "silent or truncated clip"})
@@ -92,7 +91,7 @@ def repair_line(u: dict, text: str, src: str, lang: str, brief: dict, d: Path, r
                 timing_issue = "Manual text preserved; speech underfills its slot." if final < u["slot"] else "Manual text preserved; speech exceeds its slot."
                 act("flag", issue=timing_issue)
             return {"id": u["id"], "text": text, "dur": round(final, 3), "slot": u["slot"],
-                    "tempo": round(tempo, 3), "actions": acts, "ok": not bool(timing_issue), "issue": timing_issue, "heard": v["heard"]}
+                    "tempo": 1.0, "actions": acts, "ok": not bool(timing_issue), "issue": timing_issue, "heard": v["heard"]}
         if preserve_user_text:
             if attempt >= 2:
                 break
@@ -111,5 +110,5 @@ def repair_line(u: dict, text: str, src: str, lang: str, brief: dict, d: Path, r
             break
         dur = voice.synth(text, raw, voice_id=u.get("voice"), lang=lang)
     return {"id": u["id"], "text": text, "dur": round(voice.duration(out), 3), "slot": u["slot"],
-            "tempo": round(fit.decide_tempo(dur, u["slot"], allow_slow=not pre), 3), "actions": acts, "ok": False,
+            "tempo": 1.0, "actions": acts, "ok": False,
             "issue": v["issue"], "heard": v["heard"]}

@@ -34,17 +34,21 @@ def test_flowing_line_starts_at_most_max_early(tmp_path):
     assert st["starts"] == [0.0, 3.0 - mix.MAX_EARLY]
 
 
-def test_mix_removes_sub_bass_rumble_from_the_voice(tmp_path):
+def _db(p, start, dur):
     import re
     import subprocess
-    src = tmp_path / "v.wav"
+    r = subprocess.run(["ffmpeg", "-ss", str(start), "-t", str(dur), "-i", str(p), "-af", "volumedetect",
+                        "-f", "null", "-"], capture_output=True, text=True)
+    return float(re.search(r"mean_volume: ([-\d.]+)", r.stderr).group(1))
+
+
+def test_mix_keeps_the_voice_level_and_fills_gaps_with_room_tone(tmp_path):
+    import subprocess
+    src = tmp_path / "v.wav"   # 2 s of tone, then 2 s of digital silence
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "lavfi", "-i",
-                    "aevalsrc=0.4*sin(2*PI*30*t)+0.4*sin(2*PI*300*t):s=24000:d=3", str(src)], check=True)
+                    "aevalsrc=0.1*sin(2*PI*300*t)*lt(t\\,2):s=24000:d=4", str(src)], check=True)
     out = tmp_path / "m.m4a"
     mix.mix(src, None, out)
-
-    def low(p):
-        r = subprocess.run(["ffmpeg", "-i", str(p), "-af", "lowpass=f=60,lowpass=f=60,volumedetect", "-f", "null", "-"],
-                           capture_output=True, text=True)
-        return float(re.search(r"mean_volume: ([-\d.]+)", r.stderr).group(1))
-    assert low(src) - low(out) > 20   # 30 Hz rumble cut by well over 20 dB
+    assert abs(_db(out, 0.2, 1.5) - _db(src, 0.2, 1.5)) < 0.5   # not normalized
+    gap = _db(out, 2.3, 1.5)
+    assert -95 < gap < -70   # room tone, not digital zero and not audible hiss

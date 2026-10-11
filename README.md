@@ -18,10 +18,10 @@ YouTube link + up to 4 target languages
   → Gemini 3.8 Flash listens to the audio, corrects the transcript, writes a dubbing brief (tone, terms)
   → voice casting: the creator's cloned voice only behind two consent locks; Gemini picks a matching preset for everyone else
   → Gemini translates each sentence to a character budget from its time slot and the voice's measured speed
-  → Gemini TTS speaks each line
-  → per-line agent loop: measure → shorten → time-fit → Gemini listens (language, words, meaning, length)
+  → Gemini TTS speaks up to 5 lines in one take, cut back into lines
+  → per-line agent loop: measure → shorten (never sped up) → Gemini listens (language, words, meaning, length)
        → re-speak → re-translate → after 4 tries, flag for a human
-  → mixed on the original timeline over the music bed (−14 LUFS) → MP4 + M4A per language, SRT/VTT
+  → mixed on the original timeline over the music bed, at the voice's own level → MP4 + M4A per language, SRT/VTT
 ```
 
 Every agent decision is written to Firestore, so the studio shows the agent working live. A creator can edit any
