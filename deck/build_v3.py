@@ -68,14 +68,17 @@ def build():
     stat(s[3], Emu(3150000), Emu(1150000), Emu(2700000), "6M+", "people a day watch 10+ minutes of auto-dubbed video (YouTube, Dec 2025)")
     stat(s[3], Emu(6050000), Emu(1150000), Emu(2800000), "70%", "of MrBeast's YouTube audience doesn't speak English; dubs in his own voice hold them longer (Fortune, Mar 2025)")
     B.table(s[3], L, Emu(2250000), W, [
-        ["", "Human dubbing studio", "YouTube auto-dubbing", "AI voice tools (ElevenLabs, Rask)", "VibeRick Dub agent"],
-        ["Who does the work", "Translator, voice actors, editor", "One click, no control", "You review and fix lines in an editor", "One agent, end to end"],
-        ["Targets for a Korean video", "Any, one at a time", "2 (English, Indonesian)", "90–130+", "125"],
-        ["Whose voice", "An actor's", "A stock voice", "A voice clone", "Your own (with consent) or a matched voice per speaker"],
-        ["Checks every line by ear", "A director, by hand", "Not documented", "Not advertised", "Gemini listens; up to 4 fixes, then flags a human"],
-        ["Fix one line", "New recording session", "No (“cannot edit”)", "Yes", "Yes, preview in the same voice"],
-        ["Per dubbed minute", "≈ $20–200 · days", "Free", "$0.50–0.67", "$0.20 · minutes"],
-    ], [0.17, 0.19, 0.17, 0.2, 0.27], size=10, row_h=300000)
+        ["", "Human dubbing studio", "YouTube auto-dubbing", "VibeRick Dub agent"],
+        ["Who does the work", "Translator, voice actors, editor", "One click, no control", "One agent, end to end; you approve"],
+        ["Targets for a Korean video", "Any, one at a time", "2 (English, Indonesian)", "125"],
+        ["Whose voice", "An actor's", "A stock voice", "Your own (with consent) or a matched voice per speaker"],
+        ["Checks every line by ear", "A director, by hand", "Not documented", "Gemini listens; up to 4 fixes, then flags a human"],
+        ["Fix one line", "New recording session", "No (“cannot edit”)", "Yes, preview in the same voice"],
+        ["Per dubbed minute", "≈ $20–200 · days", "Free", "$0.20 · minutes"],
+    ], [0.22, 0.24, 0.22, 0.32], size=10, row_h=300000)
+    t(s[3], L, Emu(4600000), W, Emu(300000), [
+        ("Paid AI dubbing tools (ElevenLabs, Rask: 90–130+ languages, $0.50–0.67/min) also dub end to end; "
+         "none advertise listening to every line and repairing it.", {"size": 9, "color": MUTED})])
 
     # 4 · Features
     feats = [
