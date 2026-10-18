@@ -14,7 +14,7 @@ speaker, then listens to every line it made and fixes what is wrong before a per
 ```
 YouTube link + up to 4 target languages
   → download (Cloud Run Job) → demucs separates speech from music
-  → Chirp 3: every word with a timestamp, plus speaker labels
+  → Chirp 3 hears which language is spoken, then timestamps every word and labels speakers
   → Gemini 3.8 Flash listens to the audio, corrects the transcript, writes a dubbing brief (tone, terms)
   → voice casting: the creator's cloned voice only behind two consent locks; Gemini picks a matching preset for everyone else
   → Gemini translates each sentence to a character budget from its time slot and the voice's measured speed
@@ -47,6 +47,8 @@ line, hear a preview in the same voice, and accept it; only that line is regener
 | Korean tech explainer, full 15:05 → English, Japanese, Chinese | 366 / 369 lines passed Gemini's listening check |
 | NASA *Houston We Have a Podcast* (two hosts), 3 min → Hindi, Tamil, Spanish | 124 / 129 passed · 9 min 7 s on Cloud Run |
 | NASA *Curious Universe* (a man and a woman), 3 min → Hindi, Spanish | 88 / 90 passed · male and female voices cast automatically |
+| Hindi AI explainer (English title), 3 min → English, Korean | 79 / 80 passed · 6 min 56 s on Cloud Run |
+| Fireship *htmx in 100 seconds*, 2.5 min → Hindi, Spanish, Korean, Japanese | 108 / 108 passed · 4 min 31 s |
 | Independent check: Chirp 3 transcribes each dubbed line back (median character error) | Hindi 6.9 % · Tamil 7.0 % · Spanish 0.0 % |
 | Line-end overrun vs the original speech, p95 | ≤ 0.16 s |
 | Cost per dubbed minute (model + compute, estimate) | ≈ $0.03 |
@@ -79,8 +81,9 @@ Deploy: `gcloud builds submit` the Dockerfile → `gcloud run jobs update viberi
 
 ## Limits
 
-- The public app dubs the first 3 minutes of a video, up to 4 languages per job; source languages are Korean,
-  English, Japanese and Chinese.
+- The public app dubs the first 3 minutes of a video, up to 4 languages per job. The source language is heard
+  from the audio (Chirp 3); tested with Korean, English, Japanese, Chinese and Hindi.
+- A job takes about 3-7 minutes after a worker starts (~1-2 min); finished examples are under Samples.
 - Overlapping speech goes to the dominant speaker. Lip sync is not attempted.
 - Captions burned into the source video stay in the picture.
 
