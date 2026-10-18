@@ -917,7 +917,7 @@ function evText(e) {
     case "start":
       return ["stage", `Fetched “${e.title}” · ${mmss(e.duration)}`];
     case "voice":
-      return ["stage", e.voice === "pending_verification" ? "Voice: consent recorded; speaker verification is pending" : e.consent ? "Voice: channel consent recorded; final voice selection requires a speaker match" : "Voice: preset Gemini voice (no channel consent on file)"];
+      return ["stage", e.voice === "pending_verification" || e.verification_pending ?"Voice: consent recorded; speaker verification is pending" : e.consent ? "Voice: channel consent recorded; final voice selection requires a speaker match" : "Voice: preset Gemini voice (no channel consent on file)"];
     case "separated":
       return ["stage", "Separated speech from music and effects"];
     case "cast":
