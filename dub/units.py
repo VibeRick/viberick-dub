@@ -58,7 +58,7 @@ def make_units(cues: list[dict], duration: float) -> list[dict]:
 CONTINUOUS = 0.35   # source gap below this = the speaker did not pause
 BREATH = 1.0        # a mid-sentence source pause shorter than this is a breath, not a beat
 FLOW_GAP = 0.12     # silence between two separately synthesized lines that should sound continuous
-_SENTENCE_END = re.compile(r"[.!?。！？…]['\"”’」』)]*\s*$")
+_SENTENCE_END = re.compile(r"[.!?。！？…।॥؟۔]['\"”’」』)]*\s*$")
 
 
 def flow_gaps(units: list[dict], from_take: list[bool], repaired: list[bool],

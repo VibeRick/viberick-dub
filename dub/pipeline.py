@@ -4,6 +4,7 @@ uv run python -m dub.pipeline https://youtu.be/<id> --to en,ja,zh-Hans --max-sec
 import argparse
 import hashlib
 import json
+import logging
 import os
 import re
 import shutil
@@ -171,7 +172,7 @@ def dub_language(run_dir: Path, us: list[dict], src: str, lang: str, brf: dict, 
                     for i in g:
                         pre[i] = ok
         events.log(run_dir, "voiced", lang=lang, para_lines=sum(pre), lines=len(us))
-        with ThreadPoolExecutor(8) as ex:
+        with ThreadPoolExecutor(16) as ex:   # each line waits mostly on Gemini; speech is paced by voice.GATE
             rows = list(ex.map(lambda i: agent.repair_line(us[i], texts[i], src, lang, brf, d, run_dir, pre[i],
                                                            texts[max(0, i - 3):i]),
                                range(len(us))))
@@ -238,6 +239,14 @@ def _safe_group(g, us, texts, lang, d) -> bool:
         return False
 
 
+def _heard_language(audio: Path, total: float) -> str | None:
+    try:
+        return stt.spoken_language(audio, total)
+    except Exception as error:  # noqa: BLE001  the title-based guess is the fallback
+        logging.getLogger(__name__).warning("spoken-language check failed (%s)", type(error).__name__)
+        return None
+
+
 def main(url: str, to: list[str] | None = None, max_sec: float | None = None, separate_bed: bool = True,
          on_language_done=None) -> Path:
     t0 = time.time()
@@ -251,18 +260,23 @@ def main(url: str, to: list[str] | None = None, max_sec: float | None = None, se
                consent=False, verification_pending=config.ACTIVE["voice"] == config.VOICE_ID)
     events.log(run_dir, "start", url=url, title=info.get("title"), duration=total)
     bed = vocals = None
-    if separate_bed:
-        vocals, bed = separate.separate(run_dir)
-        events.log(run_dir, "separated")
+    # Separation (CPU, ~1.5 min) and listening/transcription (network) need only the source: run side by side.
+    sep = ThreadPoolExecutor(1).submit(separate.separate, run_dir) if separate_bed else None
     audio, wav = run_dir / "source.stt.flac", run_dir / "source.wav"
-    src_guess = unitsmod.guess_source(info)
+    heard = _cached(run_dir / "language.json", lambda: _heard_language(audio, total))
+    src_guess = heard or unitsmod.guess_source(info)
     words = _cached(run_dir / "words.json", lambda: stt.chirp_words(audio, src_guess, run_dir))
     events.log(run_dir, "transcribed", words=len(words), engine="chirp_3")
     cues = _cached(run_dir / "cues.json", lambda: proofread.proofread(audio, words, info, src_guess))
-    src = unitsmod.detect_language(" ".join(c["text"] for c in cues))
+    src = heard or unitsmod.detect_language(" ".join(c["text"] for c in cues))
+    if sep:
+        vocals, bed = sep.result()
+        events.log(run_dir, "separated")
     scenes = scene_cuts(run_dir, total)
     us = unitsmod.make_units(anchor_scenes(speakers.label_cues(cues, words), scenes["cuts"]), total)
     guard_cache(run_dir, us)
+    # The brief reads only the text; write it while the speakers are being heard and cast.
+    brief_job = ThreadPoolExecutor(1).submit(_cached, run_dir / "brief.json", lambda: briefmod.make_brief(us, info, src))
     consent = config.ACTIVE["voice"] == config.VOICE_ID
     cast = _cached(run_dir / "cast.json", lambda: speakers.cast(us, vocals, config.VOICE_ID, consent, run_dir))
     for u in us:
@@ -277,7 +291,7 @@ def main(url: str, to: list[str] | None = None, max_sec: float | None = None, se
     if (run_dir / "source.mp4").exists() and not (run_dir / "out" / "video.orig.mp4").exists():
         _ff("-i", str(run_dir / "source.mp4"), "-c", "copy", "-movflags", "+faststart",
             str(run_dir / "out" / "video.orig.mp4"))
-    brf = _cached(run_dir / "brief.json", lambda: briefmod.make_brief(us, info, src))
+    brf = brief_job.result()
     events.log(run_dir, "brief", summary=brf["summary"], terms=len(brf["terms"]))
     langs = unitsmod.pick_targets(to, src)
     reports, failures = _languages(run_dir, us, src, langs, brf, total, bed, on_language_done)
@@ -294,7 +308,7 @@ def main(url: str, to: list[str] | None = None, max_sec: float | None = None, se
 
 def _languages(run_dir, us, src, langs, brf, total, bed, callback=None, offline=False):
     reports, failures = {}, []
-    with ThreadPoolExecutor(max(1, min(3, len(langs)))) as ex:
+    with ThreadPoolExecutor(max(1, len(langs))) as ex:   # ≤ MAX_LANGS_PER_JOB, all at once
         pending = {ex.submit(dub_language, run_dir, us, src, lang, brf, total, bed, offline): lang
                    for lang in langs}
         for future in as_completed(pending):

@@ -16,4 +16,4 @@ def make_brief(units: list[dict], info: dict, src: str) -> dict:
         "Prepare a dubbing brief in English. summary: 3 sentences on topic and audience. speaker_style: tone, "
         "energy and formality in one sentence. terms: product names, acronyms, jargon and proper nouns, each "
         "with a rule (keep as-is / translate as X / spell out). Use the channel name, title and tags as ground "
-        "truth for brand spelling.", SCHEMA)
+        "truth for brand spelling.", SCHEMA, hedge_after=(25.0, 60.0))

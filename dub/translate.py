@@ -45,7 +45,7 @@ def _batch(batch: list[dict], src: str, lang: str, brief: dict, prev: list[str])
         "name. Do not leave Korean script in English, Japanese or Chinese output. Render 구글링 as the natural "
         "target-language expression for searching Google. Preserve proper names through established spelling "
         "or transliteration, and preserve negation, uncertainty, numbers and units.\n"
-        "- Output every id exactly once, same order.\n\nLines:\n" + lines, SCHEMA)
+        "- Output every id exactly once, same order.\n\nLines:\n" + lines, SCHEMA, hedge_after=(25.0, 60.0))
     got = {l["id"]: l["text"].strip() for l in out["lines"]}
     return [got.get(u["id"], "") for u in batch]
 
@@ -97,7 +97,7 @@ def expand(units: list[dict], texts: list[str], src: str, lang: str, brief: dict
             "connectives, and use natural spoken phrasing. Never add facts, examples or opinions the source does "
             "not have, and no empty intensifiers (truly, really, dedicated, focused, practically). If a line "
             f"cannot grow naturally, return it unchanged. Keep terms consistent: {[t['source'] for t in brief.get('terms', [])]}.\n"
-            "Output every id once.\n\nLines:\n" + chunk, SCHEMA)
+            "Output every id once.\n\nLines:\n" + chunk, SCHEMA, hedge_after=(25.0, 60.0))
         out.update({l["id"]: l["text"].strip() for l in got["lines"]})
     res = list(texts)
     for k, u in enumerate(units):

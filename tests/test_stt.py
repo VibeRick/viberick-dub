@@ -70,3 +70,24 @@ def test_uploaded_chunk_is_cleaned_up_even_when_recognition_fails(tmp_path, monk
         assert stt.chirp_words(tmp_path / "input.wav", "en", tmp_path) == []
     blob.delete.assert_called_once()
     assert not (tmp_path / "stt.part0.flac").exists()
+
+
+def test_unknown_languages_go_to_chirp_auto_detection():
+    from dub import config
+    assert config.chirp_code("ko") == "ko-KR" and config.chirp_code("hi") == "auto"
+
+
+def test_detected_chirp_codes_map_to_ours():
+    from dub import config
+    assert config.source_code("hi") == "hi" and config.source_code("es-US") == "es"
+    assert config.source_code("cmn-Hans-CN") == "zh-Hans" and config.source_code("cmn-Hant-TW") == "zh-Hant"
+    assert config.source_code("xx-YY") is None
+
+
+def test_spoken_language_is_the_one_with_most_text():
+    alt = lambda t: SimpleNamespace(transcript=t)
+    res = [SimpleNamespace(language_code="hi", alternatives=[alt("इसके बारे में आपने जरूर सुना होगा")]),
+           SimpleNamespace(language_code="en", alternatives=[alt("Google Map")]),
+           SimpleNamespace(language_code="", alternatives=[alt("noise")])]
+    assert stt.heard_language(res) == "hi"
+    assert stt.heard_language([]) is None

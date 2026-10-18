@@ -6,7 +6,7 @@ import re
 
 from rapidfuzz.distance import Levenshtein
 
-_KEEP = re.compile(r"[0-9a-z가-힣぀-ヿ一-鿿]")
+_KEEP = re.compile(r"[^\W_]")   # letters and digits of any script (Devanagari, Arabic, Thai…), not just CJK + Latin
 
 
 def norm_chars(text: str) -> list[str]:

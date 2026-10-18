@@ -30,7 +30,7 @@ def _cfg(lang: str, diarize: bool = False) -> cs.RecognitionConfig:
     if diarize:
         feats.diarization_config = cs.SpeakerDiarizationConfig(min_speaker_count=1, max_speaker_count=6)
     return cs.RecognitionConfig(auto_decoding_config=cs.AutoDetectDecodingConfig(),
-                                language_codes=[config.CHIRP_CODES[lang]], model="chirp_3", features=feats)
+                                language_codes=[config.chirp_code(lang)], model="chirp_3", features=feats)
 
 
 def chunk_bounds(duration: float, silences: list[tuple[float, float]],
@@ -100,6 +100,29 @@ def chirp_words(audio: Path, lang: str, run_dir: Path) -> list[dict]:
                     logging.getLogger(__name__).warning("STT chunk %s cleanup failed (%s)", i, type(error).__name__)
 
     return words
+
+
+def spoken_language(audio: Path, total: float, seconds: float = 45.0) -> str | None:
+    """The language actually spoken, heard by Chirp 3 on a clip near the start (not guessed from the title:
+    an English title on a Hindi video sent a whole job down the English path). None when nothing is heard."""
+    start = min(30.0, max(0.0, total * 0.2))
+    clip = subprocess.run(["ffmpeg", "-loglevel", "error", "-ss", str(start), "-t", str(seconds), "-i", str(audio),
+                           "-ac", "1", "-ar", "16000", "-c:a", "flac", "-f", "flac", "-"],
+                          check=True, capture_output=True).stdout
+    req = cs.RecognizeRequest(recognizer=f"projects/{config.GCP_PROJECT}/locations/{config.STT_LOCATION}/recognizers/_",
+                              config=_cfg("auto"), content=clip)
+    return heard_language(_client().recognize(request=req, timeout=120).results)
+
+
+def heard_language(results) -> str | None:
+    """The detected language that carries the most transcript text, in our codes."""
+    weight: dict[str, int] = {}
+    for r in results:
+        code = config.source_code(r.language_code) if r.language_code else None
+        text = r.alternatives[0].transcript if r.alternatives else ""
+        if code and text.strip():
+            weight[code] = weight.get(code, 0) + len(text)
+    return max(weight, key=weight.get) if weight else None
 
 
 def chirp_sync_words(wav_bytes: bytes, lang: str) -> list[dict]:

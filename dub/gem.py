@@ -9,13 +9,13 @@ import time
 from google import genai
 from google.genai import types
 
-from . import config
+from . import config, hedge
 
 # USD per 1M tokens (in, out). Estimates for the cost slide only.
 PRICE = {config.TEXT_MODEL: (0.75, 3.75)}
 LEDGER: dict[str, dict] = {}
 _lock = threading.Lock()
-_gate = threading.BoundedSemaphore(24)
+_gate = threading.BoundedSemaphore(48)   # Vertex text quota is not the limit (2026-10-18); hedges count
 _client = None
 
 
@@ -51,17 +51,21 @@ def _status_code(error: Exception) -> int | None:
     return int(match[1]) if match else None
 
 
-def _call(contents, cfg: types.GenerateContentConfig, tries: int = 8, parse=None):
+def _once(contents, cfg: types.GenerateContentConfig, parse=None):
+    with _gate:
+        resp = client().models.generate_content(model=config.TEXT_MODEL, contents=contents, config=cfg)
+    _record(config.TEXT_MODEL, resp)
+    if not resp.text:
+        raise RuntimeError("empty model response")
+    return parse(resp.text) if parse else resp
+
+
+def _call(contents, cfg: types.GenerateContentConfig, tries: int = 8, parse=None, hedge_after=(15.0, 40.0)):
     if tries < 1:
         raise ValueError("tries must be positive")
     for i in range(tries):
         try:
-            with _gate:
-                resp = client().models.generate_content(model=config.TEXT_MODEL, contents=contents, config=cfg)
-            _record(config.TEXT_MODEL, resp)
-            if not resp.text:
-                raise RuntimeError("empty model response")
-            return parse(resp.text) if parse else resp
+            return hedge.first(lambda: _once(contents, cfg, parse), hedge_after)
         except Exception as e:  # noqa: BLE001  429/500 from the shared pool, empty output
             if i == tries - 1 or _status_code(e) in {400, 401, 403, 404}:
                 raise
@@ -70,13 +74,14 @@ def _call(contents, cfg: types.GenerateContentConfig, tries: int = 8, parse=None
             time.sleep(min(60, 2 ** i) * (0.5 + random.random()))
 
 
-def json_call(prompt: str, schema: dict, parts: list | None = None, thinking: str = "low") -> dict:
+def json_call(prompt: str, schema: dict, parts: list | None = None, thinking: str = "low",
+              hedge_after=(15.0, 40.0)) -> dict:
     cfg = types.GenerateContentConfig(response_mime_type="application/json", response_schema=schema,
                                       thinking_config=types.ThinkingConfig(thinking_level=thinking))
-    return _call([*(parts or []), prompt], cfg, parse=json.loads)
+    return _call([*(parts or []), prompt], cfg, parse=json.loads, hedge_after=hedge_after)
 
 
-def text_call(prompt: str, parts: list | None = None, thinking: str = "low") -> str:
+def text_call(prompt: str, parts: list | None = None, thinking: str = "low", hedge_after=(15.0, 40.0)) -> str:
     cfg = types.GenerateContentConfig(max_output_tokens=65536,
                                       thinking_config=types.ThinkingConfig(thinking_level=thinking))
-    return _call([*(parts or []), prompt], cfg).text
+    return _call([*(parts or []), prompt], cfg, hedge_after=hedge_after).text

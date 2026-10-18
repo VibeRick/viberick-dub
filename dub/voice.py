@@ -14,7 +14,7 @@ import urllib.request
 import wave
 from pathlib import Path
 
-from . import config
+from . import config, hedge
 
 RATE = 24000
 URL = "https://generativelanguage.googleapis.com/v1beta/interactions"
@@ -64,16 +64,19 @@ def _request(text: str, voice_id: str, lang: str | None = None) -> bytes:
             "input": [{"type": "user_input", "content": [content]}],
             "response_format": {"type": "audio"},
             "generation_config": {"speech_config": [{"voice": voice_id}]}}
-    for i in range(8):
+    def attempt() -> bytes:
         GATE.wait()
         with _calls_lock:
             CALLS["n"] += 1
         req = urllib.request.Request(URL, data=json.dumps(body).encode(), method="POST",
                                      headers={"x-goog-api-key": config.tts_key(),
                                               "Content-Type": "application/json"})
+        data = _find_audio(json.load(urllib.request.urlopen(req, timeout=180)))
+        return base64.b64decode(data) if data else b""
+
+    for i in range(8):
         try:
-            data = _find_audio(json.load(urllib.request.urlopen(req, timeout=180)))
-            return base64.b64decode(data) if data else b""
+            return hedge.first(attempt, (30.0, 70.0))   # a paragraph take normally returns well inside 30 s
         except urllib.error.HTTPError as e:
             if e.code not in (429, 500, 503) or i == 7:
                 raise RuntimeError(f"Speech generation failed (HTTP {e.code})") from e

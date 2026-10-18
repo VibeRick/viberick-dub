@@ -32,6 +32,19 @@ MAX_LANGS_PER_JOB = 4
 CHIRP_CODES = {"ko": "ko-KR", "en": "en-US", "ja": "ja-JP", "zh-Hans": "cmn-Hans-CN"}
 
 
+def chirp_code(lang: str) -> str:
+    """Chirp 3 locale for a language; anything else is left to Chirp's own language detection."""
+    return CHIRP_CODES.get(lang, "auto")
+
+
+def source_code(detected: str) -> str | None:
+    """Our language code for the one Chirp detected ("hi", "cmn-Hans-CN", "es-US"…); None if we can't dub from it."""
+    base = detected.split("-")[0].lower()
+    if base in ("cmn", "zh"):
+        return "zh-Hant" if "Hant" in detected or detected.endswith(("TW", "HK")) else "zh-Hans"
+    return base if base in LANGS else None
+
+
 @cache
 def gemini_key() -> str:
     """Use only an explicitly supplied key; never search other projects or Keychain."""

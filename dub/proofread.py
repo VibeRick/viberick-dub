@@ -27,7 +27,9 @@ def proofread(audio: Path, words: list[dict], info: dict, lang: str) -> list[dic
         "(use the channel name, title and tags as ground truth for names), and spacing. Keep the speaker's "
         "actual words in order; do not paraphrase, summarize or drop anything. Put a line break at every "
         "natural pause: one subtitle-length phrase per line. Output only the transcript.\n\n" + draft)
-    text = gem.text_call(prompt, parts=[types.Part.from_bytes(data=_opus(audio), mime_type="audio/ogg")])
+    # The whole transcript comes back in one answer, so a normal call is longer: hedge later.
+    text = gem.text_call(prompt, parts=[types.Part.from_bytes(data=_opus(audio), mime_type="audio/ogg")],
+                         hedge_after=(45.0, 90.0))
     lines = [l.strip() for l in text.splitlines() if l.strip()]
     cues = align.retime(lines, words)
     return cues or align.retime([draft], words)

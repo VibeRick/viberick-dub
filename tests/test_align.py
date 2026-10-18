@@ -25,3 +25,10 @@ def test_retime_survives_a_corrected_word():
 def test_line_without_letters_merges_into_previous():
     cues = align.retime(["안녕하세요", "...", "바이브릭입니다"], WORDS)
     assert len(cues) == 2 and cues[0]["text"].endswith("...")
+
+
+def test_devanagari_lines_get_their_own_timing():
+    words = [{"w": "नमस्ते", "start": 0.0, "end": 0.5}, {"w": "दोस्तों।", "start": 0.5, "end": 1.0},
+             {"w": "आज", "start": 3.0, "end": 3.3}, {"w": "बात", "start": 3.3, "end": 3.6}]
+    cues = align.retime(["नमस्ते दोस्तों।", "आज बात"], words)
+    assert len(cues) == 2 and cues[1]["start"] == 3.0

@@ -50,3 +50,29 @@ def test_retry_logs_do_not_echo_provider_secrets(monkeypatch, capsys):
     assert gem.text_call("prompt") == "ok"
     logs = capsys.readouterr().err
     assert "503" in logs and "secret" not in logs and "host" not in logs
+
+
+def test_hedge_takes_the_first_answer_and_retries_failures_at_once():
+    import threading, time
+    from dub import hedge
+    calls = []
+    lock = threading.Lock()
+
+    def slow_then_fast():
+        with lock:
+            calls.append(1)
+            n = len(calls)
+        time.sleep(1.0 if n == 1 else 0.01)
+        return n
+    t = time.monotonic()
+    assert hedge.first(slow_then_fast, (0.05,)) == 2 and time.monotonic() - t < 0.5
+
+    tries = []
+    def fails_fast():
+        tries.append(1)
+        raise RuntimeError("400")
+    t = time.monotonic()
+    with pytest.raises(RuntimeError):
+        hedge.first(fails_fast, (5.0,))
+    assert len(tries) == 1 and time.monotonic() - t < 1.0   # failures are the caller's to retry
+
