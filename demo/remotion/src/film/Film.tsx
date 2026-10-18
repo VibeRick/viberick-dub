@@ -328,6 +328,24 @@ const Edit = () => (
   </>
 );
 
+// ── 6b · the finished job: listen in each language, then download (live app, job h0wLZJeYGxw-e8930d) ──
+// result.mp4 is stepped frame by frame through the player (demo/film/capture_result.mjs); result.dub.wav is the job's own
+// es track 0–7.6 s then hi 7.6–11.6 s, so picture and sound share one clock.
+const RESULT = { hi: 7.6, narrAt: 11.8, checks: 17.4, downloads: 19.6 };
+const Result = () => {
+  const f = useCurrentFrame();
+  const label = f < sec(RESULT.hi) ? "Finished · the Spanish dub" : f < sec(RESULT.checks) ? "Finished · switched to Hindi"
+    : f < sec(RESULT.downloads) ? "Finished · every line checked" : "Finished · download video, audio and subtitles";
+  return (
+    <>
+      <Audio src={staticFile("film/result.dub.wav")} volume={0.7} />
+      <Sequence from={sec(RESULT.narrAt)}><Audio src={staticFile("film/N5b.wav")} /></Sequence>
+      <Screen src={staticFile("film/result.mp4")} label={label} />
+      <div style={{ position: "absolute", right: 120, top: 50, maxWidth: 900, textAlign: "right", font: `400 16px ${ui}`, color: C.ink3 }}>{F.podcast.attribution}</div>
+    </>
+  );
+};
+
 // ── 7 · architecture ────────────────────────────────────────────────────────────────────────
 const NODES = [
   { id: "fb", x: 120, y: 330, t: "Firebase Hosting", s: "Studio", at: 1.2 },
@@ -403,6 +421,7 @@ export const SCENES: { id: string; frames: number; C: React.FC }[] = [
   { id: "conversation", frames: sec(N.N3 + .4) + F.podcast.takes.reduce((n, t) => n + sec(t.end - t.start + .5), 0), C: Conversation },
   { id: "repair", frames: sec(N.N4 + .4) + sec(F.repair.end - F.repair.start + .8), C: Repair },
   { id: "edit", frames: sec(Math.max(N.N5 + .8, F.editTotal)), C: Edit },
+  { id: "result", frames: sec(RESULT.narrAt + N.N5b + .8), C: Result },
   { id: "arch", frames: sec(N.N6 + 1.4), C: Arch },
   { id: "close", frames: sec(N.N7 + 3.2), C: Close },
 ];

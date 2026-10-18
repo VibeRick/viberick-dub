@@ -13,6 +13,7 @@ without consent). Design tokens = docs/redesign-2026-10-11/DESIGN.md.
 | 4 | 0:58–1:24 | NASA podcast, two speakers → Hindi, speaker colours, casting reasons on screen. | N3, then the exchange unnarrated |
 | 5 | 1:24–1:48 | Self-repair: real event rows for zh #15 ("WhyBrick" → re-speak → pass) and ja #13 (wrong language → pass). | N4 |
 | 6 | 1:48–2:02 | Line edit: change a line, preview, accept. | N5 |
+| 6b | | Result page: Spanish then Hindi playing with captions, downloads, quality stats, timeline. | dub audio, then N5b |
 | 7 | 2:02–2:30 | Architecture, built up node by node; numbers. | N6 |
 | 8 | 2:30–2:45 | Consent + close, URL. | N7 |
 
@@ -29,6 +30,8 @@ N3 — It handles conversations too. Here is NASA's podcast, dubbed into Hindi. 
 N4 — But how do you know a dub is right? Gemini listens to every line the agent made: the right language, every word, the right length. Here it heard my company's name come out as "WhyBrick". The agent spoke the line again, listened again, and it was fixed. Whatever it can't fix, it flags for a human.
 
 N5 — And you stay in control of each line. Here I want the Hindi to say "today", so I add the word and preview just that line in the same voice. Gemini checks it again, and I accept. Only that line is regenerated; the rest of the dub stays as it was.
+
+N5b — When the job is done, everything is on one page. Switch languages and watch the dub with captions, see which lines passed Gemini's check, and download the video, the audio track and the subtitles, ready to upload.
 
 N6 — It is all Google Cloud. Firebase hosts the studio. Cloud Run starts one job per dub, so it scales with creators and costs nothing when idle. Every agent decision streams through Firestore, and the media lands in Cloud Storage. On a full fifteen-minute video, three hundred sixty-six of three hundred sixty-nine lines passed the listening check, at about three cents per dubbed minute.
 

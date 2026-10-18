@@ -94,5 +94,17 @@
       "meaning_ok": true,
       "issue": ""
     }
+  },
+  "N5b": {
+    "text": "When the job is done, everything is on one page. Switch languages and watch the dub with captions, see which lines passed Gemini's check, and download the video, the audio track and the subtitles, ready to upload.",
+    "seconds": 11.967166666666667,
+    "ok": true,
+    "verdict": {
+      "heard": "When the job is done, everything is on one page. Switch languages and watch the dub with captions, see which lines passed Gemini's check, and download the video, the audio track, and the subtitles, ready to upload.",
+      "language_ok": true,
+      "content_ok": true,
+      "meaning_ok": true,
+      "issue": ""
+    }
   }
 }
