@@ -189,7 +189,7 @@ def build():
     B.set_title(s[13], "Provide links to your: GitHub Public Repository · Demo Video · Final Product")
     t(s[13], L, Emu(1700000), W, Emu(2600000), [
         ("GitHub public repository", {"bold": True}), (LINKS["github"], {"color": ACC, "gap": 14}),
-        ("Demo video (under 3 minutes)", {"bold": True}), (LINKS["video"], {"color": ACC, "gap": 14}),
+        ("Demo video (3:15)", {"bold": True}), (LINKS["video"], {"color": ACC, "gap": 14}),
         ("Final product", {"bold": True}), (LINKS["product"], {"color": ACC}),
     ], size=15, gap=4)
 
